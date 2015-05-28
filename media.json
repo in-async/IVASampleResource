@@ -1,0 +1,58 @@
+{
+    "default_zone_eid": "zone2", 
+    "settings": {
+        "log_click_url": "http://192.168.1.10:8003/api/log_click", 
+        "log_view_url": "http://192.168.1.10:8003/api/log_view", 
+        "player_html_url": "http://192.168.1.10:8001/player.html"
+    }, 
+    "zones": [
+        {
+            "allowed_portrait_play": false, 
+            "allowed_skip": false, 
+            "campaigns": [
+                {
+                    "campaign_id": 1, 
+                    "creatives": [
+                        {
+                            "creative_id": 111, 
+                            "creative_url": "http://192.168.1.10:8002/api/creative/111", 
+                            "transfer_url": "http://www.yahoo.co.jp/"
+                        }
+                    ], 
+                    "daily_budget_remaining": 300, 
+                    "deliver_end_time": "2015-06-30T15:00:00Z", 
+                    "frequency": 5, 
+                    "recency": 10
+                }
+            ], 
+            "default_mute": false, 
+            "skippable_after_sec": 0, 
+            "zone_eid": "zone1", 
+            "zone_id": 1
+        }, 
+        {
+            "allowed_portrait_play": false, 
+            "allowed_skip": false, 
+            "campaigns": [
+                {
+                    "campaign_id": 1, 
+                    "creatives": [
+                        {
+                            "creative_id": 112, 
+                            "creative_url": "http://192.168.1.10:8002/api/creative/112", 
+                            "transfer_url": "http://www.yahoo.co.jp/"
+                        }
+                    ], 
+                    "daily_budget_remaining": 300, 
+                    "deliver_end_time": "2015-06-30T15:00:00Z", 
+                    "frequency": 5, 
+                    "recency": 10
+                }
+            ], 
+            "default_mute": false, 
+            "skippable_after_sec": 0, 
+            "zone_eid": "zone2", 
+            "zone_id": 2
+        }
+    ]
+}

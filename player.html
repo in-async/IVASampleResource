@@ -1,0 +1,93 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <style>
+        html, body {
+            height: 100%;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            color: #ccc;
+        }
+        #close-ad {
+            position: absolute;
+            top: 0;
+            right: 0;
+            padding: 1em;
+        }
+        #playtime-label {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            padding: 1em;
+        }
+
+        #start-video, #pause-video {
+            font-size: 50px;
+        }
+    </style>
+</head>
+<body>
+    <button id="start-video">再生</button>
+    <button id="pause-video">停止</button>
+    <button id="close-ad">×</button>
+    <span id="playtime-label">0</span>
+
+    動画プレイヤー
+
+    <script type="text/javascript">
+        try {
+        document.body.onload = function () {
+            console.log('body.onload');
+        };
+
+        // 初期化イベント
+        document.addEventListener('DOMContentLoaded', function () {
+            alert('hoge');
+            console.log('DOMContentLoaded');
+        });
+
+        // 広告クローズボタン
+        document.getElementById('close-ad').addEventListener('click', function () {
+            alert('hoge');
+            console.log('closeAd');
+            //location.href = "api://closeAd/?args={xxx:bbb}&callback=hogehoge&close_ad=true";
+            window.close();
+        });
+
+        // 広告再生ボタン
+        document.getElementById('start-video').addEventListener('click', function () {
+            alert('hoge');
+            console.log('startVideo');
+            location.href = "api://startVideo/";
+        });
+        // 広告停止ボタン
+        document.getElementById('pause-video').addEventListener('click', function () {
+            alert('hoge');
+            console.log('pauseVideo');
+            location.href = "api://pauseVideo/";
+        });
+
+        //function onOpenAd(zoneEid) {
+        //    console.log('onOpenAd');
+        //}
+        //function onCloseAd(zoneEid) {
+        //    console.log('onCloseAd');
+        //}
+        function onStartedAd(zoneEid) {
+            console.log('onStartedAd');
+        }
+        function onFinishedAd(zoneEid, playtime, skipped) {
+            console.log('onFinishedAd');
+        }
+        function onFailed(reason, zoneEid) {
+            console.log('onFailed');
+        }
+        } catch (ex) {
+            alert(ex);
+        }
+    </script>
+</body>
+</html>
