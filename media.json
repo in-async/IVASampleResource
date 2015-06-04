@@ -39,7 +39,7 @@
                 "allowed_skip": false,
                 "campaigns": [
                     {
-                        "campaign_id": 1,
+                        "campaign_id": 2,
                         "app_title": "サンプルタイトル",
                         "creatives": [
                             {
@@ -61,6 +61,33 @@
                 "skippable_after_sec": 0,
                 "zone_eid": "zone2",
                 "zone_id": 2
+            },
+            {
+                "allowed_portrait_play": false,
+                "allowed_skip": false,
+                "campaigns": [
+                    {
+                        "campaign_id": 3,
+                        "app_title": "サンプルタイトル",
+                        "creatives": [
+                            {
+                                "creative_id": 113,
+                                "video_url": "https://raw.githubusercontent.com/in-async/IVASampleResource/master/creatives/113/video.mp4",
+                                "endcard_portrait_url": "https://raw.githubusercontent.com/in-async/IVASampleResource/master/creatives/113/endcard.jpg",
+                                "app_icon_url": "https://raw.githubusercontent.com/in-async/IVASampleResource/master/creatives/113/icon.png",
+                                "transfer_url": "http://www.yahoo.co.jp/"
+                            }
+                        ],
+                        "daily_budget_remaining": 300,
+                        "deliver_end_time": "2015-06-30T15:00:00Z",
+                        "frequency": 5,
+                        "recency": 10
+                    }
+                ],
+                "default_mute": false,
+                "skippable_after_sec": 0,
+                "zone_eid": "zone3",
+                "zone_id": 3
             }
         ]
     }
