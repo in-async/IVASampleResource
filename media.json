@@ -12,6 +12,7 @@
                 "campaigns": [
                     {
                         "campaign_id": 1,
+                        "app_title": "ねこの気持ち",
                         "creatives": [
                             {
                                 "creative_id": 111,
@@ -39,6 +40,7 @@
                 "campaigns": [
                     {
                         "campaign_id": 1,
+                        "app_title": "サンプルタイトル",
                         "creatives": [
                             {
                                 "creative_id": 112,
