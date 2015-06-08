@@ -1,92 +1,394 @@
 ﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <style>
         html, body {
             height: 100%;
         }
+
         body {
             margin: 0;
             padding: 0;
-            color: #ccc;
+            color: #333;
         }
-        #close-ad {
+
+
+        #video-frame {
+            position: absolute;
+            z-index: 100;
+            display: block;
+            width: 100%;
+            height: 100%;
+            color: #ccc;
+            left: 0;
+            top: 0;
+        }
+        #skip-ad {
             position: absolute;
             top: 0;
             right: 0;
-            padding: 1em;
+            margin: 2.5%;
+            padding: 2.5%;
         }
         #playtime-label {
             position: absolute;
             bottom: 0;
             right: 0;
-            padding: 1em;
+            padding: 5%;
+            font-size: 1.2em;
+        }
+        #start-video, #pause-video {
+            display: inline-block;
+            margin: 2.5%;
+            padding: 2.5%;
         }
 
-        #start-video, #pause-video {
-            font-size: 50px;
+        .fadein {
+            /*display: block !important;*/
+            -moz-transition: left linear .1s;
+            -o-transition: left linear .1s;
+            -webkit-transition: left linear .1s;
+            transition: left linear .1s;
+            left: 0 !important;
+        }
+
+        #endcard-frame {
+            position: absolute;
+            z-index: 101;
+            /*display: none;*/
+            background: #eee;
+            width: 100%;
+            height: 100%;
+            left: 100%;
+            top: 0;
+        }
+        #endcard-panel {
+            float: left;
+            width: 100%;
+            height: 50%;
+            text-align: center;
+            background-color: #111;
+            overflow: hidden;
+
+            background: #111 no-repeat center;
+            background-size: contain;
+        }
+        #endcard-image {
+            max-width: 100%;
+            max-height: 100%;
+            display: block;
+        }
+        #detail-panel {
+            float: left;
+            width: 100%;
+            height: 50%;
+            text-align: center;
+            background: linear-gradient(#fff, #ccc);
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            padding: 5% 4%;
+        }
+        #app-icon {
+            height: 25%;
+            border-radius: 15%;
+            /*border: 1px solid #ccc;*/
+            box-shadow: 1px 1px #ccc;
+        }
+        #app-title {
+            margin: .75em 0;
+            font-size: 28px;
+            max-height: 3em;
+            overflow: hidden;
+        }
+        #transfer-button {
+            font-size: 24px;
+            padding: .5em;
+            /*margin: 1em;*/
+            display: block;
+            /*border: 1px solid #999;*/
+            border-radius: 1em;
+            letter-spacing: .2em;
+            text-indent: .2em;
+            text-align: center;
+            color: #fff;
+            background: #709FEF;
+            background: -webkit-linear-gradient(#709FEF, #4E7FD2);
+            background: linear-gradient(#709FEF, #4E7FD2);
+        }
+        #close-ad {
+            position: absolute;
+            top: 0;
+            right: 0;
+            color: #8192EA;
+            border: 2px solid #888;
+            border-radius: 1em;
+            font-weight: bold;
+            background-color: #fff;
+            opacity: .75;
+            font-size: 30px;
+            margin: 2.5%;
+            /*padding: .25em;*/
+            width: 1em;
+            height: 1em;
+            line-height: 1;
+            text-align: center;
+        }
+
+        @media only screen and (orientation:landscape) {
+            #endcard-panel {
+                width: 50%;
+                height: 100%;
+            }
+
+            #detail-panel {
+                width: 50%;
+                height: 100%;
+            }
         }
     </style>
 </head>
 <body>
-    <button id="start-video">再生</button>
-    <button id="pause-video">停止</button>
-    <button id="close-ad">×</button>
-    <span id="playtime-label">0</span>
-
-    動画プレイヤー
+    <div id="video-frame">
+        <a id="start-video">再生</a>
+        <a id="pause-video">停止</a>
+        <a id="skip-ad">skip</a>
+        <span id="playtime-label"></span>
+    </div>
+    <div id="endcard-frame">
+        <a id="endcard-panel">
+            <!--<img id="endcard-image" />-->
+        </a>
+        <div id="detail-panel">
+            <img id="app-icon" />
+            <p id="app-title"></p>
+            <a id="transfer-button">ストアを開く</a>
+        </div>
+        <a id="close-ad">×</a>
+    </div>
 
     <script type="text/javascript">
         try {
-        document.body.onload = function () {
-            console.log('body.onload');
-        };
+            // console.log をネイティブ API に渡し、IDE に出力
+            var consoleObj = console;
+            console = {
+                log: function (msg) {
+                    consoleObj.log(msg);
 
-        // 初期化イベント
-        document.addEventListener('DOMContentLoaded', function () {
-            alert('hoge');
-            console.log('DOMContentLoaded');
-        });
+                    nativeApi('log', { message: msg });
+                }
+            };
 
-        // 広告クローズボタン
-        document.getElementById('close-ad').addEventListener('click', function () {
-            alert('hoge');
-            console.log('closeAd');
-            //location.href = "api://closeAd/?args={xxx:bbb}&callback=hogehoge&close_ad=true";
-            window.close();
-        });
+            /**
+             *  フィールド変数
+             */
+            var _playtimeLabel;
+            var _media;
+            var _zone;
+            var _campaign;
+            var _creative;
 
-        // 広告再生ボタン
-        document.getElementById('start-video').addEventListener('click', function () {
-            alert('hoge');
-            console.log('startVideo');
-            location.href = "api://startVideo/";
-        });
-        // 広告停止ボタン
-        document.getElementById('pause-video').addEventListener('click', function () {
-            alert('hoge');
-            console.log('pauseVideo');
-            location.href = "api://pauseVideo/";
-        });
+            /**
+             *  初期化イベント
+             */
+            document.addEventListener('DOMContentLoaded', function () {
+                console.log('DOMContentLoaded');
+                _playtimeLabel = document.getElementById('playtime-label');
+            });
 
-        //function onOpenAd(zoneEid) {
-        //    console.log('onOpenAd');
-        //}
-        //function onCloseAd(zoneEid) {
-        //    console.log('onCloseAd');
-        //}
-        function onStartedAd(zoneEid) {
-            console.log('onStartedAd');
-        }
-        function onFinishedAd(zoneEid, playtime, skipped) {
-            console.log('onFinishedAd');
-        }
-        function onFailed(reason, zoneEid) {
-            console.log('onFailed');
-        }
+            /**
+             *  動画広告のセットアップイベント
+             */
+            function native_onLoadAd(zoneEid, campaignId, creativeId, creativePath, mediaJson) {
+                console.log('native_onLoadAd');
+                _media = mediaJson;
+
+                // Zone モデルを取得
+                for (var zoneIdx in _media.zones) {
+                    var zone = mediaJson.zones[zoneIdx];
+                    if (zone.zone_eid == zoneEid) {
+                        _zone = zone;
+                        break;
+                    }
+                }
+
+                // Campaign モデルを取得
+                for (var campaignIdx in _zone.campaigns) {
+                    var campaign = zone.campaigns[campaignIdx];
+                    if (campaign.campaign_id == campaignId) {
+                        _campaign = campaign;
+                        break;
+                    }
+                }
+
+                // Creative モデルを取得
+                for (var creativeIdx in _campaign.creatives) {
+                    var creative = campaign.creatives[creativeIdx];
+                    if (creative.creative_id == creativeId) {
+                        _creative = creative;
+                        break;
+                    }
+                }
+
+                // エンドカード画像を設定
+                nativeApi('getCreativeAsBase64', { creativeUrl: _creative.endcard_portrait_url }, function (result) {
+                    console.log('callback getCreativeAsBase64()');
+                    //document.getElementById('endcard-image').setAttribute('src', result);
+                    document.getElementById('endcard-panel').style.backgroundImage = 'url(' + result + ')';
+                });
+
+                // アプリアイコン画像を設定
+                nativeApi('getCreativeAsBase64', { creativeUrl: _creative.app_icon_url }, function (result) {
+                    document.getElementById('app-icon').setAttribute('src', result);
+                });
+
+                // アプリタイトルを設定
+                document.getElementById('app-title').innerHTML = _campaign.app_title;
+            }
+            //function onOpenAd(zoneEid) {
+            //    console.log('onOpenAd');
+            //}
+            //function onCloseAd(zoneEid) {
+            //    console.log('onCloseAd');
+            //}
+            /**
+             *  動画再生の開始イベント
+             */
+            function native_onStartedAd(zoneEid) {
+                console.log('native_onStartedAd');
+            }
+            /**
+             *  動画再生の終了イベント
+             */
+            function native_onFinishedAd(zoneEid, playtime, skipped) {
+                console.log('native_onFinishedAd');
+                // 動画フレームに代わり、エンドカードフレームを表示
+                if (!skipped) {
+                    document.getElementById('video-frame').style.display = 'none';
+                    //document.getElementById('endcard-frame').style.display = 'block';
+                    document.getElementById('endcard-frame').className = 'fadein';
+                }
+            }
+            /**
+             *  動画再生の経過時間の更新イベント
+             */
+            function native_onUpdateTime(elapsed, duration) {
+                console.log('native_onUpdateTime');
+                //            console.log('native_onUpdateTime(' + elapsed + ', ' + duration + ')');
+                // 残り再生秒数を表示
+                _playtimeLabel.innerHTML = Math.floor(duration - elapsed);
+            }
+            /**
+             *  動画再生のエラーイベント？
+             */
+            function native_onFailed(reason, zoneEid) {
+                console.log('native_onFailed');
+            }
+
+            /**
+             *  広告スキップボタンのクリックイベント
+             */
+            document.getElementById('skip-ad').addEventListener('click', function () {
+                console.log('skipAd');
+                nativeApi('skipAd');
+                nativeApi('closeAd');
+            });
+            /**
+             *  広告再生ボタンのクリックイベント
+             */
+            document.getElementById('start-video').addEventListener('click', function () {
+                console.log('start-video.click');
+                nativeApi('startVideo');
+            });
+            /**
+             *  広告停止ボタンのクリックイベント
+             */
+            document.getElementById('pause-video').addEventListener('click', function () {
+                console.log('pause-video.click');
+                nativeApi('pauseVideo');
+            });
+            /**
+             *  ストア遷移ボタンのクリックイベント
+             */
+            document.getElementById('transfer-button').addEventListener('click', function () {
+                console.log('transfer-button.click');
+                //            nativeApi('openUrl', {url: _creative.transfer_url});
+                nativeApi('openClickUrl', { url: _creative.transfer_url });
+            });
+            document.getElementById('endcard-panel').addEventListener('click', function () {
+                console.log('endcard-panel.click');
+                nativeApi('openClickUrl', { url: _creative.transfer_url });
+            });
+            /**
+             *  広告クローズボタンのクリックイベント
+             */
+            document.getElementById('close-ad').addEventListener('click', function () {
+                console.log('close-ad.click');
+                //location.href = "native://closeAd/?args={xxx:bbb}&callback=hogehoge&close_ad=true";
+                //window.close();
+                nativeApi('closeAd');
+            });
         } catch (ex) {
-            alert(ex);
+            console.log(ex);
+        }
+
+        var callbacks = [];
+        /**
+         *  ネイティブ API（SDK） の呼び出し
+         */
+        function nativeApi(method, jsonArgs, callback) {
+            if (callback) {
+                if (!jsonArgs) {
+                    jsonArgs = {};
+                }
+                jsonArgs.__callbackId = callbacks.push(callback);
+            }
+            var args = '';
+            if (jsonArgs) {
+                try {
+                    args = encodeURIComponent(JSON.stringify(jsonArgs));
+                } catch (ex) {
+                    args = encodeURIComponent(JSON.stringify({ message: ex.message, error: ex }));
+                }
+            }
+            //loadFrame('native://' + method + '/?args=' + args + '&callback=' + );
+            loadFrame('native://' + method + '/' + args);
+        }
+        /**
+         *  ネイティブ（SDK）からのコールバック
+         */
+        function native_callback(callbackId, result) {
+            console.log('native_callback: ' + callbackId);
+            callbacks[callbackId - 1](result);
+            delete callbacks[callbackId - 1];
+        }
+        /* iframe を利用したネイティブ API の呼び出し */
+        function loadFrame(url) {
+            //        document.getElementById('iframe').setAttribute('src', url);
+            var iframe = document.createElement('iframe');
+            iframe.setAttribute("height", "1px");
+            iframe.setAttribute("width", "1px");
+            iframe.setAttribute("frameborder", "0");
+            iframe.setAttribute('src', url);
+            document.documentElement.appendChild(iframe);
+            iframe.parentNode.removeChild(iframe);
+            iframe = null;
+        }
+
+        window.onerror = function (errMsg, url, lineNumber) {
+            console.log(errMsg + ", file=" + url + ":" + lineNumber);
+        }
+    </script>
+    <script type="text/javascript">
+        // for debug
+        if (location.search.indexOf('debug=1') >= 0) {
+            document.addEventListener('DOMContentLoaded', function () {
+                var script = document.createElement('script');
+                script.setAttribute('src', 'player.debug.js');
+                document.head.appendChild(script);
+            });
         }
     </script>
 </body>
