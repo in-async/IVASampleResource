@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -186,9 +186,12 @@
              */
             var _playtimeLabel;
             var _media;
+            var _device;
+
             var _zone;
             var _campaign;
             var _creative;
+
 
             /**
              *  初期化イベント
@@ -196,18 +199,29 @@
             document.addEventListener('DOMContentLoaded', function () {
                 console.log('DOMContentLoaded');
                 _playtimeLabel = document.getElementById('playtime-label');
+
+                nativeApi("getAdInfo", null, function (result) {
+                    console.log("onGetAdInfo");
+                    _media = result.media;
+                    _device = result.device;
+                    var zoneEid = result.zoneEid;
+                    var campaignId = result.campaignId;
+                    var creativeId = result.creativeId;
+
+                    // 動画広告のセットアップ
+                    setup(zoneEid, campaignId, creativeId);
+                });
             });
 
             /**
              *  動画広告のセットアップイベント
              */
-            function native_onLoadAd(zoneEid, campaignId, creativeId, mediaJson) {
-                console.log('native_onLoadAd');
-                _media = mediaJson;
+            function setup(zoneEid, campaignId, creativeId) {
+                console.log('setup(zoneEid:' + zoneEid + ', campaignId:' + campaignId + ', creativeId:' + creativeId + ')');
 
                 // Zone モデルを取得
                 for (var zoneIdx in _media.zones) {
-                    var zone = mediaJson.zones[zoneIdx];
+                    var zone = _media.zones[zoneIdx];
                     if (zone.zone_eid == zoneEid) {
                         _zone = zone;
                         break;
@@ -233,19 +247,19 @@
                 }
 
                 // エンドカード画像を設定
-                nativeApi('getCreativeAsBase64', { creativeUrl: _creative.lookup.ipadScreenshotUrls[0] }, function (result) {
+                nativeApi('getCreativeAsBase64', { creativeUrl: _campaign.lookup.ipadScreenshotUrls[0] }, function (result) {
                     console.log('callback getCreativeAsBase64()');
                     //document.getElementById('endcard-image').setAttribute('src', result);
                     document.getElementById('endcard-panel').style.backgroundImage = 'url(' + result + ')';
                 });
 
                 // アプリアイコン画像を設定
-                nativeApi('getCreativeAsBase64', { creativeUrl: _creative.lookup.artworkUrl60 }, function (result) {
+                nativeApi('getCreativeAsBase64', { creativeUrl: _campaign.lookup.artworkUrl60 }, function (result) {
                     document.getElementById('app-icon').setAttribute('src', result);
                 });
 
                 // アプリタイトルを設定
-                document.getElementById('app-title').innerHTML = _campaign.lookup.trackName + ' - ' + _campaign.lookup.sellerName;
+                document.getElementById('app-title').innerHTML = _campaign.lookup.trackName;//  + ' - ' + _campaign.lookup.sellerName;
             }
             //function onOpenAd(zoneEid) {
             //    console.log('onOpenAd');
@@ -253,15 +267,23 @@
             //function onCloseAd(zoneEid) {
             //    console.log('onCloseAd');
             //}
+//            /**
+//             *  動画再生の開始イベント
+//             */
+//            function native_onStartedAd(zoneEid) {
+//                console.log('native_onStartedAd');
+//            }
             /**
-             *  動画再生の開始イベント
+             *  動画再生の準備完了イベント
              */
-            function native_onStartedAd(zoneEid) {
-                console.log('native_onStartedAd');
+            function native_onPreparedAd() {
+                console.log("native_onPreparedAd");
+                // 動画再生
+                nativeApi('startVideo');
             }
             /**
-             *  動画再生の終了イベント
-             */
+            *  動画再生の終了イベント
+            */
             function native_onFinishedAd(zoneEid, playtime, skipped) {
                 console.log('native_onFinishedAd');
                 // 動画フレームに代わり、エンドカードフレームを表示
@@ -384,11 +406,16 @@
     <script type="text/javascript">
         // for debug
         if (location.search.indexOf('debug=1') >= 0) {
-            document.addEventListener('DOMContentLoaded', function () {
-                var script = document.createElement('script');
-                script.setAttribute('src', 'player.debug.js');
-                document.head.appendChild(script);
-            });
+            //            document.addEventListener('DOMContentLoaded', function () {
+            //                appendScript('player.debug.js');
+            //            });
+            document.write('<script src="player.debug.js"><' + '/script>');
+        }
+
+        function appendScript(src) {
+            var script = document.createElement('script');
+            script.setAttribute('src', src);
+            document.head.appendChild(script);
         }
     </script>
 </body>
