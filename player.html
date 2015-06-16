@@ -201,7 +201,7 @@
                 _playtimeLabel = document.getElementById('playtime-label');
 
                 nativeApi("getAdInfo", null, function (result) {
-                    console.log("onGetAdInfo");
+                    console.log("callback getAdInfo");
                     _media = result.media;
                     _device = result.device;
                     var zoneEid = result.zoneEid;
@@ -248,13 +248,14 @@
 
                 // エンドカード画像を設定
                 nativeApi('getCreativeAsBase64', { creativeUrl: _campaign.lookup.ipadScreenshotUrls[0] }, function (result) {
-                    console.log('callback getCreativeAsBase64()');
+                    console.log('callback getCreativeAsBase64: ' + _campaign.lookup.ipadScreenshotUrls[0]);
                     //document.getElementById('endcard-image').setAttribute('src', result);
                     document.getElementById('endcard-panel').style.backgroundImage = 'url(' + result + ')';
                 });
 
                 // アプリアイコン画像を設定
                 nativeApi('getCreativeAsBase64', { creativeUrl: _campaign.lookup.artworkUrl60 }, function (result) {
+                    console.log('callback getCreativeAsBase64: ' + _campaign.lookup.artworkUrl60);
                     document.getElementById('app-icon').setAttribute('src', result);
                 });
 
