@@ -34,14 +34,46 @@
             transition: left linear .1s;
             left: 100% !important;
         }
+        .alert-danger {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+
+            opacity: .75
+        }
     </style>
 </head>
 <body>
+    <select id="ddlFeedType">
+        <option value="topgrossingapplications">トップセールス App</option>
+        <option value="topgrossingipadapplications">トップセールス iPad App</option>
+        <option value="topfreeapplications">トップ無料 App</option>
+        <option value="topfreeipadapplications">トップ無料 iPad App</option>
+        <option value="toppaidapplications">トップ有料 App</option>
+        <option value="toppaidipadapplications">トップ有料 iPad App</option>
+        <option value="newapplications">新規 App</option>
+        <option value="newfreeapplications">新規無料 App</option>
+        <option value="newpaidapplications">新規有料 App</option>
+    </select>
+    <select id="ddlLimit">
+        <option value="10">10件</option>
+        <option value="25">25件</option>
+        <option value="50">50件</option>
+        <option value="100">100件</option>
+    </select>
+    <select id="ddlGenre">
+        <option value="" selected="selected">All</option>
+        <option value="/genre=6014">Games</option>
+    </select>
+
     <table id="app-list" class="table table-striped table-condensed">
         <caption></caption>
         <thead>
             <tr>
-                <th rowspan="2"><!-- icon --></th>
+                <th rowspan="2" colspan="2">
+                </th>
                 <th colspan="4">title</th>
             </tr>
             <tr>
@@ -64,12 +96,12 @@
             var feed = result.feed;
 
             var $appList = $('#app-list');
-            $appList.find('caption').append($('<a>')
+            $appList.find('caption').empty().append($('<a>')
                 .text(feed.title.label)
                 .attr('href', feed.link[0].attributes.href)
                 .attr('target', '_blank')
             );
-            var $tbody = $appList.find('tbody');
+            var $tbody = $appList.find('tbody').empty();
             console.log(feed.entry);
             for (var i in feed.entry) {
                 var entry = feed.entry[i];
@@ -83,6 +115,11 @@
                 var id = entry['id'];
 
                 $tbody.append($('<tr>')
+                    // Number
+                    .append($('<td>')
+                        .attr('rowspan', 2)
+                        .text(parseInt(i)+1)
+                    )
                     // icon
                     .append($('<td>')
                         .attr('rowspan', 2)
@@ -154,6 +191,18 @@
             }
         }
 
+        $('#ddlFeedType, #ddlLimit, #ddlGenre').on('change', function () {
+            var feedType = $('#ddlFeedType').val();
+            var limit = $('#ddlLimit').val();
+            var genre = $('#ddlGenre').val();
+
+            // App Store ランキング JSON をロード
+            $(document.body).append($('<script>')
+                .attr('src', 'https://itunes.apple.com/jp/rss/' + feedType + '/limit=' + limit + genre + '/json?callback=jsonp_onAppRanking')
+            );
+        }).eq(0).trigger('change');
+
+
         /**
          *  iframe ダイアログを閉じます。
          */
@@ -162,7 +211,24 @@
                 .attr('class', 'fadeOut')
                 .attr('src', null);
         }
+        $(window).on('error', function (e) {
+            console.log(e);
+
+            var $alert = $('<div>')
+                .addClass('alert')
+                .addClass('alert-danger')
+                .addClass('alert-dismissible')
+                .addClass('fade')
+                .addClass('in')
+                .text(e.originalEvent.message)
+                .alert()
+                .appendTo(document.body);
+            setTimeout(function () {
+                console.log('close alert');
+                console.log($alert);
+                $alert.alert('close');
+            }, 3000);
+        });
     </script>
-    <script src="https://itunes.apple.com/jp/rss/topgrossingapplications/limit=10/json?callback=jsonp_onAppRanking"></script>
 </body>
 </html>
