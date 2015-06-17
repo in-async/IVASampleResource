@@ -27,6 +27,13 @@
             color: #ccc;
             left: 0;
             top: 0;
+
+            /* ドラッグによる選択無効化 */
+            -moz-user-select: none;
+            -ms-user-select: none;
+            -webkit-user-select: none;
+            user-select: none;
+
         }
         #skip-ad {
             position: absolute;
@@ -491,22 +498,25 @@
                 }
                 // スクリーンショットのスワイプ機能の設定
                 (function () {
-                    var touchStartX;
+                    imageFrameElem.addEventListener('touchstart', onTouchStart);
+                    imageFrameElem.addEventListener('mousedown', onTouchStart);
+
+                    var touchStartX = null;
                     //var touchStartY;
-                    var touchMoveX;
+                    var touchMoveX = null;
                     //var touchMoveY;
-                    var frameWidth;
-                    var curElem;
-                    var prevElem;
-                    var nextElem;
-                    imageFrameElem.addEventListener('touchstart', function () {
+                    var frameWidth = null;
+                    var curElem = null;
+                    var prevElem = null;
+                    var nextElem = null;
+                    function onTouchStart() {
                         //event.preventDefault();
 
                         // フィールド初期化
                         touchStartX = touchMoveX = null;
                         curElem = prevElem = nextElem = null;
 
-                        touchStartX = event.touches[0].pageX;
+                        touchStartX = event.touches? event.touches[0].pageX: event.pageX;
                         //touchStartY = event.touches[0].pageY;
                         frameWidth = imageFrameElem.offsetWidth;
 
@@ -524,10 +534,20 @@
                             nextElem.style.left = frameWidth + 'px';
                         }
                         console.log({ prevElem: prevElem, curElem: curElem, nextElem: nextElem });
-                    });
-                    imageFrameElem.addEventListener('touchmove', function () {
+
+                        // register touchmove / mousemove
+                        imageFrameElem.addEventListener('touchmove', onTouchMove);
+                        imageFrameElem.addEventListener('mousemove', onTouchMove);
+                        // register touchend / mouseup / mouseout
+                        imageFrameElem.addEventListener('touchend', onTouchEnd);
+                        imageFrameElem.addEventListener('mouseup', onTouchEnd);
+                        imageFrameElem.addEventListener('mouseout', onTouchEnd);
+                    }
+                    function onTouchMove() {
+                        //if (touchStartX === null) return;
                         event.preventDefault();
-                        touchMoveX = event.changedTouches[0].pageX;
+
+                        touchMoveX = event.changedTouches? event.changedTouches[0].pageX: event.pageX;
                         //touchMoveY = event.changedTouches[0].pageY;
 
                         var dx = (touchMoveX - touchStartX);
@@ -538,25 +558,27 @@
                             // 範囲外へのスワイプはバウンド挙動に
                             dx *= .3;
                         }
-                        {
-                            if (prevElem) {
-                                prevElem.style.left = -frameWidth + dx + 'px';
-                            }
-                            curElem.style.left = dx + 'px';
-                            if (nextElem) {
-                                nextElem.style.left = frameWidth + dx + 'px';
-                            }
+
+                        if (prevElem) {
+                            prevElem.style.left = -frameWidth + dx + 'px';
                         }
-                    });
-                    imageFrameElem.addEventListener('touchend', function () {
-                        if (touchMoveX === null) return;
+                        curElem.style.left = dx + 'px';
+                        if (nextElem) {
+                            nextElem.style.left = frameWidth + dx + 'px';
+                        }
+                    }
+                    function onTouchEnd() {
+                        //event.preventDefault();
+                        if (touchMoveX === null) {
+                            touchMoveX = touchStartX;
+                        }
 
                         // 移動量の判定
                         var indexChanged = false;
                         if (touchStartX > touchMoveX) {
                             if (touchStartX > (touchMoveX + 50)) {
                                 //右から左に指が移動した場合
-                                console.log('swipe ←')
+                                console.log({ msg: 'swipe ←', touchStartX: touchStartX, touchMoveX: touchMoveX });
                                 if (nextElem && _slideImageIndex + 1 < _slideImageElems.length) {
                                     ++_slideImageIndex;
                                     nextElem.className = 'fadeIn';
@@ -567,7 +589,7 @@
                         } else if (touchStartX < touchMoveX) {
                             if ((touchStartX + 50) < touchMoveX) {
                                 //左から右に指が移動した場合
-                                console.log('swipe →')
+                                console.log({ msg: 'swipe →', touchStartX: touchStartX, touchMoveX: touchMoveX });
                                 if (prevElem && _slideImageIndex > 0) {
                                     --_slideImageIndex;
                                     prevElem.className = 'fadeIn';
@@ -582,7 +604,15 @@
                         if (!indexChanged) {
                             curElem.className = 'fadeIn';
                         }
-                    });
+
+                        // unregister touchmove / mousemove
+                        imageFrameElem.removeEventListener('touchmove', onTouchMove);
+                        imageFrameElem.removeEventListener('mousemove', onTouchMove);
+                        // unregister touchend / mouseup / mouseout
+                        imageFrameElem.removeEventListener('touchend', onTouchEnd);
+                        imageFrameElem.removeEventListener('mouseup', onTouchEnd);
+                        imageFrameElem.removeEventListener('mouseout', onTouchEnd);
+                    }
                 })();
 
                 // アプリアイコン画像を設定
@@ -652,8 +682,12 @@
                 if (!skipped) {
                     //_videoPageElem.className = '';
                     _endcardPageElem.className = 'fadeIn';
+
                     _slideImageIndex = 0;
                     _slideImageElems[0].className = 'fadeIn';
+                    for (var i = 1; i < _slideImageElems.length; i++) {
+                        _slideImageElems[i].className = '';
+                    }
                 }
             }
             /**

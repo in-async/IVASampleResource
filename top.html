@@ -1,0 +1,163 @@
+﻿<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+    <style>
+        iframe#pageDialog {
+            position: absolute;
+            z-index: 1;
+            top: 0;
+            bottom: 0;
+            left: 100%;
+            right: 0;
+            width: 100%;
+            height: 100%;
+
+            background-color: #000;
+        }
+        iframe#pageDialog.fadeIn {
+            -moz-transition: left linear .1s;
+            -o-transition: left linear .1s;
+            -webkit-transition: left linear .1s;
+            transition: left linear .1s;
+            left: 0;
+        }
+        iframe#pageDialog.fadeOut {
+            -moz-transition: left linear .1s;
+            -o-transition: left linear .1s;
+            -webkit-transition: left linear .1s;
+            transition: left linear .1s;
+            left: 100% !important;
+        }
+    </style>
+</head>
+<body>
+    <table id="app-list" class="table table-striped table-condensed">
+        <caption></caption>
+        <thead>
+            <tr>
+                <th rowspan="2"><!-- icon --></th>
+                <th colspan="4">title</th>
+            </tr>
+            <tr>
+                <th>price</th>
+                <th>category</th>
+                <th>release</th>
+                <th>ad</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <iframe id="pageDialog"></iframe>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script>
+        function jsonp_onAppRanking(result) {
+            console.log(result);
+            var feed = result.feed;
+
+            var $appList = $('#app-list');
+            $appList.find('caption').append($('<a>')
+                .text(feed.title.label)
+                .attr('href', feed.link[0].attributes.href)
+                .attr('target', '_blank')
+            );
+            var $tbody = $appList.find('tbody');
+            console.log(feed.entry);
+            for (var i in feed.entry) {
+                var entry = feed.entry[i];
+                var icon = entry['im:image'][0];
+                var name = entry['im:name'];
+                var link = entry['link'];
+                var artist = entry['im:artist'];
+                var price = entry['im:price'];
+                var category = entry['category'].attributes;
+                var releaseDate = entry['im:releaseDate'];
+                var id = entry['id'];
+
+                $tbody.append($('<tr>')
+                    // icon
+                    .append($('<td>')
+                        .attr('rowspan', 2)
+                        .append($('<img>')
+                            .attr('src', icon.label)
+                            .attr('height', icon.attributes.height)
+                        )
+                    )
+                    // title
+                    .append($('<td>')
+                        .attr('colspan', 4)
+                        .append($('<a>')
+                            .text(name.label)
+                            .attr('href', link.attributes.href)
+                            .attr('target', '_blank')
+                        )
+                        .append(' - ')
+                        .append($('<a>')
+                            .text(artist.label)
+                            .attr('href', artist.attributes.href)
+                            .attr('target', '_blank')
+                        )
+                    )
+                );
+                $tbody.append($('<tr>')
+                    // price
+                    .append($('<td>')
+                        .text(price.label)
+                    )
+                    // category
+                    .append($('<td>')
+                        .append($('<a>')
+                            .text(category.label)
+                            .attr('href', category.scheme)
+                            .attr('target', '_blank')
+                        )
+                    )
+                    // release date
+                    .append($('<td>')
+                        .text(releaseDate.attributes.label)
+                    )
+                    // ad
+                    .append($('<td>')
+                        .append($('<a>')
+                            .text('ad')
+                            .attr('href', 'player.html?debug=1&id=' + id.attributes['im:id'])
+                            .attr('target', '_blank')
+                            .on('click', function (e) {
+                                e.preventDefault();
+                                $('#pageDialog')
+                                    .attr('src', $(this).attr('href'))
+                                    .attr('class', 'fadeIn');
+                            })
+                        )
+                        .append('&nbsp;')
+                        .append($('<a>')
+                            .text('ec')
+                            .attr('href', 'player.html?debug=1&endcard=1&id=' + id.attributes['im:id'])
+                            .attr('target', '_blank')
+                            .on('click', function (e) {
+                                e.preventDefault();
+                                $('#pageDialog')
+                                    .attr('src', $(this).attr('href'))
+                                    .attr('class', 'fadeIn');
+                            })
+                        )
+                    )
+                );
+            }
+        }
+        function closeAd() {
+            $('#pageDialog.fadeIn')
+                .attr('class', 'fadeOut');
+        }
+    </script>
+    <script src="https://itunes.apple.com/jp/rss/topgrossingapplications/limit=10/json?callback=jsonp_onAppRanking"></script>
+</body>
+</html>
