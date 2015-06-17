@@ -469,28 +469,27 @@
                 var lookup = _campaign.lookup;
 
                 // エンドカード画像を設定
-                var imgDivs = _slideImageElems;
+                var imageFrameElem = document.getElementById('image-frame');
                 for (var i in lookup.ipadScreenshotUrls) {
-                    // imgUrl 固定化の為のクロージャ
+                    // imgElem, imgUrl 固定化の為のクロージャ
                     (function () {
+                        var imgElem = document.createElement('div');
+                        if (i == 0) {
+                            imgElem.className = 'fadeIn';
+                        }
+                        imageFrameElem.appendChild(imgElem);
+                        _slideImageElems.push(imgElem);
+
                         var imgUrl = lookup.ipadScreenshotUrls[i];
                         nativeApi('getCreativeAsBase64', { creativeUrl: imgUrl }, function (result) {
                             console.log('callback getCreativeAsBase64: ' + imgUrl);
 
-                            //document.getElementById('image-frame').style.backgroundImage = 'url(' + result + ')';
-                            var img = document.createElement('div');
-                            img.style.backgroundImage = 'url("' + result + '")';
+                            imgElem.style.backgroundImage = 'url("' + result + '")';
                             //img.setAttribute('src', result);
-                            document.getElementById('image-frame').appendChild(img);
-                            imgDivs.push(img);
-                            if (imgDivs.length == 1) {
-                                img.className = 'fadeIn';
-                            }
                         });
                     })();
                 }
                 // スクリーンショットのスワイプ機能の設定
-                var imageFrame = document.getElementById('image-frame');
                 (function () {
                     var touchStartX;
                     //var touchStartY;
@@ -500,7 +499,7 @@
                     var curElem;
                     var prevElem;
                     var nextElem;
-                    imageFrame.addEventListener('touchstart', function () {
+                    imageFrameElem.addEventListener('touchstart', function () {
                         //event.preventDefault();
 
                         // フィールド初期化
@@ -509,24 +508,24 @@
 
                         touchStartX = event.touches[0].pageX;
                         //touchStartY = event.touches[0].pageY;
-                        frameWidth = imageFrame.offsetWidth;
+                        frameWidth = imageFrameElem.offsetWidth;
 
                         if (_slideImageIndex - 1 >= 0) {
-                            prevElem = imgDivs[_slideImageIndex - 1];
+                            prevElem = _slideImageElems[_slideImageIndex - 1];
                             prevElem.className = 'swipe';
                             prevElem.style.left = -frameWidth + 'px';
                         }
-                        curElem = imgDivs[_slideImageIndex];
+                        curElem = _slideImageElems[_slideImageIndex];
                         curElem.style.left = 0;
                         curElem.className = 'swipe';
-                        if (_slideImageIndex + 1 < imgDivs.length) {
-                            nextElem = imgDivs[_slideImageIndex + 1];
+                        if (_slideImageIndex + 1 < _slideImageElems.length) {
+                            nextElem = _slideImageElems[_slideImageIndex + 1];
                             nextElem.className = 'swipe';
                             nextElem.style.left = frameWidth + 'px';
                         }
                         console.log({ prevElem: prevElem, curElem: curElem, nextElem: nextElem });
                     });
-                    imageFrame.addEventListener('touchmove', function () {
+                    imageFrameElem.addEventListener('touchmove', function () {
                         event.preventDefault();
                         touchMoveX = event.changedTouches[0].pageX;
                         //touchMoveY = event.changedTouches[0].pageY;
@@ -549,7 +548,7 @@
                             }
                         }
                     });
-                    imageFrame.addEventListener('touchend', function () {
+                    imageFrameElem.addEventListener('touchend', function () {
                         if (touchMoveX === null) return;
 
                         // 移動量の判定
@@ -558,7 +557,7 @@
                             if (touchStartX > (touchMoveX + 50)) {
                                 //右から左に指が移動した場合
                                 console.log('swipe ←')
-                                if (nextElem && _slideImageIndex + 1 < imgDivs.length) {
+                                if (nextElem && _slideImageIndex + 1 < _slideImageElems.length) {
                                     ++_slideImageIndex;
                                     nextElem.className = 'fadeIn';
                                     //curElem.className = 'fadeOut';

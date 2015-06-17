@@ -41,8 +41,10 @@ console.log('available query: endcard, zoneEid');
         // 疑似動画再生準備
         if (location.search.indexOf("endcard=1") >= 0) {
             // 直ぐ再生終了イベントをコール
-            native_onPreparedVideo(zoneEid, campaignId, creativeId);
-            native_onFinishedAd(zoneEid, 5, false);
+            setTimeout(function () {
+                native_onPreparedVideo(zoneEid, campaignId, creativeId);
+                native_onFinishedAd(zoneEid, campaignId, creativeId, 5, false, viewToken);
+            }, 0);
         } else {
             (function () {
                 video = document.createElement('video');
@@ -124,33 +126,53 @@ console.log('available query: endcard, zoneEid');
             case 'getVideoThumbnailAsBase64':
                 setTimeout(function () {
                     // 動画サムネイルの作成
-                    var canvas = document.createElement('canvas');
-                    canvas.width = video.clientWidth;
-                    canvas.height = video.clientHeight;
-                    var ctx = canvas.getContext("2d");
                     var base64 = '';
-                    try {
-                        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-                        base64 = canvas.toDataURL('image/png');
-                    } catch (e) {}
+                    if (video) {
+                        var canvas = document.createElement('canvas');
+                        canvas.width = video.clientWidth;
+                        canvas.height = video.clientHeight;
+                        var ctx = canvas.getContext("2d");
+                        try {
+                            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                            base64 = canvas.toDataURL('image/png');
+                        } catch (e) { }
+                    }
                     callback(base64);
                 }, 0);
                 break;
                 break;
 
             case 'startVideo':
-                video.play();
+                if (video) {
+                    video.play();
+                } else {
+                    setTimeout(function () {
+                        native_onFinishedAd(zoneEid, campaignId, creativeId, 5, false, viewToken);
+                    }, 300);
+                }
                 break;
             case 'pauseVideo':
-                video.pause();
+                if (video) {
+                    video.pause();
+                }
                 break;
             case 'replayVideo':
-                video.currentTime = 0;
-                video.play();
+                if (video) {
+                    video.currentTime = 0;
+                    video.play();
+                } else {
+                    setTimeout(function () {
+                        native_onFinishedAd(zoneEid, campaignId, creativeId, 5, false, viewToken);
+                    }, 300);
+                }
                 break;
             case 'skipAd':
-                video.pause();
-                native_onFinishedAd(zoneEid, campaignId, creativeId, video.currentTime, true, viewToken);
+                var playtime = 5;
+                if (video) {
+                    video.pause();
+                    playtime = video.currentTime;
+                }
+                native_onFinishedAd(zoneEid, campaignId, creativeId, playtime, true, viewToken);
                 break;
             case 'openClickUrl':
                 window.open(jsonArgs.url);
