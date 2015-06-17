@@ -1,11 +1,16 @@
 ﻿console.log('player.debug.js');
+console.log('available query: endcard, zoneEid');
 (function () {
-    var zoneEid = 'zone3';
-    var campaignId = 3;
-    var creativeId = 113;
+    var zoneEid = (function () {
+        var m = location.search.match('zoneEid=(\\w+)');
+        return m ? m[1] : 'zone3';
+    })();
+    var campaignId;
+    var creativeId;
     var mediaJson = getMediaJson();
     var deviceJson = getDeviceJson();
 //    var duration = 3.0;
+    var viewToken = '[viewToken]';
     var video;
 
     var _media = mediaJson;
@@ -21,22 +26,12 @@
     }
 
     // Campaign モデルを取得
-    for (var campaignIdx in _zone.campaigns) {
-        var campaign = zone.campaigns[campaignIdx];
-        if (campaign.campaign_id == campaignId) {
-            _campaign = campaign;
-            break;
-        }
-    }
+    _campaign = _zone.campaigns[0];
+    campaignId = _campaign.campaign_id;
 
     // Creative モデルを取得
-    for (var creativeIdx in _campaign.creatives) {
-        var creative = campaign.creatives[creativeIdx];
-        if (creative.creative_id == creativeId) {
-            _creative = creative;
-            break;
-        }
-    }
+    _creative = _campaign.creatives[0];
+    creativeId = _creative.creative_id;
 
     // 疑似イベント励起
     window.addEventListener('load', function () {
@@ -44,10 +39,10 @@
 //        native_onLoadAd(zoneEid, campaignId, creativeId, mediaJson);
 
         // 疑似動画再生準備
-        if (location.search.indexOf("endcard=1") >= 0) {
-            // 直ぐ再生終了イベントをコール
-            native_onFinishedAd(zoneEid, 5, false);
-        } else {
+        //if (location.search.indexOf("endcard=1") >= 0) {
+        //    // 直ぐ再生終了イベントをコール
+        //    native_onFinishedAd(zoneEid, 5, false);
+        //} else {
             (function () {
                 video = document.createElement('video');
                 video.setAttribute('src', _creative.video_url);
@@ -59,16 +54,26 @@
                 //                console.log('video.play');
                 //                native_onStartedAd(zoneEid);
                 //            });
-                video.addEventListener('canplaythrough', function () {
-                    console.log('video.canplaythrough');
-                    native_onPreparedAd();
+                video.addEventListener('loadedmetadata', function () {
+                    console.log('video.loadedmetadata');
+                    if (location.search.indexOf("endcard=1") >= 0) {
+                        video.currentTime = video.duration * .99;
+                    }
+                });
+                video.addEventListener('loadeddata', function () {
+                    console.log('video.loadeddata');
+                    native_onPreparedVideo(zoneEid, campaignId, creativeId);
+                    native_onPreparedAd(zoneEid, campaignId, creativeId);
+                });
+                video.addEventListener('play', function () {
+                    console.log('video.play');
                 });
                 video.addEventListener('pause', function () {
                     console.log('video.pause');
                 });
                 video.addEventListener('ended', function () {
                     console.log('video.ended');
-                    native_onFinishedAd(zoneEid, video.duration, false);
+                    native_onFinishedAd(zoneEid, campaignId, creativeId, video.duration, false, viewToken);
                 })
                 video.addEventListener('timeupdate', function () {
                     native_onUpdateTime(video.currentTime, video.duration);
@@ -82,7 +87,7 @@
                 //document.getElementById('endcard-frame').style.position = 'relative';
                 //document.getElementById('endcard-frame').style.zIndex = 100;
             })();
-        }
+        //}
     });
     /**
     * debug 用スタブメソッド
@@ -105,10 +110,29 @@
                     });
                 }, 0);
                 break;
+            case 'getDeviceInfo':
+                // TODO
+                break;
             case 'getCreativeAsBase64':
                 setTimeout(function () {
                     callback(jsonArgs.creativeUrl);
                 }, 0);
+                break;
+            case 'getVideoThumbnailAsBase64':
+                setTimeout(function () {
+                    // 動画サムネイルの作成
+                    var canvas = document.createElement('canvas');
+                    canvas.width = video.clientWidth;
+                    canvas.height = video.clientHeight;
+                    var ctx = canvas.getContext("2d");
+                    var base64 = '';
+                    try {
+                        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                        base64 = canvas.toDataURL('image/png');
+                    } catch (e) {}
+                    callback(base64);
+                }, 0);
+                break;
                 break;
 
             case 'startVideo':
@@ -117,9 +141,13 @@
             case 'pauseVideo':
                 video.pause();
                 break;
+            case 'replayVideo':
+                video.currentTime = 0;
+                video.play();
+                break;
             case 'skipAd':
                 video.pause();
-                native_onFinishedAd(zoneEid, video.currentTime, true);
+                native_onFinishedAd(zoneEid, campaignId, creativeId, video.currentTime, true, viewToken);
                 break;
             case 'openClickUrl':
                 window.open(jsonArgs.url);
