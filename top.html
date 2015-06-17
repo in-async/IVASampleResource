@@ -1,6 +1,6 @@
 ﻿<html>
 <head>
-    <meta name="viewport" content="initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
     <!-- Latest compiled and minified CSS -->
@@ -72,14 +72,13 @@
         <caption></caption>
         <thead>
             <tr>
-                <th rowspan="2" colspan="2">
-                </th>
-                <th colspan="4">title</th>
+                <th rowspan="2" colspan="2"></th>
+                <th colspan="3">タイトル</th>
             </tr>
             <tr>
-                <th>price</th>
-                <th>category</th>
-                <th>release</th>
+                <!--<th>価格</th>-->
+                <th>カテゴリ</th>
+                <th>リリース</th>
                 <th>ad</th>
             </tr>
         </thead>
@@ -130,7 +129,7 @@
                     )
                     // title
                     .append($('<td>')
-                        .attr('colspan', 4)
+                        .attr('colspan', 3)
                         .append($('<a>')
                             .text(name.label)
                             .attr('href', link.attributes.href)
@@ -145,10 +144,10 @@
                     )
                 );
                 $tbody.append($('<tr>')
-                    // price
-                    .append($('<td>')
-                        .text(price.label)
-                    )
+                    //// price
+                    //.append($('<td>')
+                    //    .text(price.label)
+                    //)
                     // category
                     .append($('<td>')
                         .append($('<a>')
@@ -175,7 +174,7 @@
                                 $(document.documentElement).css('overflow', 'hidden');
                             })
                         )
-                        .append('&nbsp;')
+                        .append(' ')
                         .append($('<a>')
                             .text('ec')
                             .attr('href', 'player.html?debug=1&endcard=1&id=' + id.attributes['im:id'])
