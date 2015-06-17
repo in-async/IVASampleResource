@@ -18,11 +18,9 @@
         /**
          *  動画ページ
          */
-        #video-page.fadeIn {
-            z-index: 10;
-        }
         #video-page {
             position: absolute;
+            z-index: 1;
             display: block;
             width: 100%;
             height: 100%;
@@ -55,12 +53,21 @@
          */
         #endcard-page.fadeIn {
             z-index: 10;
-            /*display: block !important;*/
+
             -moz-transition: left linear .1s;
             -o-transition: left linear .1s;
             -webkit-transition: left linear .1s;
             transition: left linear .1s;
             left: 0 !important;
+        }
+        #endcard-page.fadeOut {
+            z-index: 10;
+
+            -moz-transition: left linear .1s;
+            -o-transition: left linear .1s;
+            -webkit-transition: left linear .1s;
+            transition: left linear .1s;
+            left: 100% !important;
         }
         #endcard-page {
             position: absolute;
@@ -334,9 +341,9 @@
 </head>
 <body>
     <div id="video-page" class="fadeIn">
-        <!--<a id="start-video">再生</a>
+        <a id="start-video">再生</a>
         <a id="pause-video">停止</a>
-        <a id="skip-ad">skip</a>-->
+        <!--<a id="skip-ad">skip</a>-->
         <span id="playtime-label"></span>
     </div>
 
@@ -614,9 +621,8 @@
                     var reloadAdElem = document.getElementById('reload-ad');
                     reloadAdElem.style.backgroundImage = 'url("' + result + '")';
                     reloadAdElem.addEventListener('click', function () {
-                        // 動画ページをフェードイン
-                        _videoPageElem.className = 'fadeIn';
-                        _endcardPageElem.className = '';
+                        //_videoPageElem.className = '';
+                        _endcardPageElem.className = 'fadeOut';
 
                         // 動画をリプレイ
                         nativeApi('replayVideo');
@@ -640,7 +646,7 @@
                 console.log('native_onFinishedAd');
                 // 動画フレームに代わり、エンドカードフレームを表示
                 if (!skipped) {
-                    _videoPageElem.className = '';
+                    //_videoPageElem.className = '';
                     _endcardPageElem.className = 'fadeIn';
                     _slideImageIndex = 0;
                     _slideImageElems[0].className = 'fadeIn';
