@@ -1,6 +1,4 @@
-﻿console.log('player.debug.js');
-console.log('available query: endcard, zoneEid');
-(function () {
+﻿(function () {
     var zoneEid = (function () {
         var m = location.search.match('zoneEid=(\\w+)');
         return m ? m[1] : 'zone3';
@@ -178,9 +176,12 @@ console.log('available query: endcard, zoneEid');
                 window.open(jsonArgs.url);
                 break;
             case 'closeAd':
+                alert('広告を閉じるボタンです。')
                 break;
         }
     };
+    console.log('player.debug.js');
+    console.log('available query: endcard, zoneEid');
 
     //// native_onFailed イベントボタン
     //(function () {
