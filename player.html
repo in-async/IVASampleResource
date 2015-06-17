@@ -479,7 +479,12 @@
 
                 // エンドカード画像を設定
                 var imageFrameElem = document.getElementById('image-frame');
-                for (var i in lookup.ipadScreenshotUrls) {
+                var imageUrls = lookup.ipadScreenshotUrls;
+                if (imageUrls.length == 0) {
+                    imageUrls = lookup.screenshotUrls;
+                }
+                console.log({ imageUrls: imageUrls, lookup: lookup });
+                for (var i in imageUrls) {
                     // imgElem, imgUrl 固定化の為のクロージャ
                     (function () {
                         var imgElem = document.createElement('div');
@@ -489,7 +494,7 @@
                         imageFrameElem.appendChild(imgElem);
                         _slideImageElems.push(imgElem);
 
-                        var imgUrl = lookup.ipadScreenshotUrls[i];
+                        var imgUrl = imageUrls[i];
                         nativeApi('getCreativeAsBase64', { creativeUrl: imgUrl }, function (result) {
                             console.log('callback getCreativeAsBase64: ' + imgUrl);
 
