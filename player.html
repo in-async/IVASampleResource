@@ -404,6 +404,11 @@
             var _campaign;
             var _creative;
 
+            // スクロール・バウンド無効化
+            document.addEventListener('touchmove', function () {
+                console.log('touchmove');
+                event.preventDefault();
+            });
 
             /**
              *  初期化イベント
