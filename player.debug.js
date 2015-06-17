@@ -31,11 +31,16 @@
         // Campaign モデルを取得
         _campaign = _zone.campaigns[0];
         campaignId = _campaign.campaign_id;
-        _campaign.lookup = lookup;
 
         // Creative モデルを取得
         _creative = _campaign.creatives[0];
         creativeId = _creative.creative_id;
+
+        // lookup 情報の上書き
+        if (lookup) {
+            _campaign.lookup = lookup;
+            _creative.transfer_url = lookup.trackViewUrl;
+        }
 
         //// 指定された任意の App Store アプリの情報を取得
         //var id = (function() {
