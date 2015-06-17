@@ -153,9 +153,14 @@
                 );
             }
         }
+
+        /**
+         *  iframe ダイアログを閉じます。
+         */
         function closeAd() {
             $('#pageDialog.fadeIn')
-                .attr('class', 'fadeOut');
+                .attr('class', 'fadeOut')
+                .attr('src', null);
         }
     </script>
     <script src="https://itunes.apple.com/jp/rss/topgrossingapplications/limit=10/json?callback=jsonp_onAppRanking"></script>
