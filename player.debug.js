@@ -39,10 +39,11 @@ console.log('available query: endcard, zoneEid');
 //        native_onLoadAd(zoneEid, campaignId, creativeId, mediaJson);
 
         // 疑似動画再生準備
-        //if (location.search.indexOf("endcard=1") >= 0) {
-        //    // 直ぐ再生終了イベントをコール
-        //    native_onFinishedAd(zoneEid, 5, false);
-        //} else {
+        if (location.search.indexOf("endcard=1") >= 0) {
+            // 直ぐ再生終了イベントをコール
+            native_onPreparedVideo(zoneEid, campaignId, creativeId);
+            native_onFinishedAd(zoneEid, 5, false);
+        } else {
             (function () {
                 video = document.createElement('video');
                 video.setAttribute('src', _creative.video_url);
@@ -67,12 +68,14 @@ console.log('available query: endcard, zoneEid');
                 });
                 video.addEventListener('play', function () {
                     console.log('video.play');
+                    video.style.display = 'block';
                 });
                 video.addEventListener('pause', function () {
                     console.log('video.pause');
                 });
                 video.addEventListener('ended', function () {
                     console.log('video.ended');
+                    video.style.display = 'none';
                     native_onFinishedAd(zoneEid, campaignId, creativeId, video.duration, false, viewToken);
                 })
                 video.addEventListener('timeupdate', function () {
@@ -87,7 +90,7 @@ console.log('available query: endcard, zoneEid');
                 //document.getElementById('endcard-frame').style.position = 'relative';
                 //document.getElementById('endcard-frame').style.zIndex = 100;
             })();
-        //}
+        }
     });
     /**
     * debug 用スタブメソッド
