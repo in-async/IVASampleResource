@@ -44,40 +44,45 @@
 //        native_onLoadAd(zoneEid, campaignId, creativeId, mediaJson);
 
         // 疑似動画再生準備
-        (function () {
-            video = document.createElement('video');
-            video.setAttribute('src', _creative.video_url);
-            //video.setAttribute('autoplay', 'autoplay');
-            video.setAttribute('style', 'position:absolute; width:100%; height:100%; top:0; left:0; background-color:#000');
+        if (location.search.indexOf("endcard=1") >= 0) {
+            // 直ぐ再生終了イベントをコール
+            native_onFinishedAd(zoneEid, 5, false);
+        } else {
+            (function () {
+                video = document.createElement('video');
+                video.setAttribute('src', _creative.video_url);
+                //video.setAttribute('autoplay', 'autoplay');
+                video.setAttribute('style', 'position:absolute; width:100%; height:100%; top:0; left:0; background-color:#000');
 
-            // 動画のイベントハンドラ設定
-//            video.addEventListener('play', function () {
-//                console.log('video.play');
-//                native_onStartedAd(zoneEid);
-//            });
-            video.addEventListener('canplaythrough', function () {
-                console.log('video.canplaythrough');
-                native_onPreparedAd();
-            });
-            video.addEventListener('pause', function () {
-                console.log('video.pause');
-            });
-            video.addEventListener('ended', function () {
-                console.log('video.ended');
-                native_onFinishedAd(zoneEid, video.duration, false);
-            })
-            video.addEventListener('timeupdate', function () {
-                native_onUpdateTime(video.currentTime, video.duration);
-            });
+                // 動画のイベントハンドラ設定
+                //            video.addEventListener('play', function () {
+                //                console.log('video.play');
+                //                native_onStartedAd(zoneEid);
+                //            });
+                video.addEventListener('canplaythrough', function () {
+                    console.log('video.canplaythrough');
+                    native_onPreparedAd();
+                });
+                video.addEventListener('pause', function () {
+                    console.log('video.pause');
+                });
+                video.addEventListener('ended', function () {
+                    console.log('video.ended');
+                    native_onFinishedAd(zoneEid, video.duration, false);
+                })
+                video.addEventListener('timeupdate', function () {
+                    native_onUpdateTime(video.currentTime, video.duration);
+                });
 
-            document.body.appendChild(video);
+                document.body.appendChild(video);
 
-            // フレームが video より前面になるよう配慮
-            //document.getElementById('video-frame').style.position = 'relative';
-            //document.getElementById('video-frame').style.zIndex = 100;
-            //document.getElementById('endcard-frame').style.position = 'relative';
-            //document.getElementById('endcard-frame').style.zIndex = 100;
-        })();
+                // フレームが video より前面になるよう配慮
+                //document.getElementById('video-frame').style.position = 'relative';
+                //document.getElementById('video-frame').style.zIndex = 100;
+                //document.getElementById('endcard-frame').style.position = 'relative';
+                //document.getElementById('endcard-frame').style.zIndex = 100;
+            })();
+        }
     });
     /**
     * debug 用スタブメソッド
