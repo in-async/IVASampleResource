@@ -1,6 +1,6 @@
 ﻿function debug_jsonp_onLookup(result) {
-    console.log('debug_jsonp_onLookup');
-    console.log(result);
+    //console.log('debug_jsonp_onLookup');
+    //console.log(result);
     var lookup = result.results[0];
 
     (function () {
