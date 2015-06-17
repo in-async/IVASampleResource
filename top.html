@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
     <style>
         iframe#pageDialog {
-            position: absolute;
+            position: fixed;
             z-index: 1;
             top: 0;
             bottom: 0;
@@ -172,6 +172,7 @@
                                 $('#pageDialog')
                                     .attr('src', $(this).attr('href'))
                                     .attr('class', 'fadeIn');
+                                $(document.documentElement).css('overflow', 'hidden');
                             })
                         )
                         .append('&nbsp;')
@@ -184,6 +185,7 @@
                                 $('#pageDialog')
                                     .attr('src', $(this).attr('href'))
                                     .attr('class', 'fadeIn');
+                                $(document.documentElement).css('overflow', 'hidden');
                             })
                         )
                     )
@@ -210,7 +212,12 @@
             $('#pageDialog.fadeIn')
                 .attr('class', 'fadeOut')
                 .attr('src', null);
+            $(document.documentElement).css('overflow', '');
         }
+
+        /**
+         *  エラー処理
+         */
         $(window).on('error', function (e) {
             console.log(e);
 
