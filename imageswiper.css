@@ -1,0 +1,90 @@
+﻿.image-swiper {
+    float: left;
+    width: 100%;
+    height: 67%;
+    text-align: center;
+    overflow: hidden;
+
+    background: #111 no-repeat center;
+    background-size: contain;
+
+    /* スクリーンショットスライド用 */
+    position: relative;
+    font-size: 100%;
+}
+.image-swiper div {
+    display: block;
+    width: 100%;
+    height: 100%;
+
+    background: #111 no-repeat center;
+    background-size: contain;
+
+    /* スクリーンショットスライド用 */
+    position: absolute;
+    display: none;
+}
+.image-swiper div.swipe {
+    display: block;
+}
+.image-swiper div.fadeIn {
+    display: block;
+
+    -moz-transition: left linear .1s;
+    -o-transition: left linear .1s;
+    -webkit-transition: left linear .1s;
+    transition: left linear .1s;
+    left: 0 !important;
+    z-index: 2;
+}
+
+.image-swiper span.left-stripe {
+    position: absolute;
+    z-index: 3;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 1.4em;
+
+    display: block;
+    background-color: #000;
+    opacity: .4;
+}
+.image-swiper span.left-stripe:before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+
+    color: #fff;
+    width: 1em;
+    height: 1em;
+    content: '<';
+}
+.image-swiper span.right-stripe {
+    position: absolute;
+    z-index: 3;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    width: 1.4em;
+
+    display: block;
+    background-color: #000;
+    opacity: .4;
+}
+.image-swiper span.right-stripe:before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+
+    color: #fff;
+    width: 1em;
+    height: 1em;
+    content: '>';
+}

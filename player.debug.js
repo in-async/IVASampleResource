@@ -64,6 +64,7 @@
                 // 直ぐ再生終了イベントをコール
                 setTimeout(function () {
                     native_onPreparedVideo(zoneEid, campaignId, creativeId);
+
                     native_onFinishedAd(zoneEid, campaignId, creativeId, 5, false, viewToken);
                 }, 0);
             } else {
@@ -147,7 +148,7 @@
                 case 'getVideoThumbnailAsBase64':
                     setTimeout(function () {
                         // 動画サムネイルの作成
-                        var base64 = '';
+                        var base64 = 'poster.jpg';
                         if (video) {
                             var canvas = document.createElement('canvas');
                             canvas.width = video.clientWidth;
