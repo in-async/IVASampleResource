@@ -141,17 +141,20 @@ var ImageSwiper = (function (imageContainer, options) {
             // タッチ位置を保持
             touchStartX = event.touches ? event.touches[0].pageX : event.pageX;
 
+            var prevIndex = (_currentIndex === 0) ? _imageElements.length - 1 : _currentIndex - 1;
+            var nextIndex = (_currentIndex + 1 >= _imageElements.length) ? 0 : _currentIndex + 1;
+
             // 対象となる画像要素とその前後要素を保持
-            if (_currentIndex - 1 >= 0) {
-                prevElem = _imageElements[_currentIndex - 1];
+            if (_imageElements.length > 2) {
+                prevElem = _imageElements[prevIndex];
                 prevElem.className = 'swipe';
                 prevElem.style.left = -containerWidth + 'px';
             }
             curElem = _imageElements[_currentIndex];
             curElem.style.left = 0;
             curElem.className = 'swipe';
-            if (_currentIndex + 1 < _imageElements.length) {
-                nextElem = _imageElements[_currentIndex + 1];
+            if (true) {
+                nextElem = _imageElements[nextIndex];
                 nextElem.className = 'swipe';
                 nextElem.style.left = containerWidth + 'px';
             }
@@ -209,8 +212,11 @@ var ImageSwiper = (function (imageContainer, options) {
                 if (touchStartX > (touchMoveX + 50)) {
                     //右から左に指が移動した場合
                     console.log({ msg: 'swipe ←', touchStartX: touchStartX, touchMoveX: touchMoveX });
-                    if (nextElem && _currentIndex + 1 < _imageElements.length) {
+                    if (nextElem) {
                         ++_currentIndex;
+                        if (_currentIndex >= _imageElements.length) {
+                            _currentIndex = 0;
+                        }
                         nextElem.className = 'fadeIn';
                         //curElem.className = 'fadeOut';
                         indexChanged = true;
@@ -220,8 +226,11 @@ var ImageSwiper = (function (imageContainer, options) {
                 if ((touchStartX + 50) < touchMoveX) {
                     //左から右に指が移動した場合
                     console.log({ msg: 'swipe →', touchStartX: touchStartX, touchMoveX: touchMoveX });
-                    if (prevElem && _currentIndex > 0) {
+                    if (prevElem) {
                         --_currentIndex;
+                        if (_currentIndex < 0) {
+                            _currentIndex = _imageElements.length - 1;
+                        }
                         prevElem.className = 'fadeIn';
                         //curElem.className = 'fadeOut';
                         indexChanged = true;
