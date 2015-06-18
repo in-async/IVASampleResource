@@ -244,6 +244,11 @@
 
             text-align: left;
             padding: 0 0 0 1em;
+
+            /* ellipsis 対応 */
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
         }
         #app-title {
             font-size: 18px;
