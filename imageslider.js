@@ -340,7 +340,7 @@ function scrollLeft(target, toLeft, duration) {
 }
 
 function scrollLeftMomentum(target, vx, duration, completionCallback) {
-    var MAX_VELOCITY = 5;
+    var MAX_VELOCITY = 10;
     var ANIMATION_INTERVAL = 10;
 
     // 慣性スクロール初速算出
