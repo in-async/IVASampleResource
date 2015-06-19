@@ -260,7 +260,7 @@ var ImageSwiper = (function (imageSwiper, options) {
          * スワイプ中イベント
          */
         function onTouchMove() {
-            event.preventDefault();
+            //event.preventDefault();
 
             var now = Date.now();
             if (now - touchMoveTime < 30) return;
@@ -286,7 +286,7 @@ var ImageSwiper = (function (imageSwiper, options) {
             //if (nextElem) {
             //    nextElem.style.left = containerWidth + dx + 'px';
             //}
-            imageContainer.scrollLeft = touchStartScrollLeft - dx;
+            //imageContainer.scrollLeft = touchStartScrollLeft - dx;
         }
         /**
          * スワイプ終了イベント
