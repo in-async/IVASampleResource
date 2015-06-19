@@ -145,7 +145,9 @@ var ImageSlider = (function (imageSlider, options) {
     //});
     window.addEventListener("resize", function () {
         console.log('resize');
-        thisObj.setIndex(_currentIndex);
+        setTimeout(function () {
+            thisObj.setIndex(_currentIndex);
+        }, 0);
         //if (window.innerHeight > window.innerWidth) {
         //    // ポートレイト（ランドスケープ）
         //} else {
@@ -161,8 +163,10 @@ var ImageSlider = (function (imageSlider, options) {
         var touchStartX = null;
         var touchMoveX = null;
         var touchMoveX2 = null;
+        var touchMoveX3 = null;
         var touchMoveTime = null;
         var touchMoveTime2 = null;
+        var touchMoveTime3 = null;
         //var containerWidth = null;
         //var curElem = null;
         //var prevElem = null;
@@ -181,7 +185,7 @@ var ImageSlider = (function (imageSlider, options) {
         function onTouchStart() {
             console.log('onTouchStart');
             // フィールド初期化
-            touchStartX = touchMoveX = touchMoveX2 = null;
+            touchStartX = touchMoveX = touchMoveX2 = touchMoveX3 = null;
             //curElem = prevElem = nextElem = null;
 
             // スライダーに係るタイマーのクリア
@@ -191,8 +195,8 @@ var ImageSlider = (function (imageSlider, options) {
             //// コンテナ幅を保持
             //containerWidth = imageContainer.offsetWidth;
             // タッチ位置を保持
-            touchStartX = touchMoveX = touchMoveX2 = event.touches ? event.touches[0].pageX : event.pageX;
-            touchMoveTime = touchMoveTime2 = Date.now();
+            touchStartX = touchMoveX = touchMoveX2 = touchMoveX3 = event.touches ? event.touches[0].pageX : event.pageX;
+            touchMoveTime = touchMoveTime2 = touchMoveTime3 = Date.now();
             touchStartScrollLeft = imageContainer.scrollLeft;
 
             //var prevIndex = (_currentIndex === 0) ? _imageElements.length - 1 : _currentIndex - 1;
@@ -231,8 +235,10 @@ var ImageSlider = (function (imageSlider, options) {
             //event.preventDefault();
 
             // 現在のタッチ位置を保持
+            touchMoveX3 = touchMoveX2;
             touchMoveX2 = touchMoveX;
             touchMoveX = event.changedTouches ? event.changedTouches[0].pageX : event.pageX;
+            touchMoveTime3 = touchMoveTime2;
             touchMoveTime2 = touchMoveTime;
             touchMoveTime = Date.now();
 
@@ -307,8 +313,8 @@ var ImageSlider = (function (imageSlider, options) {
 
             // フリックの速度を算出
             var touchEndX = event.changedTouches ? event.changedTouches[0].pageX : event.pageX;
-            var dx = (touchEndX - touchMoveX2);
-            var vx = dx / (Date.now() - touchMoveTime2);
+            var dx = (touchEndX - touchMoveX3);
+            var vx = dx / (Date.now() - touchMoveTime3);
 
             // スライダを慣性スクロールさせる
             clearInterval(_sliderScrollLeftTimerId);
@@ -333,7 +339,7 @@ var ImageSlider = (function (imageSlider, options) {
 function scrollLeft(target, toLeft, duration) {
     if (duration) {
         var fromLeft = target.scrollLeft;
-        var interval = 10;
+        var interval = 8;
         var count = duration / interval;
         var step = (toLeft - fromLeft) / count;
         var ti = 0;
