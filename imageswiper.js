@@ -57,6 +57,7 @@ var ImageSwiper = (function (imageSwiper, options) {
         }
     };
 
+    var _activeElementObseveTimerId;
     var _autoScrollTimerId;
     /**
      * 表示対象のスワイプ画像のインデックスを変更します。
@@ -97,7 +98,7 @@ var ImageSwiper = (function (imageSwiper, options) {
                 var count = duration / interval;
                 var step = (toLeft - fromLeft) / count;
                 var ti = 0;
-                clearTimeout(_autoScrollTimerId);
+                clearInterval(_autoScrollTimerId);
                 _autoScrollTimerId = setInterval(function () {
                     if (++ti < count) {
                         imageSwiper.scrollLeft += step;
@@ -113,16 +114,26 @@ var ImageSwiper = (function (imageSwiper, options) {
             imageSwiper.scrollLeft = imgElem.offsetLeft - imageSwiper.clientWidth / 2 + imgElem.offsetWidth / 2;
         }
 
+        clearInterval(_activeElementObseveTimerId);
+        setActiveElement(_currentIndex);
+    };
+
+    function setActiveElement(index) {
         for (var i in _imageElements) {
             _imageElements[i].removeAttribute('class');
         }
-        imgElem.setAttribute('class', 'active');
-    };
+        _imageElements[index].setAttribute('class', 'active');
+    }
 
+    var _isTapped = false;
     var _scrollTimerId;
+    var _reservedSetIndexTimerId;
     imageContainer.addEventListener('scroll', function () {
+        if (_isTapped) return;
+
         console.log('scroll');
         clearTimeout(_scrollTimerId);
+        clearTimeout(_reservedSetIndexTimerId);
         _scrollTimerId = setTimeout(function () {
             if (_autoScrollTimerId) {
                 clearInterval(_autoScrollTimerId);
@@ -146,6 +157,36 @@ var ImageSwiper = (function (imageSwiper, options) {
             }
         }
         return null;
+    }
+
+    imageContainer.addEventListener('touchstart', onTouchStart);
+    function onTouchStart() {
+        console.log('onTouchStart');
+        _isTapped = true;
+        clearInterval(_activeElementObseveTimerId);
+        imageContainer.addEventListener('touchmove', onTouchMove);
+        imageContainer.addEventListener('touchend', onTouchEnd);
+    }
+    function onTouchMove() {
+        console.log('onTouchMove');
+        var curElem = getCenterViewElement();
+        var index = _imageElements.indexOf(curElem);
+        setActiveElement(index);
+    }
+    function onTouchEnd() {
+        console.log('onTouchEnd');
+        _isTapped = false;
+        _activeElementObseveTimerId = setInterval(function () {
+            var curElem = getCenterViewElement();
+            var index = _imageElements.indexOf(curElem);
+//            thisObj.setIndex(index, true);
+            //setActiveElement(index);
+            _reservedSetIndexTimerId = setTimeout(function () {
+                thisObj.setIndex(index, true);
+            }, 100);
+        }, 100);
+        imageContainer.removeEventListener('touchmove', onTouchMove);
+        imageContainer.removeEventListener('touchend', onTouchEnd);
     }
 
     //(function () {
