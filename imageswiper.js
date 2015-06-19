@@ -176,15 +176,15 @@ var ImageSwiper = (function (imageSwiper, options) {
     function onTouchEnd() {
         console.log('onTouchEnd');
         _isTapped = false;
-        _activeElementObseveTimerId = setInterval(function () {
-            var curElem = getCenterViewElement();
-            var index = _imageElements.indexOf(curElem);
-//            thisObj.setIndex(index, true);
-            setActiveElement(index);
-            //_reservedSetIndexTimerId = setTimeout(function () {
-            //    thisObj.setIndex(index, true);
-            //}, 100);
-        }, 100);
+//        _activeElementObseveTimerId = setInterval(function () {
+//            var curElem = getCenterViewElement();
+//            var index = _imageElements.indexOf(curElem);
+////            thisObj.setIndex(index, true);
+//            setActiveElement(index);
+//            //_reservedSetIndexTimerId = setTimeout(function () {
+//            //    thisObj.setIndex(index, true);
+//            //}, 100);
+//        }, 100);
         imageContainer.removeEventListener('touchmove', onTouchMove);
         imageContainer.removeEventListener('touchend', onTouchEnd);
     }
