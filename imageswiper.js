@@ -103,12 +103,12 @@ var ImageSwiper = (function (imageContainer, options) {
      * 縦帯の表示リフレッシュ
      */
     function refreshColStripe() {
-        if (_leftStripeElement) {
-            _leftStripeElement.style.display = (_currentIndex == 0) ? 'none' : 'block';
-        }
-        if (_rightStripeElement) {
-            _rightStripeElement.style.display = (_currentIndex == _imageElements.length - 1) ? 'none' : 'block';
-        }
+        //if (_leftStripeElement) {
+        //    _leftStripeElement.style.display = (_currentIndex == 0) ? 'none' : 'block';
+        //}
+        //if (_rightStripeElement) {
+        //    _rightStripeElement.style.display = (_currentIndex == _imageElements.length - 1) ? 'none' : 'block';
+        //}
     }
 
     (function () {
@@ -117,6 +117,7 @@ var ImageSwiper = (function (imageContainer, options) {
          */
         var touchStartX = null;
         var touchMoveX = null;
+        var touchMoveTime = null;
         var containerWidth = null;
         var curElem = null;
         var prevElem = null;
@@ -140,6 +141,7 @@ var ImageSwiper = (function (imageContainer, options) {
             containerWidth = imageContainer.offsetWidth;
             // タッチ位置を保持
             touchStartX = event.touches ? event.touches[0].pageX : event.pageX;
+            touchMoveTime = Date.now();
 
             var prevIndex = (_currentIndex === 0) ? _imageElements.length - 1 : _currentIndex - 1;
             var nextIndex = (_currentIndex + 1 >= _imageElements.length) ? 0 : _currentIndex + 1;
@@ -175,8 +177,12 @@ var ImageSwiper = (function (imageContainer, options) {
         function onTouchMove() {
             event.preventDefault();
 
+            var now = Date.now();
+            if (now - touchMoveTime < 15) return;
+
             // 現在のタッチ位置を保持
             touchMoveX = event.changedTouches ? event.changedTouches[0].pageX : event.pageX;
+            touchMoveTime = now;
 
             // スワイプ移動量の算出
             var dx = (touchMoveX - touchStartX);
