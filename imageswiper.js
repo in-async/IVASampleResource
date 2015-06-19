@@ -222,7 +222,7 @@ var ImageSwiper = (function (imageSwiper, options) {
             event.preventDefault();
 
             var now = Date.now();
-            if (now - touchMoveTime < 20) return;
+            if (now - touchMoveTime < 30) return;
 
             // 現在のタッチ位置を保持
             touchMoveX = event.changedTouches ? event.changedTouches[0].pageX : event.pageX;
