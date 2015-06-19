@@ -102,7 +102,7 @@ var ImageSwiper = (function (imageSwiper, options) {
                     if (++ti < count) {
                         imageSwiper.scrollLeft += step;
                     } else {
-                        clearTimeout(_autoScrollTimerId);
+                        clearInterval(_autoScrollTimerId);
                         _autoScrollTimerId = null;
                         _isAutoScrolling = false;
                         imageSwiper.scrollLeft = toLeft;
@@ -119,21 +119,21 @@ var ImageSwiper = (function (imageSwiper, options) {
         imgElem.setAttribute('class', 'active');
     };
 
-    var _scrollTimerId;
-    imageContainer.addEventListener('scroll', function () {
-        console.log('scroll');
-        clearTimeout(_scrollTimerId);
-        _scrollTimerId = setTimeout(function () {
-            if (_autoScrollTimerId) {
-                clearTimeout(_autoScrollTimerId);
-                _autoScrollTimerId = null;
-            }
+    //var _scrollTimerId;
+    //imageContainer.addEventListener('scroll', function () {
+    //    console.log('scroll');
+    //    clearTimeout(_scrollTimerId);
+    //    _scrollTimerId = setTimeout(function () {
+    //        if (_autoScrollTimerId) {
+    //            clearInterval(_autoScrollTimerId);
+    //            _autoScrollTimerId = null;
+    //        }
 
-            var curElem = getCenterViewElement();
-            var index = _imageElements.indexOf(curElem);
-            thisObj.setIndex(index, true);
-        }, 50);
-    });
+    //        var curElem = getCenterViewElement();
+    //        var index = _imageElements.indexOf(curElem);
+    //        thisObj.setIndex(index, true);
+    //    }, 50);
+    //});
 
     function getCenterViewElement() {
         var centerX = imageContainer.scrollLeft + imageContainer.clientWidth / 2;
@@ -160,10 +160,13 @@ var ImageSwiper = (function (imageSwiper, options) {
         var prevElem = null;
         var nextElem = null;
 
+        var touchMoveTime = null;
+        var momentumScrollTimerId;
+
         /**
          * スワイプ開始イベントの登録
          */
-        //imageContainer.addEventListener('touchstart', onTouchStart);
+        imageContainer.addEventListener('touchstart', onTouchStart);
         imageContainer.addEventListener('mousedown', onTouchStart);
 
         /**
@@ -174,11 +177,14 @@ var ImageSwiper = (function (imageSwiper, options) {
             // フィールド初期化
             touchStartX = touchMoveX = null;
             curElem = prevElem = nextElem = null;
+            clearInterval(momentumScrollTimerId);
+            momentumScrollTimerId = null;
 
             // コンテナ幅を保持
             containerWidth = imageContainer.offsetWidth;
             // タッチ位置を保持
             touchStartX = touchMoveX = event.touches ? event.touches[0].pageX : event.pageX;
+            touchMoveTime = Date.now();
             touchStartScrollLeft = imageContainer.scrollLeft;
 
             //var prevIndex = (_currentIndex === 0) ? _imageElements.length - 1 : _currentIndex - 1;
@@ -215,8 +221,12 @@ var ImageSwiper = (function (imageSwiper, options) {
         function onTouchMove() {
             event.preventDefault();
 
+            var now = Date.now();
+            if (now - touchMoveTime < 20) return;
+
             // 現在のタッチ位置を保持
             touchMoveX = event.changedTouches ? event.changedTouches[0].pageX : event.pageX;
+            touchMoveTime = now;
 
             // スワイプ移動量の算出
             var dx = (touchMoveX - touchStartX);
@@ -284,9 +294,31 @@ var ImageSwiper = (function (imageSwiper, options) {
             //    // 縦帯のリフレッシュ
             //    refreshColStripe();
             //}
-            var curElem = getCenterViewElement();
-            var index = _imageElements.indexOf(curElem);
-            thisObj.setIndex(index, true);
+
+
+            var touchEndX = event.changedTouches ? event.changedTouches[0].pageX : event.pageX;
+            var dx = (touchEndX - touchMoveX);
+            var vx = Math.min(Math.max(dx / (Date.now() - touchMoveTime), -5), 5);
+            console.log({ dx: dx, vx: vx });
+            var interval = 10;
+            var duration = 1000;
+            var count = duration / interval;
+            var ti = 0;
+            var prevScrollLeft;
+            momentumScrollTimerId = setInterval(function () {
+                //console.log('interval: vx=' + vx);
+                if (++ti >= count || Math.abs(vx) < 0.03 || prevScrollLeft === imageContainer.scrollLeft) {
+                    clearInterval(momentumScrollTimerId);
+
+                    var curElem = getCenterViewElement();
+                    var index = _imageElements.indexOf(curElem);
+                    thisObj.setIndex(index, true);
+                }
+                prevScrollLeft = imageContainer.scrollLeft;
+                imageContainer.scrollLeft -= vx * interval;
+                vx *= .95;
+            }, interval);
+
 
             // タッチ・マウスイベントを解除
             // unregister touchmove / mousemove
