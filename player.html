@@ -36,6 +36,7 @@
             -ms-user-select: none;
             -webkit-user-select: none;
             user-select: none;
+
         }
         #skip-ad {
             position: absolute;
@@ -357,11 +358,11 @@
             var _campaign;
             var _creative;
 
-            //// スクロール・バウンド無効化
-            //document.addEventListener('touchmove', function () {
-            //    console.log('touchmove');
-            //    event.preventDefault();
-            //});
+            // スクロール・バウンド無効化
+            document.addEventListener('touchmove', function () {
+                console.log('touchmove');
+                event.preventDefault();
+            });
 
             /**
              *  初期化イベント
@@ -581,10 +582,9 @@
              */
             document.getElementById('close-ad').addEventListener('click', function () {
                 console.log('close-ad.click');
+                //location.href = "native://closeAd/?args={xxx:bbb}&callback=hogehoge&close_ad=true";
                 //window.close();
-
-                //nativeApi('closeAd');
-                _swiper.setIndex(3);
+                nativeApi('closeAd');
             });
         } catch (ex) {
             console.log(ex);
