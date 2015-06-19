@@ -3,7 +3,9 @@
     width: 100%;
     height: 67%;
     text-align: center;
-    overflow: hidden;
+    overflow: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
 
     background: #111 no-repeat center;
     background-size: contain;
@@ -11,80 +13,49 @@
     /* スクリーンショットスライド用 */
     position: relative;
     font-size: 100%;
+
+    /*padding: 0 100%;*/
+    /*padding-left: 50%;
+    box-sizing: border-box;*/
 }
-.image-swiper div {
-    display: block;
-    width: 100%;
-    height: 100%;
-
-    background: #111 no-repeat center;
-    background-size: contain;
-
-    /* スクリーンショットスライド用 */
-    position: absolute;
-    display: none;
+/*.image-swiper .container {
+  height: 100%;
+  position: relative;
+}*/
+.image-swiper:before {
+  content: '';
+  display: inline-block;
+  width: 60px;
 }
-.image-swiper div.swipe {
-    display: block;
+.image-swiper:after {
+  content: '';
+  display: inline-block;
+  width: 60px;
 }
-.image-swiper div.fadeIn {
-    display: block;
+/*.image-swiper img:first-of-type {
+  margin-left: 100%;
+}*/
+.image-swiper img {
+  display: inline-block;
+  height: 100%;
+  /*position: relative;
+  right: 50%;*/
+  padding: 0 4%;
+  opacity: .5;
 
-    -moz-transition: left linear .1s;
-    -o-transition: left linear .1s;
-    -webkit-transition: left linear .1s;
-    transition: left linear .1s;
-    left: 0 !important;
-    z-index: 2;
+  /* ドラッグによる選択無効化 */
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -webkit-user-select: none;
+  -webkit-user-drag:none;
+  user-select: none;
+}
+.image-swiper img.active {
+  opacity: 1;
 }
 
-.image-swiper span.left-stripe {
-    position: absolute;
-    z-index: 3;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    width: 1.4em;
 
-    display: block;
-    background-color: #000;
-    opacity: .4;
-}
-.image-swiper span.left-stripe:before {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    margin: auto;
 
-    color: #fff;
-    width: 1em;
-    height: 1em;
-    content: '<';
-}
-.image-swiper span.right-stripe {
-    position: absolute;
-    z-index: 3;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    width: 1.4em;
-
-    display: block;
-    background-color: #000;
-    opacity: .4;
-}
-.image-swiper span.right-stripe:before {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    margin: auto;
-
-    color: #fff;
-    width: 1em;
-    height: 1em;
-    content: '>';
+#reload-ad {
+  display: none !important;
 }

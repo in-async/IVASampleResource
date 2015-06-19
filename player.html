@@ -36,7 +36,6 @@
             -ms-user-select: none;
             -webkit-user-select: none;
             user-select: none;
-
         }
         #skip-ad {
             position: absolute;
@@ -582,9 +581,10 @@
              */
             document.getElementById('close-ad').addEventListener('click', function () {
                 console.log('close-ad.click');
-                //location.href = "native://closeAd/?args={xxx:bbb}&callback=hogehoge&close_ad=true";
                 //window.close();
-                nativeApi('closeAd');
+
+                //nativeApi('closeAd');
+                _swiper.setIndex(3);
             });
         } catch (ex) {
             console.log(ex);
