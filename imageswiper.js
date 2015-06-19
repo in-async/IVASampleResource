@@ -163,7 +163,7 @@ var ImageSwiper = (function (imageSwiper, options) {
         /**
          * スワイプ開始イベントの登録
          */
-        imageContainer.addEventListener('touchstart', onTouchStart);
+        //imageContainer.addEventListener('touchstart', onTouchStart);
         imageContainer.addEventListener('mousedown', onTouchStart);
 
         /**
