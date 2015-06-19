@@ -89,7 +89,7 @@ var ImageSlider = (function (imageSlider, options) {
         var imgElem = _imageElements[_currentIndex];
         var toLeft = imgElem.offsetLeft - imageSlider.clientWidth / 2 + imgElem.offsetWidth / 2;
         clearInterval(_sliderScrollLeftTimerId);
-        _sliderScrollLeftTimerId = scrollLeft(imageSlider, toLeft, 200);
+        _sliderScrollLeftTimerId = scrollLeft(imageSlider, toLeft, animation? 200: 0);
 
         // アクティブマークを付与
         setActiveClass(imgElem);
@@ -138,6 +138,20 @@ var ImageSlider = (function (imageSlider, options) {
         }
         return null;
     }
+
+    //window.addEventListener("orientationchange", function () {
+    //    console.log('orientationchange');
+    //    thisObj.setIndex(_currentIndex);
+    //});
+    window.addEventListener("resize", function () {
+        console.log('resize');
+        thisObj.setIndex(_currentIndex);
+        //if (window.innerHeight > window.innerWidth) {
+        //    // ポートレイト（ランドスケープ）
+        //} else {
+        //    // ランドスケープ（ポートレイト）
+        //};
+    });
 
     (function () {
         /**
