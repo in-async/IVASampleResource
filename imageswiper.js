@@ -119,21 +119,21 @@ var ImageSwiper = (function (imageSwiper, options) {
         imgElem.setAttribute('class', 'active');
     };
 
-    //var _scrollTimerId;
-    //imageContainer.addEventListener('scroll', function () {
-    //    console.log('scroll');
-    //    clearTimeout(_scrollTimerId);
-    //    _scrollTimerId = setTimeout(function () {
-    //        if (_autoScrollTimerId) {
-    //            clearTimeout(_autoScrollTimerId);
-    //            _autoScrollTimerId = null;
-    //        }
+    var _scrollTimerId;
+    imageContainer.addEventListener('scroll', function () {
+        console.log('scroll');
+        clearTimeout(_scrollTimerId);
+        _scrollTimerId = setTimeout(function () {
+            if (_autoScrollTimerId) {
+                clearTimeout(_autoScrollTimerId);
+                _autoScrollTimerId = null;
+            }
 
-    //        var curElem = getCenterViewElement();
-    //        var index = _imageElements.indexOf(curElem);
-    //        thisObj.setIndex(index, true);
-    //    }, 50);
-    //});
+            var curElem = getCenterViewElement();
+            var index = _imageElements.indexOf(curElem);
+            thisObj.setIndex(index, true);
+        }, 50);
+    });
 
     function getCenterViewElement() {
         var centerX = imageContainer.scrollLeft + imageContainer.clientWidth / 2;
