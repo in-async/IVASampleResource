@@ -253,8 +253,8 @@ var ImageSwiper = (function (imageSwiper, options) {
             imageContainer.addEventListener('mousemove', onTouchMove);
             // register touchend / mouseup / mouseout
             imageContainer.addEventListener('touchend', onTouchEnd);
-            imageContainer.addEventListener('mouseup', onTouchEnd);
-            imageContainer.addEventListener('mouseout', onTouchEnd);
+            //imageContainer.addEventListener('mouseup', onTouchEnd);
+            //imageContainer.addEventListener('mouseout', onTouchEnd);
         }
         /**
          * スワイプ中イベント
@@ -370,8 +370,8 @@ var ImageSwiper = (function (imageSwiper, options) {
             imageContainer.removeEventListener('mousemove', onTouchMove);
             // unregister touchend / mouseup / mouseout
             imageContainer.removeEventListener('touchend', onTouchEnd);
-            imageContainer.removeEventListener('mouseup', onTouchEnd);
-            imageContainer.removeEventListener('mouseout', onTouchEnd);
+            //imageContainer.removeEventListener('mouseup', onTouchEnd);
+            //imageContainer.removeEventListener('mouseout', onTouchEnd);
         }
     })();
 });
