@@ -119,21 +119,21 @@ var ImageSwiper = (function (imageSwiper, options) {
         imgElem.setAttribute('class', 'active');
     };
 
-    //var _scrollTimerId;
-    //imageContainer.addEventListener('scroll', function () {
-    //    console.log('scroll');
-    //    clearTimeout(_scrollTimerId);
-    //    _scrollTimerId = setTimeout(function () {
-    //        if (_autoScrollTimerId) {
-    //            clearInterval(_autoScrollTimerId);
-    //            _autoScrollTimerId = null;
-    //        }
+    var _scrollTimerId;
+    imageContainer.addEventListener('scroll', function () {
+        console.log('scroll');
+        clearTimeout(_scrollTimerId);
+        _scrollTimerId = setTimeout(function () {
+            if (_autoScrollTimerId) {
+                clearInterval(_autoScrollTimerId);
+                _autoScrollTimerId = null;
+            }
 
-    //        var curElem = getCenterViewElement();
-    //        var index = _imageElements.indexOf(curElem);
-    //        thisObj.setIndex(index, true);
-    //    }, 50);
-    //});
+            var curElem = getCenterViewElement();
+            var index = _imageElements.indexOf(curElem);
+            thisObj.setIndex(index, true);
+        }, 50);
+    });
 
     function getCenterViewElement() {
         var centerX = imageContainer.scrollLeft + imageContainer.clientWidth / 2;
@@ -148,186 +148,186 @@ var ImageSwiper = (function (imageSwiper, options) {
         return null;
     }
 
-    (function () {
-        /**
-         * スワイプ中に使用する内部フィールド
-         */
-        var touchStartScrollLeft = null;
-        var touchStartX = null;
-        var touchMoveX = null;
-        var containerWidth = null;
-        var curElem = null;
-        var prevElem = null;
-        var nextElem = null;
+    //(function () {
+    //    /**
+    //     * スワイプ中に使用する内部フィールド
+    //     */
+    //    var touchStartScrollLeft = null;
+    //    var touchStartX = null;
+    //    var touchMoveX = null;
+    //    var containerWidth = null;
+    //    var curElem = null;
+    //    var prevElem = null;
+    //    var nextElem = null;
 
-        var touchMoveTime = null;
-        var momentumScrollTimerId;
+    //    var touchMoveTime = null;
+    //    var momentumScrollTimerId;
 
-        /**
-         * スワイプ開始イベントの登録
-         */
-        imageContainer.addEventListener('touchstart', onTouchStart);
-        imageContainer.addEventListener('mousedown', onTouchStart);
+    //    /**
+    //     * スワイプ開始イベントの登録
+    //     */
+    //    imageContainer.addEventListener('touchstart', onTouchStart);
+    //    imageContainer.addEventListener('mousedown', onTouchStart);
 
-        /**
-         * スワイプ開始イベント
-         */
-        function onTouchStart() {
-            console.log('onTouchStart');
-            // フィールド初期化
-            touchStartX = touchMoveX = null;
-            curElem = prevElem = nextElem = null;
-            clearInterval(momentumScrollTimerId);
-            momentumScrollTimerId = null;
+    //    /**
+    //     * スワイプ開始イベント
+    //     */
+    //    function onTouchStart() {
+    //        console.log('onTouchStart');
+    //        // フィールド初期化
+    //        touchStartX = touchMoveX = null;
+    //        curElem = prevElem = nextElem = null;
+    //        clearInterval(momentumScrollTimerId);
+    //        momentumScrollTimerId = null;
 
-            // コンテナ幅を保持
-            containerWidth = imageContainer.offsetWidth;
-            // タッチ位置を保持
-            touchStartX = touchMoveX = event.touches ? event.touches[0].pageX : event.pageX;
-            touchMoveTime = Date.now();
-            touchStartScrollLeft = imageContainer.scrollLeft;
+    //        // コンテナ幅を保持
+    //        containerWidth = imageContainer.offsetWidth;
+    //        // タッチ位置を保持
+    //        touchStartX = touchMoveX = event.touches ? event.touches[0].pageX : event.pageX;
+    //        touchMoveTime = Date.now();
+    //        touchStartScrollLeft = imageContainer.scrollLeft;
 
-            //var prevIndex = (_currentIndex === 0) ? _imageElements.length - 1 : _currentIndex - 1;
-            //var nextIndex = (_currentIndex + 1 >= _imageElements.length) ? 0 : _currentIndex + 1;
+    //        //var prevIndex = (_currentIndex === 0) ? _imageElements.length - 1 : _currentIndex - 1;
+    //        //var nextIndex = (_currentIndex + 1 >= _imageElements.length) ? 0 : _currentIndex + 1;
 
-            //// 対象となる画像要素とその前後要素を保持
-            //if (_imageElements.length > 2) {
-            //    prevElem = _imageElements[prevIndex];
-            //    prevElem.className = 'swipe';
-            //    prevElem.style.left = -containerWidth + 'px';
-            //}
-            //curElem = _imageElements[_currentIndex];
-            //curElem.style.left = 0;
-            //curElem.className = 'swipe';
-            //if (true) {
-            //    nextElem = _imageElements[nextIndex];
-            //    nextElem.className = 'swipe';
-            //    nextElem.style.left = containerWidth + 'px';
-            //}
-            //console.log({ prevElem: prevElem, curElem: curElem, nextElem: nextElem });
+    //        //// 対象となる画像要素とその前後要素を保持
+    //        //if (_imageElements.length > 2) {
+    //        //    prevElem = _imageElements[prevIndex];
+    //        //    prevElem.className = 'swipe';
+    //        //    prevElem.style.left = -containerWidth + 'px';
+    //        //}
+    //        //curElem = _imageElements[_currentIndex];
+    //        //curElem.style.left = 0;
+    //        //curElem.className = 'swipe';
+    //        //if (true) {
+    //        //    nextElem = _imageElements[nextIndex];
+    //        //    nextElem.className = 'swipe';
+    //        //    nextElem.style.left = containerWidth + 'px';
+    //        //}
+    //        //console.log({ prevElem: prevElem, curElem: curElem, nextElem: nextElem });
 
-            // タッチ・マウスイベントを登録
-            // register touchmove / mousemove
-            imageContainer.addEventListener('touchmove', onTouchMove);
-            imageContainer.addEventListener('mousemove', onTouchMove);
-            // register touchend / mouseup / mouseout
-            imageContainer.addEventListener('touchend', onTouchEnd);
-            imageContainer.addEventListener('mouseup', onTouchEnd);
-            imageContainer.addEventListener('mouseout', onTouchEnd);
-        }
-        /**
-         * スワイプ中イベント
-         */
-        function onTouchMove() {
-            event.preventDefault();
+    //        // タッチ・マウスイベントを登録
+    //        // register touchmove / mousemove
+    //        imageContainer.addEventListener('touchmove', onTouchMove);
+    //        imageContainer.addEventListener('mousemove', onTouchMove);
+    //        // register touchend / mouseup / mouseout
+    //        imageContainer.addEventListener('touchend', onTouchEnd);
+    //        imageContainer.addEventListener('mouseup', onTouchEnd);
+    //        imageContainer.addEventListener('mouseout', onTouchEnd);
+    //    }
+    //    /**
+    //     * スワイプ中イベント
+    //     */
+    //    function onTouchMove() {
+    //        event.preventDefault();
 
-            var now = Date.now();
-            if (now - touchMoveTime < 30) return;
+    //        var now = Date.now();
+    //        if (now - touchMoveTime < 30) return;
 
-            // 現在のタッチ位置を保持
-            touchMoveX = event.changedTouches ? event.changedTouches[0].pageX : event.pageX;
-            touchMoveTime = now;
+    //        // 現在のタッチ位置を保持
+    //        touchMoveX = event.changedTouches ? event.changedTouches[0].pageX : event.pageX;
+    //        touchMoveTime = now;
 
-            // スワイプ移動量の算出
-            var dx = (touchMoveX - touchStartX);
-            console.log({ dx: dx });
-            //if (dx > 0 && _currentIndex > 0 || dx < 0 && _currentIndex < _imageElements.length - 1) {
-            //} else {
-            //    // 範囲外へのスワイプはバウンド挙動に
-            //    dx *= .3;
-            //}
+    //        // スワイプ移動量の算出
+    //        var dx = (touchMoveX - touchStartX);
+    //        console.log({ dx: dx });
+    //        //if (dx > 0 && _currentIndex > 0 || dx < 0 && _currentIndex < _imageElements.length - 1) {
+    //        //} else {
+    //        //    // 範囲外へのスワイプはバウンド挙動に
+    //        //    dx *= .3;
+    //        //}
 
-            //// スワイプ移動量分、画像要素を移動
-            //if (prevElem) {
-            //    prevElem.style.left = -containerWidth + dx + 'px';
-            //}
-            //curElem.style.left = dx + 'px';
-            //if (nextElem) {
-            //    nextElem.style.left = containerWidth + dx + 'px';
-            //}
-            imageContainer.scrollLeft = touchStartScrollLeft - dx;
-        }
-        /**
-         * スワイプ終了イベント
-         */
-        function onTouchEnd() {
-            console.log('onTouchEnd');
-            ////event.preventDefault();
+    //        //// スワイプ移動量分、画像要素を移動
+    //        //if (prevElem) {
+    //        //    prevElem.style.left = -containerWidth + dx + 'px';
+    //        //}
+    //        //curElem.style.left = dx + 'px';
+    //        //if (nextElem) {
+    //        //    nextElem.style.left = containerWidth + dx + 'px';
+    //        //}
+    //        imageContainer.scrollLeft = touchStartScrollLeft - dx;
+    //    }
+    //    /**
+    //     * スワイプ終了イベント
+    //     */
+    //    function onTouchEnd() {
+    //        console.log('onTouchEnd');
+    //        ////event.preventDefault();
 
-            //// 移動量の判定
-            //var indexChanged = false;
-            //if (touchStartX > touchMoveX) {
-            //    if (touchStartX > (touchMoveX + 50)) {
-            //        //右から左に指が移動した場合
-            //        console.log({ msg: 'swipe ←', touchStartX: touchStartX, touchMoveX: touchMoveX });
-            //        if (nextElem) {
-            //            ++_currentIndex;
-            //            if (_currentIndex >= _imageElements.length) {
-            //                _currentIndex = 0;
-            //            }
-            //            nextElem.className = 'fadeIn';
-            //            //curElem.className = 'fadeOut';
-            //            indexChanged = true;
-            //        }
-            //    }
-            //} else if (touchStartX < touchMoveX) {
-            //    if ((touchStartX + 50) < touchMoveX) {
-            //        //左から右に指が移動した場合
-            //        console.log({ msg: 'swipe →', touchStartX: touchStartX, touchMoveX: touchMoveX });
-            //        if (prevElem) {
-            //            --_currentIndex;
-            //            if (_currentIndex < 0) {
-            //                _currentIndex = _imageElements.length - 1;
-            //            }
-            //            prevElem.className = 'fadeIn';
-            //            //curElem.className = 'fadeOut';
-            //            indexChanged = true;
-            //        }
-            //    }
-            //}
-            //console.log({ _currentIndex: _currentIndex });
+    //        //// 移動量の判定
+    //        //var indexChanged = false;
+    //        //if (touchStartX > touchMoveX) {
+    //        //    if (touchStartX > (touchMoveX + 50)) {
+    //        //        //右から左に指が移動した場合
+    //        //        console.log({ msg: 'swipe ←', touchStartX: touchStartX, touchMoveX: touchMoveX });
+    //        //        if (nextElem) {
+    //        //            ++_currentIndex;
+    //        //            if (_currentIndex >= _imageElements.length) {
+    //        //                _currentIndex = 0;
+    //        //            }
+    //        //            nextElem.className = 'fadeIn';
+    //        //            //curElem.className = 'fadeOut';
+    //        //            indexChanged = true;
+    //        //        }
+    //        //    }
+    //        //} else if (touchStartX < touchMoveX) {
+    //        //    if ((touchStartX + 50) < touchMoveX) {
+    //        //        //左から右に指が移動した場合
+    //        //        console.log({ msg: 'swipe →', touchStartX: touchStartX, touchMoveX: touchMoveX });
+    //        //        if (prevElem) {
+    //        //            --_currentIndex;
+    //        //            if (_currentIndex < 0) {
+    //        //                _currentIndex = _imageElements.length - 1;
+    //        //            }
+    //        //            prevElem.className = 'fadeIn';
+    //        //            //curElem.className = 'fadeOut';
+    //        //            indexChanged = true;
+    //        //        }
+    //        //    }
+    //        //}
+    //        //console.log({ _currentIndex: _currentIndex });
 
-            //// インデックスに変更が無ければ、スライドを元に戻す
-            //if (!indexChanged) {
-            //    curElem.className = 'fadeIn';
-            //} else {
-            //    // 縦帯のリフレッシュ
-            //    refreshColStripe();
-            //}
-
-
-            var touchEndX = event.changedTouches ? event.changedTouches[0].pageX : event.pageX;
-            var dx = (touchEndX - touchMoveX);
-            var vx = Math.min(Math.max(dx / (Date.now() - touchMoveTime), -5), 5);
-            console.log({ dx: dx, vx: vx });
-            var interval = 10;
-            var duration = 1000;
-            var count = duration / interval;
-            var ti = 0;
-            var prevScrollLeft;
-            momentumScrollTimerId = setInterval(function () {
-                //console.log('interval: vx=' + vx);
-                if (++ti >= count || Math.abs(vx) < 0.03 || prevScrollLeft === imageContainer.scrollLeft) {
-                    clearInterval(momentumScrollTimerId);
-
-                    var curElem = getCenterViewElement();
-                    var index = _imageElements.indexOf(curElem);
-                    thisObj.setIndex(index, true);
-                }
-                prevScrollLeft = imageContainer.scrollLeft;
-                imageContainer.scrollLeft -= vx * interval;
-                vx *= .95;
-            }, interval);
+    //        //// インデックスに変更が無ければ、スライドを元に戻す
+    //        //if (!indexChanged) {
+    //        //    curElem.className = 'fadeIn';
+    //        //} else {
+    //        //    // 縦帯のリフレッシュ
+    //        //    refreshColStripe();
+    //        //}
 
 
-            // タッチ・マウスイベントを解除
-            // unregister touchmove / mousemove
-            imageContainer.removeEventListener('touchmove', onTouchMove);
-            imageContainer.removeEventListener('mousemove', onTouchMove);
-            // unregister touchend / mouseup / mouseout
-            imageContainer.removeEventListener('touchend', onTouchEnd);
-            imageContainer.removeEventListener('mouseup', onTouchEnd);
-            imageContainer.removeEventListener('mouseout', onTouchEnd);
-        }
-    })();
+    //        var touchEndX = event.changedTouches ? event.changedTouches[0].pageX : event.pageX;
+    //        var dx = (touchEndX - touchMoveX);
+    //        var vx = Math.min(Math.max(dx / (Date.now() - touchMoveTime), -5), 5);
+    //        console.log({ dx: dx, vx: vx });
+    //        var interval = 10;
+    //        var duration = 1000;
+    //        var count = duration / interval;
+    //        var ti = 0;
+    //        var prevScrollLeft;
+    //        momentumScrollTimerId = setInterval(function () {
+    //            //console.log('interval: vx=' + vx);
+    //            if (++ti >= count || Math.abs(vx) < 0.03 || prevScrollLeft === imageContainer.scrollLeft) {
+    //                clearInterval(momentumScrollTimerId);
+
+    //                var curElem = getCenterViewElement();
+    //                var index = _imageElements.indexOf(curElem);
+    //                thisObj.setIndex(index, true);
+    //            }
+    //            prevScrollLeft = imageContainer.scrollLeft;
+    //            imageContainer.scrollLeft -= vx * interval;
+    //            vx *= .95;
+    //        }, interval);
+
+
+    //        // タッチ・マウスイベントを解除
+    //        // unregister touchmove / mousemove
+    //        imageContainer.removeEventListener('touchmove', onTouchMove);
+    //        imageContainer.removeEventListener('mousemove', onTouchMove);
+    //        // unregister touchend / mouseup / mouseout
+    //        imageContainer.removeEventListener('touchend', onTouchEnd);
+    //        imageContainer.removeEventListener('mouseup', onTouchEnd);
+    //        imageContainer.removeEventListener('mouseout', onTouchEnd);
+    //    }
+    //})();
 });
