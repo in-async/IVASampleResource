@@ -180,7 +180,7 @@ var ImageSwiper = (function (imageSwiper, options) {
             var curElem = getCenterViewElement();
             var index = _imageElements.indexOf(curElem);
 //            thisObj.setIndex(index, true);
-            //setActiveElement(index);
+            setActiveElement(index);
             //_reservedSetIndexTimerId = setTimeout(function () {
             //    thisObj.setIndex(index, true);
             //}, 100);
