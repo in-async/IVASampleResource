@@ -51,10 +51,12 @@ var ImageSlider = (function (imageContainer, options) {
         // 画像要素の作成
         var imageElem = document.createElement('img');
         imageElem.src = imageUrl;
-        imageContainer.appendChild(imageElem);
+        var divElem = document.createElement('div');
+        divElem.appendChild(imageElem);
+        imageContainer.appendChild(divElem);
 
         // 画像要素の追加
-        thisObj.addImageElement(imageElem);
+        thisObj.addImageElement(divElem);
     };
 
     /**
@@ -62,6 +64,13 @@ var ImageSlider = (function (imageContainer, options) {
      */
     this.addImageElement = function (imageElem) {
         console.log(imageElem);
+        imageElem.className += ' image-slider-item';
+        if (imageContainer.contains(imageElem)) {
+            imageContainer.appendChild(imageElem);
+
+            // アイテム順序が変わったので、再描画
+            thisObj.setIndex(_currentIndex);
+        }
         _imageElements.push(imageElem);
 
         // 現在のスワイプ画像インデックスが負値だった場合、最初のスワイプ画像を表示状態にする
@@ -103,7 +112,13 @@ var ImageSlider = (function (imageContainer, options) {
     function setActiveClass(target) {
         for (var i in _imageElements) {
             var imgElem = _imageElements[i];
-            imgElem.className = (imgElem == target) ? 'active' : '';
+            if (imgElem === target) {
+                if (imgElem.className.indexOf('active') < 0) {
+                    imgElem.className += ' active';
+                }
+            } else {
+                imgElem.className = imgElem.className.replace(' active', '');
+            }
         }
     }
 
@@ -245,6 +260,9 @@ var ImageSlider = (function (imageContainer, options) {
 
                     var targetX = targetCenterX + ((vx > 0) ? -interval : interval);
                     var index = getIndexAt(targetX);
+                    if (index < 0) {
+                        index = (vx > 0) ? 0 : _imageElements.length - 1;
+                    }
                     thisObj.setIndex(index, true);
                 },
             });

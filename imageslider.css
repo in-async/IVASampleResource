@@ -7,12 +7,12 @@
     overflow-y: hidden;
     white-space: nowrap;
 
-    background: #111 no-repeat center;
-    background-size: contain;
+    /*background: #111 no-repeat center;
+    background-size: contain;*/
 
     /* スクリーンショットスライド用 */
-    position: relative;
-    font-size: 100%;
+    /*position: relative;*/
+    /*font-size: 100%;*/
 
     /*padding: 0 100%;*/
     /*padding-left: 50%;
@@ -26,23 +26,23 @@
 .image-slider:before {
   content: '';
   display: inline-block;
-  width: 60px;
+  width: 50%;
 }
 .image-slider:after {
   content: '';
   display: inline-block;
-  width: 60px;
+  width: 50%;
 }
 /*.image-slider img:first-of-type {
   margin-left: 100%;
 }*/
-.image-slider img {
+.image-slider-item {
   display: inline-block;
   height: 100%;
   /*position: relative;
   right: 50%;*/
-  padding: 0 6%;
-  opacity: .5;
+  padding: 0 3%;
+  opacity: .3;
 
   /* ドラッグによる選択無効化 */
   -moz-user-select: none;
@@ -51,12 +51,16 @@
   -webkit-user-drag:none;
   user-select: none;
 }
-.image-slider img.active {
+.image-slider-item img {
+  max-width: 100%;
+  max-height: 100%;
+}
+.image-slider-item.active {
   opacity: 1;
 }
 
 
 
-#reload-ad {
+/*#reload-ad {
   display: none !important;
-}
+}*/

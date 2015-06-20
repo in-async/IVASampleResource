@@ -108,8 +108,11 @@
             top: 0;
         }
         #image-frame #reload-ad {
-            background: #111 no-repeat center;
+            /*background: #111 no-repeat center;
             background-size: contain;
+
+            transform: rotate(90deg);*/
+            position: relative;
         }
         #image-frame #reload-ad:before {
             position: absolute;
@@ -303,10 +306,10 @@
     </div>
 
     <div id="endcard-page">
-        <a id="image-frame">
+        <div id="image-frame">
             <!--<img id="endcard-image" />-->
             <div id="reload-ad"></div>
-        </a>
+        </div>
         <div id="detail-frame">
             <div id="detail-panel">
                 <img id="app-icon" />
@@ -504,7 +507,10 @@
                     console.log('callback getVideoThumbnailAsBase64');
 
                     var reloadAdElem = document.getElementById('reload-ad');
-                    reloadAdElem.style.backgroundImage = 'url("' + result + '")';
+                    //reloadAdElem.style.backgroundImage = 'url("' + result + '")';
+                    var imgElem = document.createElement('img');
+                    imgElem.setAttribute('src', result);
+                    reloadAdElem.appendChild(imgElem);
                     reloadAdElem.addEventListener('click', function () {
                         //_videoPageElem.className = '';
                         _endcardPageElem.className = 'fadeOut';
