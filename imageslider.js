@@ -179,6 +179,7 @@ var ImageSlider = (function (imageContainer, options) {
         /**
          * スライド中に使用する内部フィールド
          */
+        var imageCount;
         var touchStartScrollLeft = null;
         var touchStartX = null;
         var touchMoveX = null;
@@ -211,6 +212,7 @@ var ImageSlider = (function (imageContainer, options) {
             console.log('onTouchStart');
             // フィールド初期化
             touchStartX = touchMoveX = touchMoveX2 = touchMoveX3 = null;
+            imageCount = _imageElements.length;
 
             // スライダーに係るタイマーのクリア
             clearInterval(_sliderScrollLeftTimerId);
@@ -250,6 +252,10 @@ var ImageSlider = (function (imageContainer, options) {
             //    // 範囲外へのスワイプはバウンド挙動に
             //    dx *= .3;
             //}
+            if (_currentIndex === 0 || _currentIndex === imageCount - 1) {
+                // 範囲外へのスワイプはバウンド挙動に
+                dx *= .3;
+            }
 
             // スクロール
             imageContainer.scrollLeft = touchStartScrollLeft - dx;
