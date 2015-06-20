@@ -366,6 +366,7 @@
             });
 
             // 少なくとも iOS 6 にてローテーション時に画像が不適切な大きさにリサイズ表示されてしまう不具合ので、その対処
+            // ref: http://stackoverflow.com/questions/12102235/how-to-fit-to-screen-after-changing-viewport-width-on-orientation-change
             window.document.addEventListener('orientationchange', function () {
                 var iOS = navigator.userAgent.match(/(iPad|iPhone|iPod)/g);
                 if (iOS) {
