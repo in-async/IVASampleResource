@@ -1,15 +1,34 @@
-﻿//var slider = new imageSlider(container);
+﻿//var slider = new imageContainer(container);
 //slider.setPosition(0);
 //slider.addImageUrl(imgUrl);
+
+// ref: http://stackoverflow.com/questions/12606245/detect-if-browser-is-running-on-an-android-or-ios-device
+var isMobile = {
+    Android: function () {
+        return /Android/i.test(navigator.userAgent);
+    },
+    BlackBerry: function () {
+        return /BlackBerry/i.test(navigator.userAgent);
+    },
+    iOS: function () {
+        return /iPhone|iPad|iPod/i.test(navigator.userAgent);
+    },
+    Windows: function () {
+        return /IEMobile/i.test(navigator.userAgent);
+    },
+    any: function () {
+        return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Windows());
+    }
+};
 
 /**
  * 複数画像をスワイプする為のクラス
  */
-var ImageSlider = (function (imageSlider, options) {
+var ImageSlider = (function (imageContainer, options) {
     var thisObj = this;
-    
+    imageContainer.className += ' image-slider';
+
     // 引数の検証
-    imageSlider.className += ' image-slider';
     if (!options) {
         options = {};
     }
@@ -19,14 +38,9 @@ var ImageSlider = (function (imageSlider, options) {
 
     // 現在表示されている画像インデックス
     var _currentIndex = -1;
-    // スワイプ対象となる画像要素配列
+    // スライド対象となる画像要素配列
     var _imageElements = [];
-
-    //var imageContainer = document.createElement('div');
-    //imageContainer.setAttribute('class', 'container');
-    //imageSlider.appendChild(imageContainer);
-    var imageContainer = imageSlider;
-
+    // スライダースクロール位置に係るタイマー ID
     var _sliderScrollLeftTimerId;
 
 
@@ -73,23 +87,11 @@ var ImageSlider = (function (imageSlider, options) {
         // スライド対象画像が１件もなければ何もしない
         if (_currentIndex < 0) return;
 
-        //if (indexChanged) {
-        //    //// 全ての画像要素のクラスを初期化
-        //    //for (var i = 0, len = _imageElements.length; i < len; i++) {
-        //    //    if (i === index) {
-        //    //        _imageElements[index].className = 'fadeIn';
-        //    //    } else {
-        //    //        _imageElements[i].className = '';
-        //    //    }
-        //    //}
-        //    //imageContainer.style.left = -imgElem.offsetLeft + 'px';
-        //}
-
         // 対象画像がスライダーのビューポート中央に表示されるようスクロール（アクティブ化）
         var imgElem = _imageElements[_currentIndex];
-        var toLeft = imgElem.offsetLeft - imageSlider.clientWidth / 2 + imgElem.offsetWidth / 2;
+        var toLeft = imgElem.offsetLeft - imageContainer.clientWidth / 2 + imgElem.offsetWidth / 2;
         clearInterval(_sliderScrollLeftTimerId);
-        _sliderScrollLeftTimerId = scrollLeft(imageSlider, toLeft, animation? 200: 0);
+        _sliderScrollLeftTimerId = scrollLeft(imageContainer, toLeft, animation? 200: 0);
 
         // アクティブマークを付与
         setActiveClass(imgElem);
@@ -105,49 +107,36 @@ var ImageSlider = (function (imageSlider, options) {
         }
     }
 
-    //var _isTapped = false;
-    //var _scrollTimerId;
-    //var _reservedSetIndexTimerId;
-    //imageContainer.addEventListener('scroll', function () {
-    //    if (_isTapped) return;
-
-    //    console.log('scroll');
-    //    clearTimeout(_scrollTimerId);
-    //    clearTimeout(_reservedSetIndexTimerId);
-    //    _scrollTimerId = setTimeout(function () {
-    //        if (_autoScrollTimerId) {
-    //            clearInterval(_autoScrollTimerId);
-    //            _autoScrollTimerId = null;
-    //        }
-
-    //        var curElem = getCenterViewElement();
-    //        var index = _imageElements.indexOf(curElem);
-    //        thisObj.setIndex(index, true);
-    //    }, 50);
-    //});
-
-    function getCenterViewElement() {
-        var centerX = imageContainer.scrollLeft + imageContainer.clientWidth / 2;
+    /**
+     * 指定した座標に位置する画像インデックスを返します。
+     */
+    function getIndexAt(targetX) {
         for (var i = 0, len = _imageElements.length; i < len; i++) {
             var imgElem = _imageElements[i];
             var offsetLeft = imgElem.offsetLeft;
             var offsetRight = offsetLeft + imgElem.offsetWidth;
-            if (centerX > offsetLeft && centerX < offsetRight) {
-                return imgElem;
+            if (targetX > offsetLeft && targetX < offsetRight) {
+                return i;
             }
         }
-        return null;
+        return -1;
     }
 
-    //window.addEventListener("orientationchange", function () {
-    //    console.log('orientationchange');
-    //    thisObj.setIndex(_currentIndex);
-    //});
+    //function getCenterViewElement() {
+    //    var centerX = imageContainer.scrollLeft + imageContainer.clientWidth / 2;
+    //    var index = getIndexAt(centerX);
+    //    return (index >= 0) ? _imageElements[index] : null;
+    //}
+
+    window.addEventListener("orientationchange", function () {
+        console.log('orientationchange');
+    });
     window.addEventListener("resize", function () {
         console.log('resize');
-        setTimeout(function () {
-            thisObj.setIndex(_currentIndex);
-        }, 0);
+        thisObj.setIndex(_currentIndex);
+        //setTimeout(function () {
+        //    thisObj.setIndex(_currentIndex);
+        //}, 0);
         //if (window.innerHeight > window.innerWidth) {
         //    // ポートレイト（ランドスケープ）
         //} else {
@@ -157,7 +146,7 @@ var ImageSlider = (function (imageSlider, options) {
 
     (function () {
         /**
-         * スワイプ中に使用する内部フィールド
+         * スライド中に使用する内部フィールド
          */
         var touchStartScrollLeft = null;
         var touchStartX = null;
@@ -167,68 +156,46 @@ var ImageSlider = (function (imageSlider, options) {
         var touchMoveTime = null;
         var touchMoveTime2 = null;
         var touchMoveTime3 = null;
-        //var containerWidth = null;
-        //var curElem = null;
-        //var prevElem = null;
-        //var nextElem = null;
 
 
         /**
-         * スワイプ開始イベントの登録
+         * スライド開始イベントの登録
          */
-        imageContainer.addEventListener('touchstart', onTouchStart);
-        //imageContainer.addEventListener('mousedown', onTouchStart);
+        var TOUCH_START_EVENT, TOUCH_MOVE_EVENT, TOUCH_END_EVENT;
+        if (isMobile.any()) {
+            TOUCH_START_EVENT = 'touchstart';
+            TOUCH_MOVE_EVENT = 'touchmove';
+            TOUCH_END_EVENT = 'touchend';
+        } else {
+            TOUCH_START_EVENT = 'mousedown';
+            TOUCH_MOVE_EVENT = 'mousemove';
+            TOUCH_END_EVENT = 'mouseup';
+        }
+        imageContainer.addEventListener(TOUCH_START_EVENT, onTouchStart);
 
         /**
-         * スワイプ開始イベント
+         * スライド開始イベント
          */
         function onTouchStart() {
             console.log('onTouchStart');
             // フィールド初期化
             touchStartX = touchMoveX = touchMoveX2 = touchMoveX3 = null;
-            //curElem = prevElem = nextElem = null;
 
             // スライダーに係るタイマーのクリア
             clearInterval(_sliderScrollLeftTimerId);
             _sliderScrollLeftTimerId = null;
 
-            //// コンテナ幅を保持
-            //containerWidth = imageContainer.offsetWidth;
             // タッチ位置を保持
             touchStartX = touchMoveX = touchMoveX2 = touchMoveX3 = event.touches ? event.touches[0].pageX : event.pageX;
             touchMoveTime = touchMoveTime2 = touchMoveTime3 = Date.now();
             touchStartScrollLeft = imageContainer.scrollLeft;
 
-            //var prevIndex = (_currentIndex === 0) ? _imageElements.length - 1 : _currentIndex - 1;
-            //var nextIndex = (_currentIndex + 1 >= _imageElements.length) ? 0 : _currentIndex + 1;
-
-            //// 対象となる画像要素とその前後要素を保持
-            //if (_imageElements.length > 2) {
-            //    prevElem = _imageElements[prevIndex];
-            //    prevElem.className = 'swipe';
-            //    prevElem.style.left = -containerWidth + 'px';
-            //}
-            //curElem = _imageElements[_currentIndex];
-            //curElem.style.left = 0;
-            //curElem.className = 'swipe';
-            //if (true) {
-            //    nextElem = _imageElements[nextIndex];
-            //    nextElem.className = 'swipe';
-            //    nextElem.style.left = containerWidth + 'px';
-            //}
-            //console.log({ prevElem: prevElem, curElem: curElem, nextElem: nextElem });
-
-            // タッチ・マウスイベントを登録
-            // register touchmove / mousemove
-            imageContainer.addEventListener('touchmove', onTouchMove);
-            //imageContainer.addEventListener('mousemove', onTouchMove);
-            // register touchend / mouseup / mouseout
-            imageContainer.addEventListener('touchend', onTouchEnd);
-            //imageContainer.addEventListener('mouseup', onTouchEnd);
-            //imageContainer.addEventListener('mouseout', onTouchEnd);
+            // タッチイベントを登録
+            imageContainer.addEventListener(TOUCH_MOVE_EVENT, onTouchMove);
+            imageContainer.addEventListener(TOUCH_END_EVENT, onTouchEnd);
         }
         /**
-         * スワイプ中イベント
+         * スライド中イベント
          */
         function onTouchMove() {
             console.log('onTouchMove');
@@ -244,7 +211,7 @@ var ImageSlider = (function (imageSlider, options) {
 
             //if (now - touchMoveTime < 30) return;
 
-            // スワイプ移動量の算出
+            // スライド移動量の算出
             var dx = (touchMoveX - touchStartX);
             //console.log('dx: ' + dx);
             //if (dx > 0 && _currentIndex > 0 || dx < 0 && _currentIndex < _imageElements.length - 1) {
@@ -253,63 +220,15 @@ var ImageSlider = (function (imageSlider, options) {
             //    dx *= .3;
             //}
 
-            //// スワイプ移動量分、画像要素を移動
-            //if (prevElem) {
-            //    prevElem.style.left = -containerWidth + dx + 'px';
-            //}
-            //curElem.style.left = dx + 'px';
-            //if (nextElem) {
-            //    nextElem.style.left = containerWidth + dx + 'px';
-            //}
+            // スクロール
             imageContainer.scrollLeft = touchStartScrollLeft - dx;
         }
         /**
-         * スワイプ終了イベント
+         * スライド終了イベント
          */
         function onTouchEnd() {
             console.log('onTouchEnd');
             ////event.preventDefault();
-
-            //// 移動量の判定
-            //var indexChanged = false;
-            //if (touchStartX > touchMoveX) {
-            //    if (touchStartX > (touchMoveX + 50)) {
-            //        //右から左に指が移動した場合
-            //        console.log({ msg: 'swipe ←', touchStartX: touchStartX, touchMoveX: touchMoveX });
-            //        if (nextElem) {
-            //            ++_currentIndex;
-            //            if (_currentIndex >= _imageElements.length) {
-            //                _currentIndex = 0;
-            //            }
-            //            nextElem.className = 'fadeIn';
-            //            //curElem.className = 'fadeOut';
-            //            indexChanged = true;
-            //        }
-            //    }
-            //} else if (touchStartX < touchMoveX) {
-            //    if ((touchStartX + 50) < touchMoveX) {
-            //        //左から右に指が移動した場合
-            //        console.log({ msg: 'swipe →', touchStartX: touchStartX, touchMoveX: touchMoveX });
-            //        if (prevElem) {
-            //            --_currentIndex;
-            //            if (_currentIndex < 0) {
-            //                _currentIndex = _imageElements.length - 1;
-            //            }
-            //            prevElem.className = 'fadeIn';
-            //            //curElem.className = 'fadeOut';
-            //            indexChanged = true;
-            //        }
-            //    }
-            //}
-            //console.log({ _currentIndex: _currentIndex });
-
-            //// インデックスに変更が無ければ、スライドを元に戻す
-            //if (!indexChanged) {
-            //    curElem.className = 'fadeIn';
-            //} else {
-            //    // 縦帯のリフレッシュ
-            //    refreshColStripe();
-            //}
 
             // フリックの速度を算出
             var touchEndX = event.changedTouches ? event.changedTouches[0].pageX : event.pageX;
@@ -318,29 +237,77 @@ var ImageSlider = (function (imageSlider, options) {
 
             // スライダを慣性スクロールさせる
             clearInterval(_sliderScrollLeftTimerId);
-            _sliderScrollLeftTimerId = scrollLeftMomentum(imageSlider, vx, 1000, function () {
-                var curElem = getCenterViewElement();
-                var index = _imageElements.indexOf(curElem);
-                thisObj.setIndex(index, true);
+            _sliderScrollLeftTimerId = scrollLeftMomentum(imageContainer, vx, 1000, {
+                minVelocity: .5,
+                onCompleted: function () {
+                    var targetCenterX = imageContainer.scrollLeft + imageContainer.clientWidth / 2;
+                    var interval = imageContainer.clientWidth * .25;
+
+                    var targetX = targetCenterX + ((vx > 0) ? -interval : interval);
+                    var index = getIndexAt(targetX);
+                    thisObj.setIndex(index, true);
+                },
             });
 
-            // タッチ・マウスイベントを解除
-            // unregister touchmove / mousemove
-            imageContainer.removeEventListener('touchmove', onTouchMove);
-            //imageContainer.removeEventListener('mousemove', onTouchMove);
-            // unregister touchend / mouseup / mouseout
-            imageContainer.removeEventListener('touchend', onTouchEnd);
-            //imageContainer.removeEventListener('mouseup', onTouchEnd);
-            //imageContainer.removeEventListener('mouseout', onTouchEnd);
+            // タッチイベントを解除
+            imageContainer.removeEventListener(TOUCH_MOVE_EVENT, onTouchMove);
+            imageContainer.removeEventListener(TOUCH_END_EVENT, onTouchEnd);
         }
     })();
 });
 
+/**
+ * 指定した初速で慣性スクロールを行います。
+ */
+function scrollLeftMomentum(target, vx, duration, options) {
+    if (typeof (options.minVelocity) === 'undefined') {
+        options.minVelocity = .03;
+    }
+    if (typeof (options.maxVelocity) === 'undefined') {
+        options.maxVelocity = 10;
+    }
+    if (typeof (options.fps) === 'undefined') {
+        options.fps = 60;
+    }
+
+    // 慣性スクロール初速算出
+    vx = (vx < -options.maxVelocity) ? -options.maxVelocity :
+         (vx > options.maxVelocity) ? options.maxVelocity :
+         vx;
+    console.log('vx: ' + vx);
+
+    var animationInterval = 1000 / options.fps;
+    var count = duration / animationInterval;
+    var ti = 0;
+    var prevScrollLeft;
+    var timerId = setInterval(function () {
+        var scrollLeft = target.scrollLeft;
+        if (++ti >= count || prevScrollLeft === scrollLeft || Math.abs(vx) < options.minVelocity) {
+            clearInterval(timerId);
+            if (options.onCompleted) {
+                options.onCompleted.apply(window);
+            }
+        } else {
+            prevScrollLeft = scrollLeft;
+            target.scrollLeft = scrollLeft - vx * animationInterval;
+
+            // 慣性スクロール速度を減衰
+            vx *= .95;
+        }
+    }, animationInterval);
+    return timerId;
+}
+
+/**
+ * 指定したポジションまでアニメーションスクロールします。
+ */
 function scrollLeft(target, toLeft, duration) {
     if (duration) {
+        var FPS = 60;
+
         var fromLeft = target.scrollLeft;
-        var interval = 8;
-        var count = duration / interval;
+        var animationInterval = 1000 / FPS;
+        var count = duration / animationInterval;
         var step = (toLeft - fromLeft) / count;
         var ti = 0;
         var timerId = setInterval(function () {
@@ -348,44 +315,11 @@ function scrollLeft(target, toLeft, duration) {
                 target.scrollLeft += step;
             } else {
                 clearInterval(timerId);
-                //_autoScrollTimerId = null;
-                //_isAutoScrolling = false;
                 target.scrollLeft = toLeft;
             }
-        }, interval);
+        }, animationInterval);
         return timerId;
     } else {
         target.scrollLeft = toLeft;
     }
-}
-
-function scrollLeftMomentum(target, vx, duration, completionCallback) {
-    var MAX_VELOCITY = 10;
-    var ANIMATION_INTERVAL = 10;
-
-    // 慣性スクロール初速算出
-    vx = (vx < -MAX_VELOCITY) ? -MAX_VELOCITY :
-         (vx > MAX_VELOCITY) ? MAX_VELOCITY :
-         vx;
-    console.log('vx: ' + vx);
-
-    var count = duration / ANIMATION_INTERVAL;
-    var ti = 0;
-    var prevScrollLeft;
-    var timerId = setInterval(function () {
-        var scrollLeft = target.scrollLeft;
-        if (++ti >= count || Math.abs(vx) < 0.03 || prevScrollLeft === scrollLeft) {
-            clearInterval(timerId);
-            if (completionCallback) {
-                completionCallback.apply(window);
-            }
-        } else {
-            prevScrollLeft = scrollLeft;
-            target.scrollLeft = scrollLeft - vx * ANIMATION_INTERVAL;
-
-            // 慣性スクロール速度を減衰
-            vx *= .95;
-        }
-    }, ANIMATION_INTERVAL);
-    return timerId;
 }

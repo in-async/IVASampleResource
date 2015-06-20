@@ -370,7 +370,7 @@
             window.document.addEventListener('orientationchange', function () {
                 var iOS = navigator.userAgent.match(/(iPad|iPhone|iPod)/g);
                 if (iOS) {
-                    var ios = (navigator.appVersion).match(/OS (\d+)_(\d+)/);
+                    var ios = navigator.appVersion.match(/OS (\d+)_(\d+)/);
                     var iosVer = [parseInt(ios[1]), parseInt(ios[2])];
                     if (iosVer[0] <= 6) {
                         var viewportmeta = document.querySelector('meta[name="viewport"]');
