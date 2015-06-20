@@ -40,6 +40,8 @@
 .image-slider-item {
   display: inline-block;
   height: 100%;
+  max-width: 100%;
+  width: auto;
   /*position: relative;
   right: 50%;*/
   padding: 0 3%;
@@ -52,16 +54,20 @@
   user-select: none;
 }
 .image-slider-item img {
-  opacity: .3;
+  height: 100%;
   max-width: 100%;
-  max-height: 100%;
+  /*max-height: 100%;*/
+  width: auto;
+  display: block;
+
+  /*opacity: .4;*/
 }
 .image-slider-item.active img {
-  opacity: 1;
+  /*opacity: 1;*/
 }
 
 
 
-/*#reload-ad {
+#reload-ad {
   display: none !important;
-}*/
+}
