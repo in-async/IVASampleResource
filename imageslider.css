@@ -48,6 +48,8 @@
 
   padding: 0 3%;
 
+  opacity: .4;
+
   /* ドラッグによる選択無効化 */
   -moz-user-select: none;
   -ms-user-select: none;
@@ -62,14 +64,13 @@
   /*width: auto;*/
   display: block;
 
-  /*opacity: .4;*/
 }
-.image-slider-item.active img {
-  /*opacity: 1;*/
+.image-slider-item.active {
+  opacity: 1;
 }
 
 
 
-#reload-ad {
+/*#reload-ad {
   display: none !important;
-}
+}*/

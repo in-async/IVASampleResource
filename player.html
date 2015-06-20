@@ -368,26 +368,26 @@
                 event.preventDefault();
             });
 
-            // 少なくとも iOS 6 にてローテーション時に画像が不適切な大きさにリサイズ表示されてしまう不具合ので、その対処
-            // ref: http://stackoverflow.com/questions/12102235/how-to-fit-to-screen-after-changing-viewport-width-on-orientation-change
-            window.document.addEventListener('orientationchange', function () {
-                var iOS = navigator.userAgent.match(/(iPad|iPhone|iPod)/g);
-                if (iOS) {
-                    var ios = navigator.appVersion.match(/OS (\d+)_(\d+)/);
-                    var iosVer = [parseInt(ios[1]), parseInt(ios[2])];
-                    if (iosVer[0] <= 6) {
-                        var viewportmeta = document.querySelector('meta[name="viewport"]');
-                        if (viewportmeta) {
-                            //if (viewportmeta.content.match(/width=device-width/)) {
-                            viewportmeta.content = viewportmeta.content.replace(/width=[^,]+/, 'width=1');
-                            //}
-                            viewportmeta.content = viewportmeta.content.replace(/width=[^,]+/, 'width=' + window.innerWidth);
-                        }
-                    }
-                }
-                // If you want to hide the address bar on orientation change, uncomment the next line
-                // window.scrollTo(0, 0);
-            });
+            //// 少なくとも iOS 6 にてローテーション時に画像が不適切な大きさにリサイズ表示されてしまう不具合ので、その対処
+            //// ref: http://stackoverflow.com/questions/12102235/how-to-fit-to-screen-after-changing-viewport-width-on-orientation-change
+            //window.document.addEventListener('orientationchange', function () {
+            //    var iOS = navigator.userAgent.match(/(iPad|iPhone|iPod)/g);
+            //    if (iOS) {
+            //        var ios = navigator.appVersion.match(/OS (\d+)_(\d+)/);
+            //        var iosVer = [parseInt(ios[1]), parseInt(ios[2])];
+            //        if (iosVer[0] <= 6) {
+            //            var viewportmeta = document.querySelector('meta[name="viewport"]');
+            //            if (viewportmeta) {
+            //                //if (viewportmeta.content.match(/width=device-width/)) {
+            //                viewportmeta.content = viewportmeta.content.replace(/width=[^,]+/, 'width=1');
+            //                //}
+            //                viewportmeta.content = viewportmeta.content.replace(/width=[^,]+/, 'width=' + window.innerWidth);
+            //            }
+            //        }
+            //    }
+            //    // If you want to hide the address bar on orientation change, uncomment the next line
+            //    // window.scrollTo(0, 0);
+            //});
 
 
             /**
@@ -507,18 +507,20 @@
                     console.log('callback getVideoThumbnailAsBase64');
 
                     var reloadAdElem = document.getElementById('reload-ad');
-                    //reloadAdElem.style.backgroundImage = 'url("' + result + '")';
-                    var imgElem = document.createElement('img');
-                    imgElem.setAttribute('src', result);
-                    reloadAdElem.appendChild(imgElem);
-                    reloadAdElem.addEventListener('click', function () {
-                        //_videoPageElem.className = '';
-                        _endcardPageElem.className = 'fadeOut';
+                    if (reloadAdElem) {
+                        //reloadAdElem.style.backgroundImage = 'url("' + result + '")';
+                        var imgElem = document.createElement('img');
+                        imgElem.setAttribute('src', result);
+                        reloadAdElem.appendChild(imgElem);
+                        reloadAdElem.addEventListener('click', function () {
+                            //_videoPageElem.className = '';
+                            _endcardPageElem.className = 'fadeOut';
 
-                        // 動画をリプレイ
-                        nativeApi('replayVideo');
-                    });
-                    _slider.addImageElement(reloadAdElem);
+                            // 動画をリプレイ
+                            nativeApi('replayVideo');
+                        });
+                        _slider.addImageElement(reloadAdElem);
+                    }
                 });
             }
             /**

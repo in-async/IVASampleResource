@@ -51,12 +51,12 @@ var ImageSlider = (function (imageContainer, options) {
         // 画像要素の作成
         var imageElem = document.createElement('img');
         imageElem.src = imageUrl;
-        var divElem = document.createElement('div');
-        divElem.appendChild(imageElem);
-        imageContainer.appendChild(divElem);
+        //var divElem = document.createElement('div');
+        //divElem.appendChild(imageElem);
 
         // 画像要素の追加
-        thisObj.addImageElement(divElem);
+        //thisObj.addImageElement(divElem);
+        thisObj.addImageElement(imageElem);
     };
 
     /**
@@ -70,6 +70,8 @@ var ImageSlider = (function (imageContainer, options) {
 
             // アイテム順序が変わったので、再描画
             thisObj.setIndex(_currentIndex);
+        } else {
+            imageContainer.appendChild(imageElem);
         }
         _imageElements.push(imageElem);
 
