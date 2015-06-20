@@ -114,9 +114,9 @@ var ImageSlider = (function (imageContainer, options) {
             var imgElem = _imageElements[i];
             var imgs = imgElem.getElementsByTagName('img');
             if (imgs && imgs.length > 0) {
-                var w = img[0].style.width;
-                img[0].style.width = '1px';
-                img[0].style.width = w;
+                var w = imgs[0].style.width;
+                imgs[0].style.width = '1px';
+                imgs[0].style.width = w;
             }
         }
         //_imageElements[_currentIndex].className += ' active';
