@@ -133,10 +133,10 @@ var ImageSlider = (function (imageContainer, options) {
     });
     window.addEventListener("resize", function () {
         console.log('resize');
-        thisObj.setIndex(_currentIndex);
-        //setTimeout(function () {
-        //    thisObj.setIndex(_currentIndex);
-        //}, 0);
+        //thisObj.setIndex(_currentIndex);
+        setTimeout(function () {
+            thisObj.setIndex(_currentIndex);
+        }, 0);
         //if (window.innerHeight > window.innerWidth) {
         //    // ポートレイト（ランドスケープ）
         //} else {
