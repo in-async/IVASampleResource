@@ -108,6 +108,14 @@ var ImageSlider = (function (imageContainer, options) {
         setActiveClass(imgElem);
     };
 
+    this.refresh = function () {
+        for (var i in _imageElements) {
+            var imgElem = _imageElements[i];
+            imgElem.className = imgElem.className.replace(' active', '');
+        }
+        _imageElements[_currentIndex].className += ' active';
+    };
+
     /**
      *  スライド対象画像のうち、指定した要素をアクティブとしてマークします。
      */
