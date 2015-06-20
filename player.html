@@ -383,12 +383,14 @@
                             //}
                             viewportmeta.content = viewportmeta.content.replace(/width=[^,]+/, 'width=' + window.innerWidth);
                         }
-
-                        _slider.refresh();
                     }
                 }
                 // If you want to hide the address bar on orientation change, uncomment the next line
                 // window.scrollTo(0, 0);
+            });
+            window.addEventListener("orientationchange", function () {
+                console.log('orientationchange');
+                _slider.refresh();
             });
 
 
