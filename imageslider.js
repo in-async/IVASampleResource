@@ -252,7 +252,7 @@ var ImageSlider = (function (imageContainer, options) {
             //    // 範囲外へのスワイプはバウンド挙動に
             //    dx *= .3;
             //}
-            if (_currentIndex === 0 || _currentIndex === imageCount - 1) {
+            if (dx > 0 && _currentIndex === 0 || dx < 0 && _currentIndex === imageCount - 1) {
                 // 範囲外へのスワイプはバウンド挙動に
                 dx *= .3;
             }
