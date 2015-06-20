@@ -109,11 +109,15 @@ var ImageSlider = (function (imageContainer, options) {
     };
 
     this.refresh = function () {
+        console.log('refresh');
         for (var i in _imageElements) {
             var imgElem = _imageElements[i];
-            var w = imgElem.style.width;
-            imgElem.style.width = '1px';
-            imgElem.style.width = w;
+            var imgs = imgElem.getElementsByTagName('img');
+            if (imgs && imgs.length > 0) {
+                var w = img[0].style.width;
+                img[0].style.width = '1px';
+                img[0].style.width = w;
+            }
         }
         //_imageElements[_currentIndex].className += ' active';
     };
