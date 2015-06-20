@@ -111,9 +111,11 @@ var ImageSlider = (function (imageContainer, options) {
     this.refresh = function () {
         for (var i in _imageElements) {
             var imgElem = _imageElements[i];
-            imgElem.className = imgElem.className.replace(' active', '');
+            var w = imgElem.style.width;
+            imgElem.style.width = '1px';
+            imgElem.style.width = w;
         }
-        _imageElements[_currentIndex].className += ' active';
+        //_imageElements[_currentIndex].className += ' active';
     };
 
     /**
