@@ -247,13 +247,8 @@ var ImageSlider = (function (imageContainer, options) {
             // スライド移動量の算出
             var dx = (touchMoveX - touchStartX);
             //console.log('dx: ' + dx);
-            //if (dx > 0 && _currentIndex > 0 || dx < 0 && _currentIndex < _imageElements.length - 1) {
-            //} else {
-            //    // 範囲外へのスワイプはバウンド挙動に
-            //    dx *= .3;
-            //}
             if (dx > 0 && _currentIndex === 0 || dx < 0 && _currentIndex === imageCount - 1) {
-                // 範囲外へのスワイプはバウンド挙動に
+                // 範囲外へのスライドはバウンド挙動に
                 dx *= .3;
             }
 
