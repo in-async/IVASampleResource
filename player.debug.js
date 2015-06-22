@@ -64,6 +64,8 @@
                 // 直ぐ再生終了イベントをコール
                 setTimeout(function () {
                     native_onPreparedVideo(zoneEid, campaignId, creativeId);
+                    // プレイヤーを非表示
+                    document.getElementById('video-page').style.display = 'none';
 
                     native_onFinishedAd(zoneEid, campaignId, creativeId, 5, false, viewToken);
                 }, 0);
@@ -378,11 +380,6 @@
     })();
 }
 (function () {
-    if (location.search.indexOf("endcard=1") >= 0) {
-        // プレイヤーを非表示
-        document.getElementById('video-page').style.display = 'none';
-    }
-
     // 指定された任意の App Store アプリの情報を取得
     var m = location.search.match('id=(\\d+)');
     if (m) {

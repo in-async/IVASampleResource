@@ -22,9 +22,9 @@
          *  動画ページ
          */
         #video-page {
+            display: none;
             position: absolute;
             z-index: 1;
-            display: block;
             width: 100%;
             height: 100%;
             color: #ccc;
@@ -350,6 +350,9 @@
              *  フィールド変数
              */
             var _videoPageElem;
+            var _startVideoElem;
+            var _pauseVideoElem;
+            var _skipVideoElem;
             var _endcardPageElem;
             var _playtimeLabelElem;
             var _playtimeSvgElem;
@@ -396,11 +399,60 @@
             document.addEventListener('DOMContentLoaded', function () {
                 console.log('DOMContentLoaded');
                 _videoPageElem = document.getElementById('video-page');
+                _startVideoElem = document.getElementById('start-video');
+                _pauseVideoElem = document.getElementById('pause-video');
+                _skipVideoElem = document.getElementById('skip-ad');
                 _endcardPageElem = document.getElementById('endcard-page');
                 _playtimeLabelElem = document.getElementById('playtime-label');
                 _playtimeSvgElem = document.getElementById('playtime-svg');
                 _playtimeSvgPathElem = document.getElementById('playtime-svg-path');
                 _slider = new ImageSlider(document.getElementById('image-frame'));
+
+                /**
+                 *  広告スキップボタンのクリックイベント
+                 */
+                if (_skipVideoElem) {
+                    _skipVideoElem.addEventListener('click', function () {
+                        console.log('skipAd');
+                        nativeApi('skipAd');
+                        nativeApi('closeAd');
+                    });
+                }
+                /**
+                 *  広告再生ボタンのクリックイベント
+                 */
+                if (_startVideoElem) {
+                    _startVideoElem.addEventListener('click', function () {
+                        console.log('start-video.click');
+                        nativeApi('startVideo');
+                    });
+                }
+                /**
+                 *  広告停止ボタンのクリックイベント
+                 */
+                if (_pauseVideoElem) {
+                    _pauseVideoElem.addEventListener('click', function () {
+                        console.log('pause-video.click');
+                        nativeApi('pauseVideo');
+                    });
+                }
+                /**
+                 *  ストア遷移ボタンのクリックイベント
+                 */
+                document.getElementById('transfer-button').addEventListener('click', function () {
+                    console.log('transfer-button.click');
+                    //            nativeApi('openUrl', {url: _creative.transfer_url});
+                    nativeApi('openClickUrl', { url: _creative.transfer_url });
+                });
+                /**
+                 *  広告クローズボタンのクリックイベント
+                 */
+                document.getElementById('close-ad').addEventListener('click', function () {
+                    console.log('close-ad.click');
+                    //location.href = "native://closeAd/?args={xxx:bbb}&callback=hogehoge&close_ad=true";
+                    //window.close();
+                    nativeApi('closeAd');
+                });
 
                 /* 広告情報の取得 */
                 nativeApi("getAdInfo", null, function (result) {
@@ -530,6 +582,7 @@
                 console.log("native_onPreparedAd");
 
                 // 動画再生
+                _videoPageElem.style.display = 'block';
                 nativeApi('startVideo');
             }
             /**
@@ -564,59 +617,6 @@
             function native_onFailed(reason, zoneEid) {
                 console.log('native_onFailed');
             }
-
-            /**
-             *  広告スキップボタンのクリックイベント
-             */
-            var skipAdElem = document.getElementById('skip-ad');
-            if (skipAdElem) {
-                skipAdElem.addEventListener('click', function () {
-                    console.log('skipAd');
-                    nativeApi('skipAd');
-                    nativeApi('closeAd');
-                });
-            }
-            /**
-             *  広告再生ボタンのクリックイベント
-             */
-            var startAdElem = document.getElementById('start-video');
-            if (startAdElem) {
-                startAdElem.addEventListener('click', function () {
-                    console.log('start-video.click');
-                    nativeApi('startVideo');
-                });
-            }
-            /**
-             *  広告停止ボタンのクリックイベント
-             */
-            var pauseAdElem = document.getElementById('pause-video');
-            if (pauseAdElem) {
-                pauseAdElem.addEventListener('click', function () {
-                    console.log('pause-video.click');
-                    nativeApi('pauseVideo');
-                });
-            }
-            /**
-             *  ストア遷移ボタンのクリックイベント
-             */
-            document.getElementById('transfer-button').addEventListener('click', function () {
-                console.log('transfer-button.click');
-                //            nativeApi('openUrl', {url: _creative.transfer_url});
-                nativeApi('openClickUrl', { url: _creative.transfer_url });
-            });
-            //document.getElementById('image-frame').addEventListener('click', function () {
-            //    console.log('image-frame.click');
-            //    nativeApi('openClickUrl', { url: _creative.transfer_url });
-            //});
-            /**
-             *  広告クローズボタンのクリックイベント
-             */
-            document.getElementById('close-ad').addEventListener('click', function () {
-                console.log('close-ad.click');
-                //location.href = "native://closeAd/?args={xxx:bbb}&callback=hogehoge&close_ad=true";
-                //window.close();
-                nativeApi('closeAd');
-            });
         } catch (ex) {
             console.log(ex);
         }
