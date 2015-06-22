@@ -98,14 +98,14 @@ var ImageSlider = (function (imageContainer, options) {
         // スライド対象画像が１件もなければ何もしない
         if (_currentIndex < 0) return;
 
-        // 対象画像がスライダーのビューポート中央に表示されるようスクロール（アクティブ化）
+        // アクティブマークを付与
         var imgElem = _imageElements[_currentIndex];
+        setActiveClass(imgElem);
+
+        // 対象画像がスライダーのビューポート中央に表示されるようスクロール（アクティブ化）
         var toLeft = imgElem.offsetLeft - imageContainer.clientWidth / 2 + imgElem.offsetWidth / 2;
         clearInterval(_sliderScrollLeftTimerId);
         _sliderScrollLeftTimerId = scrollLeft(imageContainer, toLeft, animation? 200: 0);
-
-        // アクティブマークを付与
-        setActiveClass(imgElem);
     };
 
     this.refresh = function () {
