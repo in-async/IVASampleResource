@@ -118,7 +118,7 @@ var ImageSlider = (function (imageContainer, options) {
             this.removeEventListener('load', scrollFunc);
         }
         console.log({ "imgElem.dataset.isLoaded": imgElem.dataset.isLoaded });
-        if (imgElem.dataset.isLoaded) {
+        if (imgElem.tagName.toLowerCase() !== 'img' || imgElem.dataset.isLoaded) {
             scrollFunc();
         } else {
             imgElem.addEventListener('load', scrollFunc);
