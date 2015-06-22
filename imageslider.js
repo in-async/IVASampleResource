@@ -51,6 +51,11 @@ var ImageSlider = (function (imageContainer, options) {
         // 画像要素の作成
         var imageElem = document.createElement('img');
         imageElem.src = imageUrl;
+        function img_onLoad() {
+            this.dataset.isLoaded = 1;
+            imageElem.removeEventListener('load', img_onLoad);
+        }
+        imageElem.addEventListener('load', img_onLoad);
         //var divElem = document.createElement('div');
         //divElem.appendChild(imageElem);
 
@@ -85,7 +90,7 @@ var ImageSlider = (function (imageContainer, options) {
      * 表示対象のスライド画像のインデックスを変更します。
      */
     this.setIndex = function (index, animation) {
-        console.log('setIndex');
+        console.log('setIndex: ' + index + ', animation:' + animation);
         // 指定したスライド画像インデックスが画像配列数を上回っていたら、代わりに最後尾を指定
         if (index >= _imageElements.length) {
             index = _imageElements.length - 1;
@@ -103,9 +108,21 @@ var ImageSlider = (function (imageContainer, options) {
         setActiveClass(imgElem);
 
         // 対象画像がスライダーのビューポート中央に表示されるようスクロール（アクティブ化）
-        var toLeft = imgElem.offsetLeft - imageContainer.clientWidth / 2 + imgElem.offsetWidth / 2;
-        clearInterval(_sliderScrollLeftTimerId);
-        _sliderScrollLeftTimerId = scrollLeft(imageContainer, toLeft, animation? 200: 0);
+        var scrollFunc = function () {
+            var toLeft = imgElem.offsetLeft - imageContainer.clientWidth / 2 + imgElem.offsetWidth / 2;
+            console.log({ toLeft: toLeft, "imgElem.offsetWidth": imgElem.offsetWidth });
+            clearInterval(_sliderScrollLeftTimerId);
+            _sliderScrollLeftTimerId = scrollLeft(imageContainer, toLeft, animation ? 200 : 0);
+
+            // イベント解除
+            this.removeEventListener('load', scrollFunc);
+        }
+        console.log({ "imgElem.dataset.isLoaded": imgElem.dataset.isLoaded });
+        if (imgElem.dataset.isLoaded) {
+            scrollFunc();
+        } else {
+            imgElem.addEventListener('load', scrollFunc);
+        }
     };
 
     this.refresh = function () {
@@ -337,6 +354,7 @@ function scrollLeftMomentum(target, vx, duration, options) {
  * 指定したポジションまでアニメーションスクロールします。
  */
 function scrollLeft(target, toLeft, duration) {
+    console.log('scrollLeft: ' + toLeft + ', duration:' + duration);
     if (duration) {
         var FPS = 60;
 

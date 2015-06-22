@@ -47,7 +47,7 @@
 
   padding: 0 3%;
 
-  opacity: .4;
+  /*opacity: .4;*/
 
   /* ドラッグによる選択無効化 */
   -moz-user-select: none;
@@ -71,7 +71,7 @@
   /*height: 1728px;*/
 }
 .image-slider-item.active {
-  opacity: 1;
+  /*opacity: 1;*/
 }
 
 

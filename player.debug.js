@@ -377,12 +377,16 @@
         }
     })();
 }
-// 指定された任意の App Store アプリの情報を取得
 (function () {
+    if (location.search.indexOf("endcard=1") >= 0) {
+        // プレイヤーを非表示
+        document.getElementById('video-page').style.display = 'none';
+    }
+
+    // 指定された任意の App Store アプリの情報を取得
     var m = location.search.match('id=(\\d+)');
     if (m) {
         var id = m[1];
         document.write('<script src="https://itunes.apple.com/lookup?country=JP&callback=debug_jsonp_onLookup&id=' + id + '"></' + 'script>');
     }
 })();
-
