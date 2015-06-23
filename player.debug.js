@@ -72,11 +72,11 @@
             if (location.search.indexOf("endcard=1") >= 0) {
                 // 直ぐ再生終了イベントをコール
                 setTimeout(function () {
-                    native_onPreparedVideo(zoneEid, campaignId, creativeId);
+                    native_onPreparedVideo(5);
                     // プレイヤーを非表示
                     document.getElementById('video-page').style.display = 'none';
 
-                    native_onFinishedAd(zoneEid, campaignId, creativeId, 5, false, viewToken);
+                    native_onFinishedAd(5, false);
                 }, 0);
             } else {
                 (function () {
@@ -98,8 +98,8 @@
                     });
                     video.addEventListener('loadeddata', function () {
                         console.log('video.loadeddata');
-                        native_onPreparedVideo(zoneEid, campaignId, creativeId);
-                        native_onPreparedAd(zoneEid, campaignId, creativeId);
+                        native_onPreparedVideo(video.duration);
+                        native_onPreparedAd();
                     });
                     video.addEventListener('play', function () {
                         console.log('video.play');
@@ -111,7 +111,7 @@
                     video.addEventListener('ended', function () {
                         console.log('video.ended');
                         video.style.display = 'none';
-                        native_onFinishedAd(zoneEid, campaignId, creativeId, video.duration, false, viewToken);
+                        native_onFinishedAd(video.duration, false);
                     })
                     video.addEventListener('timeupdate', function () {
                         native_onUpdateTime(video.currentTime, video.duration);
@@ -180,7 +180,7 @@
                         video.play();
                     } else {
                         setTimeout(function () {
-                            native_onFinishedAd(zoneEid, campaignId, creativeId, 5, false, viewToken);
+                            native_onFinishedAd(5, false);
                         }, 300);
                     }
                     break;
@@ -195,7 +195,7 @@
                         video.play();
                     } else {
                         setTimeout(function () {
-                            native_onFinishedAd(zoneEid, campaignId, creativeId, 5, false, viewToken);
+                            native_onFinishedAd(5, false);
                         }, 300);
                     }
                     break;
@@ -205,7 +205,7 @@
                         video.pause();
                         playtime = video.currentTime;
                     }
-                    native_onFinishedAd(zoneEid, campaignId, creativeId, playtime, true, viewToken);
+                    native_onFinishedAd(playtime, true);
                     break;
                 case 'sendViewLog':
                     break;

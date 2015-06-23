@@ -633,7 +633,7 @@
             /**
              *  動画再生の準備完了イベント
              */
-            function native_onPreparedVideo() {
+            function native_onPreparedVideo(duration) {
                 console.log('native_onPreparedVideo');
 
                 // 動画サムネイルの取得
@@ -672,6 +672,7 @@
             */
             function native_onFinishedAd(playtime, skipped) {
                 console.log('native_onFinishedAd');
+                //console.log({ playtime: playtime, skipped: skipped });
 
                 // 動画フレームに代わり、エンドカードフレームを表示
                 if (!skipped) {
