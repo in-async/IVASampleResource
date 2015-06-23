@@ -207,6 +207,8 @@
                     }
                     native_onFinishedAd(zoneEid, campaignId, creativeId, playtime, true, viewToken);
                     break;
+                case 'sendViewLog':
+                    break;
                 case 'openClickUrl':
                     window.open(jsonArgs.url);
                     break;

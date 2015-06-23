@@ -294,8 +294,8 @@
 </head>
 <body>
     <div id="video-page">
-        <a id="start-video">再生</a>
-        <a id="pause-video">停止</a>
+        <a id="start-video">play</a>
+        <a id="pause-video">pause</a>
         <!--<a id="skip-ad">skip</a>-->
         <div id="playtime">
             <span id="playtime-label"></span>
@@ -332,20 +332,108 @@
         <img id="close-ad" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADgAAAA4CAYAAACohjseAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAxFpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNS1jMDIxIDc5LjE1NDkxMSwgMjAxMy8xMC8yOS0xMTo0NzoxNiAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6NTM2Q0RCRkIxMzNFMTFFNUFFRDY4MjU5Q0UwRjA5N0IiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6NTM2Q0RCRkExMzNFMTFFNUFFRDY4MjU5Q0UwRjA5N0IiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIChXaW5kb3dzKSI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJGQjU2RDhDMzU5NjZGQzkwNzA4RkZEQTAxOEEzRjNCRCIgc3RSZWY6ZG9jdW1lbnRJRD0iRkI1NkQ4QzM1OTY2RkM5MDcwOEZGREEwMThBM0YzQkQiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz77E+Y9AAANqUlEQVR42sxbe1CTVxbP40vIi2eAgKiIQKVU66zu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" />
     </div>
 
+    <!-- Core -->
+    <script type="text/javascript">
+        // console.log をネイティブ API に渡し、IDE に出力
+        var consoleObj = console;
+        console = {
+            log: function (msg) {
+                consoleObj.log(msg);
+
+                nativeApi('log', { message: msg });
+            }
+        };
+
+        var callbacks = [];
+        /**
+         *  ネイティブ API（SDK） の呼び出し
+         */
+        function nativeApi(method, jsonArgs, callback) {
+            if (callback) {
+                if (!jsonArgs) {
+                    jsonArgs = {};
+                }
+                jsonArgs.__callbackId = callbacks.push(callback);
+            }
+            var args = '';
+            if (jsonArgs) {
+                try {
+                    args = encodeURIComponent(JSON.stringify(jsonArgs));
+                } catch (ex) {
+                    args = encodeURIComponent(JSON.stringify({ message: ex.message, error: ex }));
+                }
+            }
+            //loadFrame('native://' + method + '/?args=' + args + '&callback=' + );
+            loadFrame('native://' + method + '/' + args);
+        }
+        /**
+         *  ネイティブ（SDK）からのコールバック
+         */
+        function native_callback(callbackId, result) {
+            console.log('native_callback: ' + callbackId);
+            callbacks[callbackId - 1](result);
+            delete callbacks[callbackId - 1];
+        }
+        /* iframe を利用したネイティブ API の呼び出し */
+        function loadFrame(url) {
+            //        document.getElementById('iframe').setAttribute('src', url);
+            var iframe = document.createElement('iframe');
+            iframe.setAttribute("height", "1px");
+            iframe.setAttribute("width", "1px");
+            iframe.setAttribute("frameborder", "0");
+            iframe.setAttribute('src', url);
+            document.documentElement.appendChild(iframe);
+            iframe.parentNode.removeChild(iframe);
+            iframe = null;
+        }
+
+        /**
+         *  整数をカンマ区切りの文字列に変換します。
+         */
+        function toCommify(num) {
+            return String(num).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,');
+        }
+
+        window.onerror = function (errMsg, url, lineNumber) {
+            console.log(errMsg + ", file=" + url + ":" + lineNumber);
+        }
+
+        //cxは円の中心のx座標;
+        //cyは円の中心のy座標;
+        //rは半径;
+        //startDegreeは扇形の始まりの中心角(度数法);
+        //finishDegreeは扇形の終わりの中心角(度数法);
+        //strokeWidthは線の幅;
+        function drawArc(path, cx, cy, r, startDegree, finishDegree, strokeWidth) {
+            //円弧の始まりの座標;
+            var startX = cx + r * Math.sin(startDegree / 180 * Math.PI);
+            var startY = cy - r * Math.cos(startDegree / 180 * Math.PI);
+            //円弧の終わり座標;
+            var finishX = cx + r * Math.sin(finishDegree / 180 * Math.PI);
+            var finishY = cy - r * Math.cos(finishDegree / 180 * Math.PI);
+            //扇形の角度が180度を超えているか;
+            var largeArcFlag = (finishDegree - startDegree <= 180) ? 0 : 1;
+
+            //扇形の中心点へ移動するコマンド;
+            var move = 'M' + startX + ' ' + startY + ' ';
+            //円弧を描くコマンド;
+            var arc = 'A' + r + ' ' + r + ' ' + 0 + ' ' + largeArcFlag + ' ' + 1 + ' ' + finishX + ' ' + finishY + ' ';
+
+            // path要素を作成
+            path.setAttributeNS(null, 'd', move + arc);
+            path.setAttributeNS(null, 'stroke-width', strokeWidth);
+
+            return path;
+        }
+    </script>
+
+    <!-- Lib -->
     <link rel="stylesheet" href="imageslider.css" />
     <script src="imageslider.js"></script>
+
+    <!-- テンプレートロジック -->
     <script type="text/javascript">
         try {
-            // console.log をネイティブ API に渡し、IDE に出力
-            var consoleObj = console;
-            console = {
-                log: function (msg) {
-                    consoleObj.log(msg);
-
-                    nativeApi('log', { message: msg });
-                }
-            };
-
             /**
              *  フィールド変数
              */
@@ -545,7 +633,7 @@
             /**
              *  動画再生の準備完了イベント
              */
-            function native_onPreparedVideo(zoneEid, campaignId, creativeId) {
+            function native_onPreparedVideo() {
                 console.log('native_onPreparedVideo');
 
                 // 動画サムネイルの取得
@@ -572,7 +660,7 @@
             /**
              *  広告の全ての準備完了イベント
              */
-            function native_onPreparedAd(zoneEid, campaignId, creativeId) {
+            function native_onPreparedAd() {
                 console.log("native_onPreparedAd");
 
                 // 動画再生
@@ -582,14 +670,25 @@
             /**
             *  動画再生の終了イベント
             */
-            function native_onFinishedAd(zoneEid, campaignId, creativeId, playtime, skipped) {
+            function native_onFinishedAd(playtime, skipped) {
                 console.log('native_onFinishedAd');
+
                 // 動画フレームに代わり、エンドカードフレームを表示
                 if (!skipped) {
                     //_videoPageElem.className = '';
                     _endcardPageElem.className = 'fadeIn';
                     _slider.setIndex(0);
                 }
+
+                // 再生ログを送信
+                var viewLogUrl = _media.settings.log_view_url
+                    + '?zoneEid=' + _zone.zone_eid
+                    + '&campaignId=' + _campaign.campaignId
+                    + '&creativeId=' + _creative.creativeId
+                    + '&playtime=' + playtime
+                    + '&skipped=' + (skipped ? 1 : 0)
+                    ;
+                nativeApi('sendViewLog', viewLogUrl);
             }
             /**
              *  動画再生の経過時間の更新イベント
@@ -614,89 +713,8 @@
         } catch (ex) {
             console.log(ex);
         }
-
-        var callbacks = [];
-        /**
-         *  ネイティブ API（SDK） の呼び出し
-         */
-        function nativeApi(method, jsonArgs, callback) {
-            if (callback) {
-                if (!jsonArgs) {
-                    jsonArgs = {};
-                }
-                jsonArgs.__callbackId = callbacks.push(callback);
-            }
-            var args = '';
-            if (jsonArgs) {
-                try {
-                    args = encodeURIComponent(JSON.stringify(jsonArgs));
-                } catch (ex) {
-                    args = encodeURIComponent(JSON.stringify({ message: ex.message, error: ex }));
-                }
-            }
-            //loadFrame('native://' + method + '/?args=' + args + '&callback=' + );
-            loadFrame('native://' + method + '/' + args);
-        }
-        /**
-         *  ネイティブ（SDK）からのコールバック
-         */
-        function native_callback(callbackId, result) {
-            console.log('native_callback: ' + callbackId);
-            callbacks[callbackId - 1](result);
-            delete callbacks[callbackId - 1];
-        }
-        /* iframe を利用したネイティブ API の呼び出し */
-        function loadFrame(url) {
-            //        document.getElementById('iframe').setAttribute('src', url);
-            var iframe = document.createElement('iframe');
-            iframe.setAttribute("height", "1px");
-            iframe.setAttribute("width", "1px");
-            iframe.setAttribute("frameborder", "0");
-            iframe.setAttribute('src', url);
-            document.documentElement.appendChild(iframe);
-            iframe.parentNode.removeChild(iframe);
-            iframe = null;
-        }
-
-        /**
-         *  整数をカンマ区切りの文字列に変換します。
-         */
-        function toCommify(num) {
-            return String(num).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,');
-        }
-
-        window.onerror = function (errMsg, url, lineNumber) {
-            console.log(errMsg + ", file=" + url + ":" + lineNumber);
-        }
-
-        //cxは円の中心のx座標;
-        //cyは円の中心のy座標;
-        //rは半径;
-        //startDegreeは扇形の始まりの中心角(度数法);
-        //finishDegreeは扇形の終わりの中心角(度数法);
-        //strokeWidthは線の幅;
-        function drawArc(path, cx, cy, r, startDegree, finishDegree, strokeWidth) {
-            //円弧の始まりの座標;
-            var startX = cx + r * Math.sin(startDegree / 180 * Math.PI);
-            var startY = cy - r * Math.cos(startDegree / 180 * Math.PI);
-            //円弧の終わり座標;
-            var finishX = cx + r * Math.sin(finishDegree / 180 * Math.PI);
-            var finishY = cy - r * Math.cos(finishDegree / 180 * Math.PI);
-            //扇形の角度が180度を超えているか;
-            var largeArcFlag = (finishDegree - startDegree <= 180) ? 0 : 1;
-
-            //扇形の中心点へ移動するコマンド;
-            var move = 'M' + startX + ' ' + startY + ' ';
-            //円弧を描くコマンド;
-            var arc = 'A' + r + ' ' + r + ' ' + 0 + ' ' + largeArcFlag + ' ' + 1 + ' ' + finishX + ' ' + finishY + ' ';
-
-            // path要素を作成
-            path.setAttributeNS(null, 'd', move + arc);
-            path.setAttributeNS(null, 'stroke-width', strokeWidth);
-
-            return path;
-        }
     </script>
+
     <script type="text/javascript">
         // for debug
         if (location.search.indexOf('debug=1') >= 0) {
