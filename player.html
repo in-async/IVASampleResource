@@ -663,6 +663,9 @@
              */
             function native_onPreparedVideo(duration) {
                 console.log('native_onPreparedVideo');
+
+                // 残秒数の更新
+                native_onUpdateTime(0, duration);
             }
             /**
              *  広告の全ての準備完了イベント
