@@ -1,8 +1,8 @@
 ﻿{
     "default_zone_eid": "zone2",
     "settings": {
-        "log_click_url": "http://192.168.1.10:8003/api/log_click",
-        "log_view_url": "http://192.168.1.10:8003/api/log_view",
+        "log_click_url": "http://deliverlog.maio.jp/api/log_click",
+        "log_view_url": "http://deliverlog.maio.jp/api/log_view",
     },
     "zones": [
         {

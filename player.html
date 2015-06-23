@@ -685,11 +685,11 @@
 
                 // 再生ログを送信
                 var viewLogUrl = _media.settings.log_view_url
-                    + '?zoneEid=' + _zone.zone_eid
-                    + '&campaignId=' + _campaign.campaignId
-                    + '&creativeId=' + _creative.creativeId
-                    + '&playtime=' + playtime
-                    + '&skipped=' + (skipped ? 1 : 0)
+                    + '?zone_id=' + _zone.zone_id
+                    + '&campaign_id=' + _campaign.campaign_id
+                    + '&creative_id=' + _creative.creative_id
+                    + '&view_time=' + playtime
+                    + '&view_completed=' + (!skipped ? 1 : 0)
                     ;
                 nativeApi('sendViewLog', { viewLogUrl: viewLogUrl });
             }
