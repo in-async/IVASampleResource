@@ -22,7 +22,7 @@
          *  動画ページ
          */
         #video-page {
-            display: none;
+            display: block;
             position: absolute;
             z-index: 1;
             width: 100%;
@@ -712,7 +712,6 @@
                 // アプリレーティングを設定
                 document.getElementById('app-rating-average-foreground').style.width = (_creative.ad_template_params.average_rating * 20) + '%';
                 document.getElementById('app-rating-count').innerHTML = '(' + toCommify(_creative.ad_template_params.rating_count) + ')';
-
 
                 if (_reloadAdElem) {
                     // 動画サムネイルを生成し、リロードボタンにロード
