@@ -362,7 +362,7 @@
                 try {
                     args = encodeURIComponent(JSON.stringify(jsonArgs));
                 } catch (ex) {
-                    args = encodeURIComponent(JSON.stringify({ message: ex.message, error: ex }));
+                    args = encodeURIComponent(JSON.stringify({ message: ex.message }));
                 }
             }
             //loadFrame('native://' + method + '/?args=' + args + '&callback=' + );
@@ -690,7 +690,7 @@
                             _reloadAdElem.appendChild(imgElem);
                         });
                     }
-                }, 1000);
+                }, 0);
             }
             /**
             *  動画再生の終了イベント
