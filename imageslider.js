@@ -72,7 +72,6 @@ var ImageSlider = (function (imageContainer, options) {
      * 画像要素を追加します。
      */
     this.addImageElement = function (imageElem) {
-        console.log(imageElem);
         imageElem.className += ' image-slider-item';
         if (imageContainer.contains(imageElem)) {
             imageContainer.appendChild(imageElem);
