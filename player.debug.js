@@ -73,8 +73,9 @@
                 // 直ぐ再生終了イベントをコール
                 setTimeout(function () {
                     native_onPreparedVideo(5);
-                    // プレイヤーを非表示
-                    document.getElementById('video-page').style.display = 'none';
+                    native_onPreparedAd();
+                    //// 動画プレイヤーを非表示
+                    //document.getElementById('video-page').style.display = 'none';
 
                     native_onFinishedAd(5, false);
                 }, 0);
