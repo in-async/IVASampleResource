@@ -640,7 +640,7 @@
                 nativeApi('startVideo');
 
                 // エンドカード関連素材をロード
-                (function () {
+                setTimeout(function () {
                     // アプリタイトルを設定
                     document.getElementById('app-name').innerHTML = _creative.ad_template_params.app_name;
                     document.getElementById('app-seller').innerHTML = _creative.ad_template_params.seller_name;
@@ -690,7 +690,7 @@
                             _reloadAdElem.appendChild(imgElem);
                         });
                     }
-                })();
+                }, 0);
             }
             /**
             *  動画再生の終了イベント
