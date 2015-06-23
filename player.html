@@ -606,44 +606,6 @@
                         break;
                     }
                 }
-
-                // エンドカード画像をロード
-                var imageUrls = _creative.ad_template_params.screenshot_urls;
-                for (var i in imageUrls) {
-                    // imgUrl 固定化の為のクロージャ
-                    (function () {
-                        // img 要素を先に追加（順番固定）
-                        var imgElem = _slider.addImageUrl(null);
-
-                        // スクリーンショット画像をロード
-                        var imgUrl = imageUrls[i];
-                        nativeApi('getCreativeAsBase64', { creativeUrl: imgUrl, async: true }, function (result) {
-                            console.log('callback getCreativeAsBase64: ' + imgUrl);
-                            imgElem.setAttribute('src', result);
-                            //_slider.addImageUrl(result);
-                        });
-                    })();
-                }
-
-                // リプレイ要素をスライダーに追加
-                if (_reloadAdElem) {
-                    _slider.addImageElement(_reloadAdElem);
-                }
-
-                // アプリアイコン画像を設定
-                var iconUrl = _creative.ad_template_params.icon_url;
-                nativeApi('getCreativeAsBase64', { creativeUrl: iconUrl, async: true }, function (result) {
-                    console.log('callback getCreativeAsBase64: ' + iconUrl);
-                    document.getElementById('app-icon').setAttribute('src', result);
-                });
-
-                // アプリタイトルを設定
-                document.getElementById('app-name').innerHTML = _creative.ad_template_params.app_name;
-                document.getElementById('app-seller').innerHTML = _creative.ad_template_params.seller_name;
-
-                // アプリレーティングを設定
-                document.getElementById('app-rating-average-foreground').style.width = (_creative.ad_template_params.average_rating * 20) + '%';
-                document.getElementById('app-rating-count').innerHTML = '(' + toCommify(_creative.ad_template_params.rating_count) + ')';
             }
             //function onOpenAd(zoneEid) {
             //    console.log('onOpenAd');
@@ -666,18 +628,6 @@
 
                 //// 残秒数の更新
                 //native_onUpdateTime(0, duration);
-
-                if (_reloadAdElem) {
-                    // 動画サムネイルを生成し、リロードボタンにロード
-                    nativeApi('getVideoThumbnailAsBase64', { position: 1.0, async: true }, function (result) {
-                        console.log('callback getVideoThumbnailAsBase64');
-
-                        //_reloadAdElem.style.backgroundImage = 'url("' + result + '")';
-                        var imgElem = document.createElement('img');
-                        imgElem.setAttribute('src', result);
-                        _reloadAdElem.appendChild(imgElem);
-                    });
-                }
             }
             /**
              *  広告の全ての準備完了イベント
@@ -688,6 +638,59 @@
                 // 動画再生
                 _videoPageElem.style.display = 'block';
                 nativeApi('startVideo');
+
+                // エンドカード関連素材をロード
+                (function () {
+                    // アプリタイトルを設定
+                    document.getElementById('app-name').innerHTML = _creative.ad_template_params.app_name;
+                    document.getElementById('app-seller').innerHTML = _creative.ad_template_params.seller_name;
+
+                    // アプリレーティングを設定
+                    document.getElementById('app-rating-average-foreground').style.width = (_creative.ad_template_params.average_rating * 20) + '%';
+                    document.getElementById('app-rating-count').innerHTML = '(' + toCommify(_creative.ad_template_params.rating_count) + ')';
+
+                    // エンドカード画像をロード
+                    var imageUrls = _creative.ad_template_params.screenshot_urls;
+                    for (var i in imageUrls) {
+                        // imgUrl 固定化の為のクロージャ
+                        (function () {
+                            // img 要素を先に追加（順番固定）
+                            var imgElem = _slider.addImageUrl(null);
+
+                            // スクリーンショット画像をロード
+                            var imgUrl = imageUrls[i];
+                            nativeApi('getCreativeAsBase64', { creativeUrl: imgUrl, async: true }, function (result) {
+                                console.log('callback getCreativeAsBase64: ' + imgUrl);
+                                imgElem.setAttribute('src', result);
+                                //_slider.addImageUrl(result);
+                            });
+                        })();
+                    }
+
+                    // リプレイ要素をスライダーに追加
+                    if (_reloadAdElem) {
+                        _slider.addImageElement(_reloadAdElem);
+                    }
+
+                    // アプリアイコン画像を設定
+                    var iconUrl = _creative.ad_template_params.icon_url;
+                    nativeApi('getCreativeAsBase64', { creativeUrl: iconUrl, async: true }, function (result) {
+                        console.log('callback getCreativeAsBase64: ' + iconUrl);
+                        document.getElementById('app-icon').setAttribute('src', result);
+                    });
+
+                    if (_reloadAdElem) {
+                        // 動画サムネイルを生成し、リロードボタンにロード
+                        nativeApi('getVideoThumbnailAsBase64', { position: 1.0, async: true }, function (result) {
+                            console.log('callback getVideoThumbnailAsBase64');
+
+                            //_reloadAdElem.style.backgroundImage = 'url("' + result + '")';
+                            var imgElem = document.createElement('img');
+                            imgElem.setAttribute('src', result);
+                            _reloadAdElem.appendChild(imgElem);
+                        });
+                    }
+                })();
             }
             /**
             *  動画再生の終了イベント
