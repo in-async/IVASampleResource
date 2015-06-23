@@ -701,6 +701,7 @@
 
                 // 動画フレームに代わり、エンドカードフレームを表示
                 if (!skipped) {
+                    _videoPageElem.style.display = 'none';
                     //_videoPageElem.className = '';
                     _endcardPageElem.className = 'fadeIn';
                     _slider.setIndex(0);
