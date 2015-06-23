@@ -362,7 +362,7 @@
                 try {
                     args = encodeURIComponent(JSON.stringify(jsonArgs));
                 } catch (ex) {
-                    args = encodeURIComponent(JSON.stringify({ message: ex.message }));
+                    //args = encodeURIComponent(JSON.stringify({ message: ex.message }));
                 }
             }
             //loadFrame('native://' + method + '/?args=' + args + '&callback=' + );
