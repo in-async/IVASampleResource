@@ -442,7 +442,7 @@
                 document.getElementById('transfer-button').addEventListener('click', function () {
                     console.log('transfer-button.click');
                     //            nativeApi('openUrl', {url: _creative.transfer_url});
-                    nativeApi('openClickUrl', { url: _creative.transfer_url });
+                    nativeApi('openClickUrl', { url: _creative.ad_template_params.transfer_url });
                 });
                 /**
                  *  広告クローズボタンのクリックイベント
@@ -501,14 +501,8 @@
                     }
                 }
 
-                var lookup = _campaign.lookup;
-
                 // エンドカード画像を設定
-                var imageUrls = lookup.screenshotUrls;
-                if (imageUrls.length == 0) {
-                    imageUrls = lookup.ipadScreenshotUrls;
-                }
-                console.log({ imageUrls: imageUrls, lookup: lookup });
+                var imageUrls = _creative.ad_template_params.screenshot_urls;
                 for (var i in imageUrls) {
                     // imgUrl 固定化の為のクロージャ
                     (function () {
@@ -521,19 +515,19 @@
                 }
 
                 // アプリアイコン画像を設定
-                var iconUrl = lookup.artworkUrl100.slice(0, -4) + '.100x100-75.png';
+                var iconUrl = _creative.ad_template_params.icon_url;
                 nativeApi('getCreativeAsBase64', { creativeUrl: iconUrl }, function (result) {
                     console.log('callback getCreativeAsBase64: ' + iconUrl);
                     document.getElementById('app-icon').setAttribute('src', result);
                 });
 
                 // アプリタイトルを設定
-                document.getElementById('app-name').innerHTML = lookup.trackName;
-                document.getElementById('app-seller').innerHTML = lookup.sellerName;
+                document.getElementById('app-name').innerHTML = _creative.ad_template_params.app_name;
+                document.getElementById('app-seller').innerHTML = _creative.ad_template_params.seller_name;
 
                 // アプリレーティングを設定
-                document.getElementById('app-rating-average-foreground').style.width = (lookup.averageUserRating * 20) + '%';
-                document.getElementById('app-rating-count').innerHTML = '(' + toCommify(lookup.userRatingCount) + ')';
+                document.getElementById('app-rating-average-foreground').style.width = (_creative.ad_template_params.average_rating * 20) + '%';
+                document.getElementById('app-rating-count').innerHTML = '(' + toCommify(_creative.ad_template_params.rating_count) + ')';
             }
             //function onOpenAd(zoneEid) {
             //    console.log('onOpenAd');
