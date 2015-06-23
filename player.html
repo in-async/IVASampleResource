@@ -663,6 +663,16 @@
              */
             function native_onPreparedVideo(duration) {
                 console.log('native_onPreparedVideo');
+            }
+            /**
+             *  広告の全ての準備完了イベント
+             */
+            function native_onPreparedAd() {
+                console.log("native_onPreparedAd");
+
+                // 動画再生
+                _videoPageElem.style.display = 'block';
+                nativeApi('startVideo');
 
                 if (_reloadAdElem) {
                     // 動画サムネイルを生成し、リロードボタンにロード
@@ -675,16 +685,6 @@
                         _reloadAdElem.appendChild(imgElem);
                     });
                 }
-            }
-            /**
-             *  広告の全ての準備完了イベント
-             */
-            function native_onPreparedAd() {
-                console.log("native_onPreparedAd");
-
-                // 動画再生
-                _videoPageElem.style.display = 'block';
-                nativeApi('startVideo');
             }
             /**
             *  動画再生の終了イベント
