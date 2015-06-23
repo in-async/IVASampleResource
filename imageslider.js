@@ -50,18 +50,22 @@ var ImageSlider = (function (imageContainer, options) {
     this.addImageUrl = function (imageUrl) {
         // 画像要素の作成
         var imageElem = document.createElement('img');
-        imageElem.src = imageUrl;
         function img_onLoad() {
             this.dataset.isLoaded = 1;
             imageElem.removeEventListener('load', img_onLoad);
         }
         imageElem.addEventListener('load', img_onLoad);
+        if (imageUrl) {
+            imageElem.src = imageUrl;
+        }
         //var divElem = document.createElement('div');
         //divElem.appendChild(imageElem);
 
         // 画像要素の追加
         //thisObj.addImageElement(divElem);
         thisObj.addImageElement(imageElem);
+
+        return imageElem;
     };
 
     /**
