@@ -688,7 +688,7 @@
                     + '&playtime=' + playtime
                     + '&skipped=' + (skipped ? 1 : 0)
                     ;
-                nativeApi('sendViewLog', viewLogUrl);
+                nativeApi('sendViewLog', { viewLogUrl: viewLogUrl });
             }
             /**
              *  動画再生の経過時間の更新イベント
