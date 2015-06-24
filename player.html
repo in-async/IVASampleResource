@@ -711,14 +711,14 @@
                 }
 
                 // 再生ログを送信
-                var viewLogUrlQuery =
-                       'zone_id=' + _zone.zone_id
-                    + '&campaign_id=' + _campaign.campaign_id
-                    + '&creative_id=' + _creative.creative_id
-                    + '&view_time=' + playtime
-                    + '&view_completed=' + (!skipped ? 1 : 0)
-                    ;
-                nativeApi('sendViewLog', { viewLogUrlQuery: viewLogUrlQuery, async: true });
+                var postJson = {
+                    zone_id: _zone.zone_id,
+                    campaign_id: _campaign.campaign_id,
+                    creative_id: _creative.creative_id,
+                    view_time: playtime,
+                    view_completed: !skipped,
+                };
+                nativeApi('sendViewLog', { postJson: postJson, async: true });
             }
             /**
              *  動画再生の経過時間の更新イベント
