@@ -21,6 +21,9 @@
         /**
          *  動画ページ
          */
+        #video-page.fadeIn {
+            display: block;
+        }
         #video-page {
             display: none;
             position: absolute;
@@ -83,10 +86,10 @@
             z-index: 10;
             display: block;
 
-            -moz-transition: left linear .1s;
-            -o-transition: left linear .1s;
-            -webkit-transition: left linear .1s;
-            transition: left linear .1s;
+            -moz-transition: left linear .2s;
+            -o-transition: left linear .2s;
+            -webkit-transition: left linear .2s;
+            transition: left linear .2s;
             left: 0 !important;
         }
         #endcard-page.fadeOut {
@@ -553,7 +556,7 @@
                  */
                 if (_reloadAdElem) {
                     _reloadAdElem.addEventListener('click', function () {
-                        //_videoPageElem.className = '';
+                        _videoPageElem.className = 'fadeIn';
                         _endcardPageElem.className = 'fadeOut';
 
                         // 動画をリプレイ
@@ -637,7 +640,7 @@
                 console.log("native_onPreparedAd");
 
                 // 動画再生
-                _videoPageElem.style.display = 'block';
+                _videoPageElem.className = 'fadeIn';
                 nativeApi('startVideo');
 
                 // エンドカード関連素材をロード
@@ -702,8 +705,7 @@
 
                 // 動画フレームに代わり、エンドカードフレームを表示
                 if (!skipped) {
-                    _videoPageElem.style.display = 'none';
-                    //_videoPageElem.className = '';
+                    _videoPageElem.className = '';
                     _endcardPageElem.className = 'fadeIn';
                     _slider.setIndex(0);
                 }

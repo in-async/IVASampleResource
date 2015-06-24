@@ -22,6 +22,17 @@ var isMobile = {
 };
 
 /**
+ * requestAnimationFrame メソッドの使用準備
+ */
+(function () {
+    var requestAnimationFrame = window.requestAnimationFrame
+                             || window.mozRequestAnimationFrame
+                             || window.webkitRequestAnimationFrame
+                             || window.msRequestAnimationFrame;
+    window.requestAnimationFrame = requestAnimationFrame;
+})();
+
+/**
  * 複数画像をスワイプする為のクラス
  */
 var ImageSlider = (function (imageContainer, options) {
