@@ -84,7 +84,9 @@
                     video = document.createElement('video');
                     video.setAttribute('src', _creative.ad_template_params.video_url);
                     //video.setAttribute('autoplay', 'autoplay');
-                    video.setAttribute('style', 'position:absolute; width:100%; height:100%; top:0; left:0; background-color:#000; display:none;');
+                    video.setAttribute('style', 'position:absolute; width:100%; height:100%; top:0; left:0; background-color:#000;');
+                    
+                    document.getElementById('endcard-page').style.display = 'none';
 
                     // 動画のイベントハンドラ設定
                     //            video.addEventListener('play', function () {
@@ -99,7 +101,6 @@
                     });
                     video.addEventListener('loadeddata', function () {
                         console.log('video.loadeddata');
-                        video.style.display = 'block';
                         native_onPreparedVideo(video.duration);
                         native_onPreparedAd();
                     });
@@ -113,7 +114,10 @@
                     video.addEventListener('ended', function () {
                         console.log('video.ended');
                         video.style.display = 'none';
-                        native_onFinishedAd(video.duration, false);
+	                    document.getElementById('endcard-page').style.display = 'block';
+	                    setTimeout(function() {
+	                        native_onFinishedAd(video.duration, false);
+	                    }, 0);
                     })
                     video.addEventListener('timeupdate', function () {
                         native_onUpdateTime(video.currentTime, video.duration);
@@ -163,6 +167,8 @@
                         // 動画サムネイルの作成
                         var base64 = 'poster.jpg';
                         if (video) {
+//                            video.currentTime = jsonArgs.position;
+
                             var canvas = document.createElement('canvas');
                             canvas.width = video.clientWidth;
                             canvas.height = video.clientHeight;
@@ -423,7 +429,7 @@
                                         "creative_id": 1000,
                                         "ad_template_url": "https://raw.githubusercontent.com/in-async/IVASampleResource/master/player.html",
                                         "ad_template_params": {
-                                            "video_url": "http://creative.maio.jp/sampledata/id414664715.mp4",
+                                            "video_url": "http://demo.maio.jp/video/id414664715_960x540.mp4",
                                         },
                                         "ad_template_creative_urls": [
                                         ],
