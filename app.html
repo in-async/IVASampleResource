@@ -83,19 +83,21 @@
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <script>
+        var zoneEid = (function () {
+            var m = location.search.match('[&?]zoneEid=(\\w+)');
+            return m ? m[1] : '';
+        })();
+        var id = (function () {
+            var m = location.search.match('[&?]id=(\\w+)');
+            return m ? m[1] : '';
+        })();
+        $('#video-ad').attr('href', $('#video-ad').attr('href') + '&zoneEid=' + zoneEid + '&id=' + id);
+        $('#endcard').attr('href', $('#endcard').attr('href') + '&zoneEid=' + zoneEid + '&id=' + id);
+
         $('#video-ad, #endcard').on('click', function (e) {
             e.preventDefault();
-
-            var zoneEid = (function () {
-                var m = location.search.match('[&?]zoneEid=(\\w+)');
-                return m ? m[1] : '';
-            })();
-            var id = (function () {
-                var m = location.search.match('[&?]id=(\\w+)');
-                return m ? m[1] : '';
-            })();
             $('#pageDialog')
-                .attr('src', $(this).attr('href') + '&zoneEid=' + zoneEid + '&id=' + id)
+                .attr('src', $(this).attr('href'))
                 .attr('class', 'fadeIn');
             $(document.documentElement).css('overflow', 'hidden');
         });
