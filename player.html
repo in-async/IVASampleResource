@@ -780,17 +780,22 @@
     <script type="text/javascript">
         // for debug
         if (location.search.indexOf('debug=1') >= 0) {
+            var link = document.createElement('link');
+            link.setAttribute('rel', 'stylesheet');
+            link.setAttribute('href', 'player.debug.css');
+            document.head.appendChild(link);
+
             //            document.addEventListener('DOMContentLoaded', function () {
             //                appendScript('player.debug.js');
             //            });
             document.write('<script src="player.debug.js"><' + '/script>');
         }
 
-        function appendScript(src) {
-            var script = document.createElement('script');
-            script.setAttribute('src', src);
-            document.head.appendChild(script);
-        }
+        //function appendScript(src) {
+        //    var script = document.createElement('script');
+        //    script.setAttribute('src', src);
+        //    document.head.appendChild(script);
+        //}
     </script>
 </body>
 </html>
