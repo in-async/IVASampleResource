@@ -59,23 +59,16 @@ var ImageSlider = (function (imageContainer, options) {
      * 画像 URL を追加します。
      */
     this.addImageUrl = function (imageUrl) {
-        // 画像タグのコンテナを追加
-        var divElem = document.createElement('div');
-        thisObj.addImageElement(divElem);
-
-        // 画像タグを作成
+        // 画像要素を作成
         var imageElem = document.createElement('img');
         function img_onLoad() {
-            imageElem.removeEventListener('load', img_onLoad);
+            this.removeEventListener('load', img_onLoad);
             this.dataset.isLoaded = 1;
 
-            if (this.width <= this.height) {
-                // コンテナに画像タグを追加
-                divElem.appendChild(this);
-            } else {
+            var iw = this.width;
+            var ih = this.height;
+            if (iw > ih) {
                 // 270°回転させた画像を生成
-                var iw = this.width;
-                var ih = this.height;
                 var cw = ih;
                 var ch = iw;
                 var canvas = document.createElement('canvas');
@@ -90,8 +83,8 @@ var ImageSlider = (function (imageContainer, options) {
                 context.translate(-ch / 2, -cw / 2);
                 context.drawImage(this, 0, 0, iw, ih);
 
-                // 生成した画像（キャンバス）をコンテナに追加
-                divElem.appendChild(canvas);
+                // 生成した画像（キャンバス）を img に代わり追加
+                replaceImageElement(canvas, this);
             }
         }
         imageElem.addEventListener('load', img_onLoad);
@@ -99,6 +92,9 @@ var ImageSlider = (function (imageContainer, options) {
             // 画像リソースをロード
             imageElem.src = imageUrl;
         }
+
+        // 画像要素を追加
+        thisObj.addImageElement(imageElem);
 
         return imageElem;
     };
@@ -123,6 +119,15 @@ var ImageSlider = (function (imageContainer, options) {
             thisObj.setIndex(0);
         }
     };
+
+    /**
+     * 画像要素を別の要素に置換します。
+     */
+    function replaceImageElement(newElem, oldElem) {
+        newElem.className = oldElem.className;
+        oldElem.parentElement.replaceChild(newElem, oldElem);
+        _imageElements[_imageElements.indexOf(oldElem)] = newElem;
+    }
 
     /**
      * 表示対象のスライド画像のインデックスを変更します。
