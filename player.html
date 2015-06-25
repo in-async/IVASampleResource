@@ -111,26 +111,49 @@
             top: 0;
         }
         #image-frame #reload-ad {
-            /*background: #111 no-repeat center;
-            background-size: contain;
-
-            transform: rotate(90deg);*/
             position: relative;
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            width: 90%;
+            /*padding: 0;
+            margin-left: 3%;*/
         }
-        #image-frame #reload-ad:before {
+        #image-frame #reload-ad #video-thumbnail {
             position: absolute;
-            z-index: 1;
             top: 0;
             bottom: 0;
-            right: 0;
             left: 0;
-            margin: auto;
-            height: 1em;
-            line-height: 1;
+            right: 0;
 
-            content: 'Replay';
+            background: no-repeat center;
+            background-size: contain;
+            -moz-background-origin: content-box;
+            -webkit-background-origin: content-box;
+            background-origin: content-box;
+
+            opacity: .5;
+        }
+        #image-frame #reload-ad:after {
+            position: absolute;
+            /*z-index: 1;*/
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            margin: auto;
+            /*height: 1em;
+            line-height: 1;*/
+
+            content: '';
             display: block;
-            color: #fff;
+            width: 64%;
+            height: 100%;
+
+            /*margin: auto;*/
+            background: url("btn_replay.png") no-repeat center center;
+            background-size: contain;
+            /*color: #fff;*/
         }
         /*#image-frame div.fadeOut {
             -moz-transition: left linear .1s;
@@ -311,7 +334,7 @@
     <div id="endcard-page">
         <div id="image-frame">
             <!--<img id="endcard-image" />-->
-            <div id="reload-ad"></div>
+            <div id="reload-ad"><div id="video-thumbnail"></div></div>
         </div>
         <div id="detail-frame">
             <div id="detail-panel">
@@ -689,9 +712,10 @@
                             console.log('callback getVideoThumbnailAsBase64');
 
                             //_reloadAdElem.style.backgroundImage = 'url("' + result + '")';
-                            var imgElem = document.createElement('img');
-                            imgElem.setAttribute('src', result);
-                            _reloadAdElem.appendChild(imgElem);
+                            document.getElementById('video-thumbnail').style.backgroundImage = 'url("' + result + '")';
+                            //var imgElem = document.createElement('img');
+                            //imgElem.setAttribute('src', result);
+                            //_reloadAdElem.appendChild(imgElem);
                         });
                     }
                 }, 0);
