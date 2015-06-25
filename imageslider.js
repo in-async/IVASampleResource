@@ -24,13 +24,38 @@ var isMobile = {
 /**
  * requestAnimationFrame メソッドの使用準備
  */
-(function () {
-    var requestAnimationFrame = window.requestAnimationFrame
-                             || window.mozRequestAnimationFrame
-                             || window.webkitRequestAnimationFrame
-                             || window.msRequestAnimationFrame;
-    window.requestAnimationFrame = requestAnimationFrame;
-})();
+var RAFTimer = (function (_callback) {
+    var _requestAnimationFrame = window.requestAnimationFrame
+                              || window.mozRequestAnimationFrame
+                              || window.webkitRequestAnimationFrame
+                              || window.msRequestAnimationFrame
+                              || setTimeout;
+    var _interval = 1000 / 60;
+    var _enabled = false;
+    var _startTime = null;
+    var _this = this;
+
+    this.start = function () {
+        if (_enabled) return;
+
+        _enabled = true;
+        _startTime = Date.now();
+        function step() {
+            if (_enabled) {
+                _requestAnimationFrame(step, _interval);
+            }
+            var elapsed = Date.now() - _startTime;
+            _callback(_this, elapsed);
+        }
+        _requestAnimationFrame(step, _interval);
+
+        return _this;
+    };
+
+    this.stop = function () {
+        _enabled = false;
+    };
+});
 
 /**
  * 複数画像をスワイプする為のクラス
@@ -51,8 +76,8 @@ var ImageSlider = (function (imageContainer, options) {
     var _currentIndex = -1;
     // スライド対象となる画像要素配列
     var _imageElements = [];
-    // スライダースクロール位置に係るタイマー ID
-    var _sliderScrollLeftTimerId;
+    // スライダースクロール位置に係るタイマー
+    var _sliderScrollLeftTimer;
 
 
     /**
@@ -154,8 +179,9 @@ var ImageSlider = (function (imageContainer, options) {
         var scrollFunc = function () {
             var toLeft = imgElem.offsetLeft - imageContainer.clientWidth / 2 + imgElem.offsetWidth / 2;
             console.log({ toLeft: toLeft, "imgElem.offsetWidth": imgElem.offsetWidth });
-            clearInterval(_sliderScrollLeftTimerId);
-            _sliderScrollLeftTimerId = scrollLeft(imageContainer, toLeft, animation ? 200 : 0);
+            //clearInterval(_sliderScrollLeftTimer);
+            if (_sliderScrollLeftTimer) _sliderScrollLeftTimer.stop();
+            _sliderScrollLeftTimer = scrollLeft(imageContainer, toLeft, animation ? 200 : 0);
 
             // イベント解除
             this.removeEventListener('load', scrollFunc);
@@ -275,8 +301,9 @@ var ImageSlider = (function (imageContainer, options) {
             imageCount = _imageElements.length;
 
             // スライダーに係るタイマーのクリア
-            clearInterval(_sliderScrollLeftTimerId);
-            _sliderScrollLeftTimerId = null;
+            //clearInterval(_sliderScrollLeftTimerId);
+            if (_sliderScrollLeftTimer) _sliderScrollLeftTimer.stop();
+            _sliderScrollLeftTimer = null;
 
             // タッチ位置を保持
             touchStartX = touchMoveX = touchMoveX2 = touchMoveX3 = event.touches ? event.touches[0].pageX : event.pageX;
@@ -328,8 +355,9 @@ var ImageSlider = (function (imageContainer, options) {
             var vx = dx / (Date.now() - touchMoveTime3);
 
             // スライダを慣性スクロールさせる
-            clearInterval(_sliderScrollLeftTimerId);
-            _sliderScrollLeftTimerId = scrollLeftMomentum(imageContainer, vx, 1000, {
+            //clearInterval(_sliderScrollLeftTimerId);
+            if (_sliderScrollLeftTimer) _sliderScrollLeftTimer.stop();
+            _sliderScrollLeftTimer = scrollLeftMomentum(imageContainer, vx, 1000, {
                 minVelocity: .5,
                 onCompleted: function () {
                     var targetCenterX = imageContainer.scrollLeft + imageContainer.clientWidth / 2;
@@ -375,22 +403,46 @@ function scrollLeftMomentum(target, vx, duration, options) {
     var count = duration / animationInterval;
     var ti = 0;
     var prevScrollLeft;
-    var timerId = setInterval(function () {
+    //var timerId = setInterval(function () {
+    //    var scrollLeft = target.scrollLeft;
+    //    if (++ti >= count || prevScrollLeft === scrollLeft || Math.abs(vx) < options.minVelocity) {
+    //        clearInterval(timerId);
+    //        if (options.onCompleted) {
+    //            options.onCompleted.apply(window);
+    //        }
+    //    } else {
+    //        prevScrollLeft = scrollLeft;
+    //        target.scrollLeft = scrollLeft - vx * animationInterval;
+
+    //        // 慣性スクロール速度を減衰
+    //        vx *= .95;
+    //    }
+    //}, animationInterval);
+    //return timerId;
+    var prevElapsed = 0;
+    var timer = new RAFTimer(function (timer, elapsed) {
         var scrollLeft = target.scrollLeft;
-        if (++ti >= count || prevScrollLeft === scrollLeft || Math.abs(vx) < options.minVelocity) {
-            clearInterval(timerId);
+        if (elapsed >= duration || prevScrollLeft === scrollLeft || Math.abs(vx) < options.minVelocity) {
+            console.log('elapsed2: ' + elapsed);
+            console.log(elapsed >= duration);
+            console.log(prevScrollLeft === scrollLeft);
+            console.log(Math.abs(vx) < options.minVelocity);
+            timer.stop();
             if (options.onCompleted) {
                 options.onCompleted.apply(window);
             }
         } else {
+            console.log('elapsed1: ' + elapsed);
             prevScrollLeft = scrollLeft;
-            target.scrollLeft = scrollLeft - vx * animationInterval;
+            target.scrollLeft = scrollLeft - vx * (elapsed - prevElapsed);
+            console.log('diff: ' + (vx * (elapsed - prevElapsed)));
+            prevElapsed = elapsed;
 
             // 慣性スクロール速度を減衰
             vx *= .95;
         }
-    }, animationInterval);
-    return timerId;
+    }).start();
+    return timer;
 }
 
 /**
@@ -402,19 +454,28 @@ function scrollLeft(target, toLeft, duration) {
         var FPS = 60;
 
         var fromLeft = target.scrollLeft;
-        var animationInterval = 1000 / FPS;
-        var count = duration / animationInterval;
-        var step = (toLeft - fromLeft) / count;
-        var ti = 0;
-        var timerId = setInterval(function () {
-            if (++ti < count) {
-                target.scrollLeft += step;
+        //var animationInterval = 1000 / FPS;
+        //var count = duration / animationInterval;
+        //var step = (toLeft - fromLeft) / count;
+        //var ti = 0;
+        //var timerId = setInterval(function () {
+        //    if (++ti < count) {
+        //        target.scrollLeft += step;
+        //    } else {
+        //        clearInterval(timerId);
+        //        target.scrollLeft = toLeft;
+        //    }
+        //}, animationInterval);
+        //return timerId;
+        var timer = new RAFTimer(function (timer, elapsed) {
+            if (elapsed < duration) {
+                target.scrollLeft = fromLeft + (toLeft - fromLeft) * (elapsed / duration);
             } else {
-                clearInterval(timerId);
+                timer.stop();
                 target.scrollLeft = toLeft;
             }
-        }, animationInterval);
-        return timerId;
+        }).start();
+        return timer;
     } else {
         target.scrollLeft = toLeft;
     }
