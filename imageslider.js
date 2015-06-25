@@ -423,19 +423,13 @@ function scrollLeftMomentum(target, vx, duration, options) {
     var timer = new RAFTimer(function (timer, elapsed) {
         var scrollLeft = target.scrollLeft;
         if (elapsed >= duration || prevScrollLeft === scrollLeft || Math.abs(vx) < options.minVelocity) {
-            console.log('elapsed2: ' + elapsed);
-            console.log(elapsed >= duration);
-            console.log(prevScrollLeft === scrollLeft);
-            console.log(Math.abs(vx) < options.minVelocity);
             timer.stop();
             if (options.onCompleted) {
                 options.onCompleted.apply(window);
             }
         } else {
-            console.log('elapsed1: ' + elapsed);
             prevScrollLeft = scrollLeft;
             target.scrollLeft = scrollLeft - vx * (elapsed - prevElapsed);
-            console.log('diff: ' + (vx * (elapsed - prevElapsed)));
             prevElapsed = elapsed;
 
             // 慣性スクロール速度を減衰
