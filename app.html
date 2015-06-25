@@ -1,0 +1,138 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>アプリ風ページ</title>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+    <style>
+        iframe#pageDialog {
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            bottom: 0;
+            left: 100%;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+            background-color: #000;
+        }
+
+        iframe#pageDialog.fadeIn {
+            -moz-transition: left linear .1s;
+            -o-transition: left linear .1s;
+            -webkit-transition: left linear .1s;
+            transition: left linear .1s;
+            left: 0;
+        }
+
+        iframe#pageDialog.fadeOut {
+            -moz-transition: left linear .1s;
+            -o-transition: left linear .1s;
+            -webkit-transition: left linear .1s;
+            transition: left linear .1s;
+            left: 100% !important;
+        }
+
+        .alert-danger {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            opacity: .75;
+        }
+
+        .container-fluid {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            margin: auto;
+            height: 96px;
+        }
+        #video-ad, #endcard {
+            min-width: 64%;
+            margin: .5em 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-12 text-center">
+                <a id="video-ad" href="player.html?debug=1" class="btn btn-default">動画広告再生</a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 text-center">
+                <a id="endcard" href="player.html?debug=1&endcard=1" class="btn btn-default">エンドカード表示</a>
+            </div>
+        </div>
+    </div>
+
+    <iframe id="pageDialog"></iframe>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script>
+        $('#video-ad, #endcard').on('click', function (e) {
+            e.preventDefault();
+
+            var zoneEid = (function () {
+                var m = location.search.match('[&?]zoneEid=(\\w+)');
+                return m ? m[1] : '';
+            })();
+            var id = (function () {
+                var m = location.search.match('[&?]id=(\\w+)');
+                return m ? m[1] : '';
+            })();
+            $('#pageDialog')
+                .attr('src', $(this).attr('href') + '&zoneEid=' + zoneEid + '&id=' + id)
+                .attr('class', 'fadeIn');
+            $(document.documentElement).css('overflow', 'hidden');
+        });
+    </script>
+
+    <script>
+        /**
+         *  iframe ダイアログを閉じます。
+         */
+        function closeAd() {
+            $('#pageDialog.fadeIn')
+                .attr('class', 'fadeOut')
+                .attr('src', null);
+            $(document.documentElement).css('overflow', '');
+        }
+
+        /**
+         *  エラー処理
+         */
+        $(window).on('error', function (e) {
+            console.log(e);
+
+            var $alert = $('<div>')
+                .addClass('alert')
+                .addClass('alert-danger')
+                .addClass('alert-dismissible')
+                .addClass('fade')
+                .addClass('in')
+                .text(e.originalEvent.message)
+                .alert()
+                .appendTo(document.body);
+            setTimeout(function () {
+                console.log('close alert');
+                console.log($alert);
+                $alert.alert('close');
+            }, 3000);
+        });
+    </script>
+</body>
+</html>

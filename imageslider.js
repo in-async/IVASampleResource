@@ -59,22 +59,46 @@ var ImageSlider = (function (imageContainer, options) {
      * 画像 URL を追加します。
      */
     this.addImageUrl = function (imageUrl) {
-        // 画像要素の作成
+        // 画像タグのコンテナを追加
+        var divElem = document.createElement('div');
+        thisObj.addImageElement(divElem);
+
+        // 画像タグを作成
         var imageElem = document.createElement('img');
         function img_onLoad() {
-            this.dataset.isLoaded = 1;
             imageElem.removeEventListener('load', img_onLoad);
+            this.dataset.isLoaded = 1;
+
+            if (this.width <= this.height) {
+                // コンテナに画像タグを追加
+                divElem.appendChild(this);
+            } else {
+                // 270°回転させた画像を生成
+                var iw = this.width;
+                var ih = this.height;
+                var cw = ih;
+                var ch = iw;
+                var canvas = document.createElement('canvas');
+                canvas.setAttribute('width', cw);
+                canvas.setAttribute('height', ch);
+                var context = canvas.getContext('2d');
+                context.fillStyle = "#fff";
+                context.fillRect(0, 0, cw, ch);
+                var rad = 270 * Math.PI / 180;
+                context.translate(cw / 2, ch / 2);
+                context.rotate(rad);
+                context.translate(-ch / 2, -cw / 2);
+                context.drawImage(this, 0, 0, iw, ih);
+
+                // 生成した画像（キャンバス）をコンテナに追加
+                divElem.appendChild(canvas);
+            }
         }
         imageElem.addEventListener('load', img_onLoad);
         if (imageUrl) {
+            // 画像リソースをロード
             imageElem.src = imageUrl;
         }
-        //var divElem = document.createElement('div');
-        //divElem.appendChild(imageElem);
-
-        // 画像要素の追加
-        //thisObj.addImageElement(divElem);
-        thisObj.addImageElement(imageElem);
 
         return imageElem;
     };

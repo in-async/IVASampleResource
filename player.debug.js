@@ -84,7 +84,7 @@
                     video = document.createElement('video');
                     video.setAttribute('src', _creative.ad_template_params.video_url);
                     //video.setAttribute('autoplay', 'autoplay');
-                    video.setAttribute('style', 'position:absolute; width:100%; height:100%; top:0; left:0; background-color:#000');
+                    video.setAttribute('style', 'position:absolute; width:100%; height:100%; top:0; left:0; background-color:#000; display:none;');
 
                     // 動画のイベントハンドラ設定
                     //            video.addEventListener('play', function () {
@@ -99,6 +99,7 @@
                     });
                     video.addEventListener('loadeddata', function () {
                         console.log('video.loadeddata');
+                        video.style.display = 'block';
                         native_onPreparedVideo(video.duration);
                         native_onPreparedAd();
                     });
@@ -405,6 +406,34 @@
                                 "frequency": 5,
                                 "recency": 10,
                             },
+                        ],
+                        "default_mute": false,
+                        "skippable_after_sec": 0,
+                    },
+                    {
+                        "zone_eid": "id414664715",
+                        "zone_id": 1000,
+                        "allowed_portrait_play": false,
+                        "allowed_skip": false,
+                        "campaigns": [
+                            {
+                                "campaign_id": 1000,
+                                "creatives": [
+                                    {
+                                        "creative_id": 1000,
+                                        "ad_template_url": "https://raw.githubusercontent.com/in-async/IVASampleResource/master/player.html",
+                                        "ad_template_params": {
+                                            "video_url": "http://creative.maio.jp/sampledata/id414664715.mp4",
+                                        },
+                                        "ad_template_creative_urls": [
+                                        ],
+                                    }
+                                ],
+                                "daily_budget_remaining": 300,
+                                "deliver_end_time": "2015-06-30T15:00:00Z",
+                                "frequency": 5,
+                                "recency": 10,
+                            }
                         ],
                         "default_mute": false,
                         "skippable_after_sec": 0,
