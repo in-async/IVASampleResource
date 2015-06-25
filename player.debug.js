@@ -200,7 +200,7 @@
                         }, 300);
                     }
                     break;
-                case 'skipAd':
+                case 'skipVideo':
                     var playtime = 5;
                     if (video) {
                         video.pause();
