@@ -377,67 +377,73 @@ var ImageSlider = (function (imageContainer, options) {
             imageContainer.removeEventListener(TOUCH_END_EVENT, onTouchEnd);
         }
     })();
-});
 
-/**
- * 指定した初速で慣性スクロールを行います。
- */
-function scrollLeftMomentum(target, vx, duration, options) {
-    if (typeof (options.minVelocity) === 'undefined') {
-        options.minVelocity = .03;
-    }
-    if (typeof (options.maxVelocity) === 'undefined') {
-        options.maxVelocity = 10;
-    }
-    if (typeof (options.fps) === 'undefined') {
-        options.fps = 60;
-    }
-
-    // 慣性スクロール初速算出
-    vx = (vx < -options.maxVelocity) ? -options.maxVelocity :
-         (vx > options.maxVelocity) ? options.maxVelocity :
-         vx;
-    console.log('vx: ' + vx);
-
-    var animationInterval = 1000 / options.fps;
-    var count = duration / animationInterval;
-    var ti = 0;
-    var prevScrollLeft;
-    //var timerId = setInterval(function () {
-    //    var scrollLeft = target.scrollLeft;
-    //    if (++ti >= count || prevScrollLeft === scrollLeft || Math.abs(vx) < options.minVelocity) {
-    //        clearInterval(timerId);
-    //        if (options.onCompleted) {
-    //            options.onCompleted.apply(window);
-    //        }
-    //    } else {
-    //        prevScrollLeft = scrollLeft;
-    //        target.scrollLeft = scrollLeft - vx * animationInterval;
-
-    //        // 慣性スクロール速度を減衰
-    //        vx *= .95;
-    //    }
-    //}, animationInterval);
-    //return timerId;
-    var prevElapsed = 0;
-    var timer = new RAFTimer(function (timer, elapsed) {
-        var scrollLeft = target.scrollLeft;
-        if (elapsed >= duration || prevScrollLeft === scrollLeft || Math.abs(vx) < options.minVelocity) {
-            timer.stop();
-            if (options.onCompleted) {
-                options.onCompleted.apply(window);
-            }
-        } else {
-            prevScrollLeft = scrollLeft;
-            target.scrollLeft = scrollLeft - vx * (elapsed - prevElapsed);
-            prevElapsed = elapsed;
-
-            // 慣性スクロール速度を減衰
-            vx *= .95;
+    /**
+     * 指定した初速で慣性スクロールを行います。
+     */
+    function scrollLeftMomentum(target, vx, duration, options) {
+        if (typeof (options.minVelocity) === 'undefined') {
+            options.minVelocity = .03;
         }
-    }).start();
-    return timer;
-}
+        if (typeof (options.maxVelocity) === 'undefined') {
+            options.maxVelocity = 10;
+        }
+        if (typeof (options.fps) === 'undefined') {
+            options.fps = 60;
+        }
+
+        // 慣性スクロール初速算出
+        vx = (vx < -options.maxVelocity) ? -options.maxVelocity :
+             (vx > options.maxVelocity) ? options.maxVelocity :
+             vx;
+        console.log('vx: ' + vx);
+
+        var animationInterval = 1000 / options.fps;
+        var count = duration / animationInterval;
+        var ti = 0;
+        var prevScrollLeft;
+        //var timerId = setInterval(function () {
+        //    var scrollLeft = target.scrollLeft;
+        //    if (++ti >= count || prevScrollLeft === scrollLeft || Math.abs(vx) < options.minVelocity) {
+        //        clearInterval(timerId);
+        //        if (options.onCompleted) {
+        //            options.onCompleted.apply(window);
+        //        }
+        //    } else {
+        //        prevScrollLeft = scrollLeft;
+        //        target.scrollLeft = scrollLeft - vx * animationInterval;
+
+        //        // 慣性スクロール速度を減衰
+        //        vx *= .95;
+        //    }
+        //}, animationInterval);
+        //return timerId;
+        var imageCount = _imageElements.length;
+        var prevElapsed = 0;
+        var timer = new RAFTimer(function (timer, elapsed) {
+            var scrollLeft = target.scrollLeft;
+            if (elapsed >= duration || prevScrollLeft === scrollLeft || Math.abs(vx) < options.minVelocity) {
+                timer.stop();
+                if (options.onCompleted) {
+                    options.onCompleted.apply(window);
+                }
+            } else {
+                if (vx > 0 && _currentIndex === 0 || vx < 0 && _currentIndex === imageCount - 1) {
+                    // 範囲外へのスライドはバウンド挙動に
+                    vx *= .3;
+                    console.log('hooooooooooooooooooooooooooooooooooo');
+                } else {
+                    // 慣性スクロール速度を減衰
+                    vx *= .95;
+                }
+                prevScrollLeft = scrollLeft;
+                target.scrollLeft = scrollLeft - vx * (elapsed - prevElapsed);
+                prevElapsed = elapsed;
+            }
+        }).start();
+        return timer;
+    }
+});
 
 /**
  * 指定したポジションまでアニメーションスクロールします。
