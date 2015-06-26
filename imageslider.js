@@ -397,8 +397,15 @@ var ImageSlider = (function (imageContainer, options) {
             //    },
             //});
             var duration = 600;
-            var targetLeft = imageContainer.scrollLeft - vx * duration / 10;
+            var targetLeft = imageContainer.scrollLeft - vx * duration / 5;
             var index = getIndexAt(targetLeft + imageContainer.clientWidth / 2);
+            if (_currentIndex === index) {
+                if (index > 0 && vx > 0) {
+                    index--;
+                } else if (index < imageCount - 1 && vx < 0) {
+                    index++;
+                }
+            }
             thisObj.setIndex(index, duration);
 
             // タッチイベントを解除
