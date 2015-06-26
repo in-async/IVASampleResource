@@ -3,6 +3,11 @@
     "settings": {
         "log_click_url": "http://deliverlog.maio.jp/api/log_click",
         "log_view_url": "http://deliverlog.maio.jp/api/log_view",
+        "sent_view_log_lifetime_minutes": 1440,
+        "video_update_time_interval_seconds": 0.1,
+        "network_timeout_seconds": 10,
+        "download_retry_count": 3,
+        "download_retry_interval_seconds":  20,
     },
     "zones": [
         {
