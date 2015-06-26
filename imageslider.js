@@ -34,6 +34,12 @@ var Easing = {
         t--;
         return c * (t * t * t + 1) + b;
     },
+
+    easeOutQuint: function (t, b, c, d) {
+        t /= d;
+        t--;
+        return c * (t * t * t * t * t + 1) + b;
+    },
 };
 
 /**
@@ -200,7 +206,7 @@ var ImageSlider = (function (imageContainer, options) {
             console.log({ toLeft: toLeft, "imgElem.offsetWidth": imgElem.offsetWidth });
             //clearInterval(_sliderScrollLeftTimer);
             if (_sliderScrollLeftTimer) _sliderScrollLeftTimer.stop();
-            _sliderScrollLeftTimer = scrollLeft(imageContainer, toLeft, duration, Easing.easeOutCubic);
+            _sliderScrollLeftTimer = scrollLeft(imageContainer, toLeft, duration, Easing.easeOutQuint);
 
             // イベント解除
             this.removeEventListener('load', scrollFunc);
