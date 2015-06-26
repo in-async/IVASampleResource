@@ -22,6 +22,21 @@ var isMobile = {
 };
 
 /**
+ * Easing クラス
+ */
+var Easing = {
+    linear: function (t, b, c, d) {
+        return c * t / d + b;
+    },
+
+    easeOutCubic: function (t, b, c, d) {
+        t /= d;
+        t--;
+        return c * (t * t * t + 1) + b;
+    },
+};
+
+/**
  * requestAnimationFrame メソッドの使用準備
  */
 var RAFTimer = (function (_callback) {
@@ -157,8 +172,12 @@ var ImageSlider = (function (imageContainer, options) {
     /**
      * 表示対象のスライド画像のインデックスを変更します。
      */
-    this.setIndex = function (index, animation) {
-        console.log('setIndex: ' + index + ', animation:' + animation);
+    this.setIndex = function (index, duration) {
+        console.log('setIndex: ' + index + ', duration:' + duration);
+        duration = !duration ? 0 :
+                   (duration === true) ? 600 :
+                   duration;
+                   
         // 指定したスライド画像インデックスが画像配列数を上回っていたら、代わりに最後尾を指定
         if (index >= _imageElements.length) {
             index = _imageElements.length - 1;
@@ -181,7 +200,7 @@ var ImageSlider = (function (imageContainer, options) {
             console.log({ toLeft: toLeft, "imgElem.offsetWidth": imgElem.offsetWidth });
             //clearInterval(_sliderScrollLeftTimer);
             if (_sliderScrollLeftTimer) _sliderScrollLeftTimer.stop();
-            _sliderScrollLeftTimer = scrollLeft(imageContainer, toLeft, animation ? 200 : 0);
+            _sliderScrollLeftTimer = scrollLeft(imageContainer, toLeft, duration, Easing.easeOutCubic);
 
             // イベント解除
             this.removeEventListener('load', scrollFunc);
@@ -228,15 +247,21 @@ var ImageSlider = (function (imageContainer, options) {
      * 指定した座標に位置する画像インデックスを返します。
      */
     function getIndexAt(targetX) {
+        if (_imageElements.length === 0) return -1;
+
+        if (targetX < _imageElements[0].offsetLeft) {
+            return 0;
+        }
         for (var i = 0, len = _imageElements.length; i < len; i++) {
             var imgElem = _imageElements[i];
             var offsetLeft = imgElem.offsetLeft;
             var offsetRight = offsetLeft + imgElem.offsetWidth;
+            //console.log('index: ' + i + ', offsetLeft: ' + offsetLeft + ', offsetRight: ' + offsetRight);
             if (targetX > offsetLeft && targetX < offsetRight) {
                 return i;
             }
         }
-        return -1;
+        return _imageElements.length - 1;
     }
 
     //function getCenterViewElement() {
@@ -357,20 +382,24 @@ var ImageSlider = (function (imageContainer, options) {
             // スライダを慣性スクロールさせる
             //clearInterval(_sliderScrollLeftTimerId);
             if (_sliderScrollLeftTimer) _sliderScrollLeftTimer.stop();
-            _sliderScrollLeftTimer = scrollLeftMomentum(imageContainer, vx, 1000, {
-                minVelocity: .5,
-                onCompleted: function () {
-                    var targetCenterX = imageContainer.scrollLeft + imageContainer.clientWidth / 2;
-                    var interval = imageContainer.clientWidth * .25;
+            //_sliderScrollLeftTimer = scrollLeftMomentum(imageContainer, vx, 600, {
+            //    minVelocity: .5,
+            //    onCompleted: function () {
+            //        var targetCenterX = imageContainer.scrollLeft + imageContainer.clientWidth / 2;
+            //        var interval = imageContainer.clientWidth * .25;
 
-                    var targetX = targetCenterX + ((vx > 0) ? -interval : interval);
-                    var index = getIndexAt(targetX);
-                    if (index < 0) {
-                        index = (vx > 0) ? 0 : _imageElements.length - 1;
-                    }
-                    thisObj.setIndex(index, true);
-                },
-            });
+            //        var targetX = targetCenterX + ((vx > 0) ? -interval : interval);
+            //        var index = getIndexAt(targetX);
+            //        if (index < 0) {
+            //            index = (vx > 0) ? 0 : _imageElements.length - 1;
+            //        }
+            //        thisObj.setIndex(index, true);
+            //    },
+            //});
+            var duration = 600;
+            var targetLeft = imageContainer.scrollLeft - vx * duration / 10;
+            var index = getIndexAt(targetLeft + imageContainer.clientWidth / 2);
+            thisObj.setIndex(index, duration);
 
             // タッチイベントを解除
             imageContainer.removeEventListener(TOUCH_MOVE_EVENT, onTouchMove);
@@ -378,98 +407,154 @@ var ImageSlider = (function (imageContainer, options) {
         }
     })();
 
-    /**
-     * 指定した初速で慣性スクロールを行います。
-     */
-    function scrollLeftMomentum(target, vx, duration, options) {
-        if (typeof (options.minVelocity) === 'undefined') {
-            options.minVelocity = .03;
-        }
-        if (typeof (options.maxVelocity) === 'undefined') {
-            options.maxVelocity = 10;
-        }
-        if (typeof (options.fps) === 'undefined') {
-            options.fps = 60;
-        }
+//    /**
+//     * 指定した初速で慣性スクロールを行います。
+//     */
+//    function scrollLeftMomentum(target, vx, duration, options) {
+//        console.log('scrollLeftMomentum');
 
-        // 慣性スクロール初速算出
-        vx = (vx < -options.maxVelocity) ? -options.maxVelocity :
-             (vx > options.maxVelocity) ? options.maxVelocity :
-             vx;
-        console.log('vx: ' + vx);
+//        if (typeof (options.minVelocity) === 'undefined') {
+//            options.minVelocity = .03;
+//        }
+//        if (typeof (options.maxVelocity) === 'undefined') {
+//            options.maxVelocity = 10;
+//        }
+//        if (typeof (options.fps) === 'undefined') {
+//            options.fps = 60;
+//        }
 
-        var animationInterval = 1000 / options.fps;
-        var count = duration / animationInterval;
-        var ti = 0;
-        var prevScrollLeft;
-        //var timerId = setInterval(function () {
-        //    var scrollLeft = target.scrollLeft;
-        //    if (++ti >= count || prevScrollLeft === scrollLeft || Math.abs(vx) < options.minVelocity) {
-        //        clearInterval(timerId);
-        //        if (options.onCompleted) {
-        //            options.onCompleted.apply(window);
-        //        }
-        //    } else {
-        //        prevScrollLeft = scrollLeft;
-        //        target.scrollLeft = scrollLeft - vx * animationInterval;
+//        // 慣性スクロール初速算出
+//        //vx = (vx < -options.maxVelocity) ? -options.maxVelocity :
+//        //     (vx > options.maxVelocity) ? options.maxVelocity :
+//        //     vx;
+//        console.log('vx: ' + vx + ', duration: ' + duration);
 
-        //        // 慣性スクロール速度を減衰
-        //        vx *= .95;
-        //    }
-        //}, animationInterval);
-        //return timerId;
-        var imageCount = _imageElements.length;
-        var prevElapsed = 0;
-        var timer = new RAFTimer(function (timer, elapsed) {
-            var scrollLeft = target.scrollLeft;
-            if (elapsed >= duration || prevScrollLeft === scrollLeft || Math.abs(vx) < options.minVelocity) {
-                timer.stop();
-                if (options.onCompleted) {
-                    options.onCompleted.apply(window);
-                }
-            } else {
-                if (vx > 0 && _currentIndex === 0 || vx < 0 && _currentIndex === imageCount - 1) {
-                    // 範囲外へのスライドはバウンド挙動に
-                    vx *= .3;
-                    console.log('hooooooooooooooooooooooooooooooooooo');
-                } else {
-                    // 慣性スクロール速度を減衰
-                    vx *= .95;
-                }
-                prevScrollLeft = scrollLeft;
-                target.scrollLeft = scrollLeft - vx * (elapsed - prevElapsed);
-                prevElapsed = elapsed;
-            }
-        }).start();
-        return timer;
-    }
+//        var animationInterval = 1000 / options.fps;
+//        var count = duration / animationInterval;
+//        var ti = 0;
+//        var prevScrollLeft;
+//        //var timerId = setInterval(function () {
+//        //    var scrollLeft = target.scrollLeft;
+//        //    if (++ti >= count || prevScrollLeft === scrollLeft || Math.abs(vx) < options.minVelocity) {
+//        //        clearInterval(timerId);
+//        //        if (options.onCompleted) {
+//        //            options.onCompleted.apply(window);
+//        //        }
+//        //    } else {
+//        //        prevScrollLeft = scrollLeft;
+//        //        target.scrollLeft = scrollLeft - vx * animationInterval;
+
+//        //        // 慣性スクロール速度を減衰
+//        //        vx *= .95;
+//        //    }
+//        //}, animationInterval);
+//        //return timerId;
+
+//        //var imageCount = _imageElements.length;
+//        //var prevElapsed = 0;
+//        //var timer = new RAFTimer(function (timer, elapsed) {
+//        //    console.log('elapsed: ' + elapsed);
+//        //    var scrollLeft = target.scrollLeft;
+//        //    if (elapsed >= duration || prevScrollLeft === scrollLeft || Math.abs(vx) < options.minVelocity) {
+//        //        timer.stop();
+//        //        if (options.onCompleted) {
+//        //            options.onCompleted.apply(window);
+//        //        }
+//        //    } else {
+//        //        if (vx > 0 && _currentIndex === 0 || vx < 0 && _currentIndex === imageCount - 1) {
+//        //            // 範囲外へのスライドはバウンド挙動に
+//        //            vx *= .3;
+//        //        } else {
+//        //            // 慣性スクロール速度を減衰
+//        //            vx *= .95;
+//        //        }
+//        //        prevScrollLeft = scrollLeft;
+//        //        target.scrollLeft = scrollLeft - vx * (elapsed - prevElapsed);
+//        //        prevElapsed = elapsed;
+//        //    }
+//        //}).start();
+//        //return timer;
+
+//        var fromLeft = target.scrollLeft;
+//        var targetLeft = fromLeft - vx * duration / 10;
+//        var index = getIndexAt(targetLeft + imageContainer.clientWidth / 2);
+//        if (index < 0) {
+//            //index = (vx > 0) ? 0 : _imageElements.length - 1;
+//            index = (targetLeft < 0) ? 0 : _imageElements.length - 1;
+//        }
+//        var imgElem = _imageElements[index];
+//        console.log('fromLeft: ' + fromLeft + ', targetLeft: ' + targetLeft + ', targetIndex: ' + index);
+//        var toLeft = imgElem.offsetLeft - imageContainer.clientWidth / 2 + imgElem.offsetWidth / 2;
+//        var changeInValue = toLeft - fromLeft;
+
+//        var imageCount = _imageElements.length;
+//        var prevElapsed = 0;
+//        var timer = new RAFTimer(function (timer, elapsed) {
+//            //            console.log('elapsed: ' + elapsed);
+//            var left = easeOutCubic(elapsed, fromLeft, changeInValue, duration);
+//            target.scrollLeft = left;
+////            console.log('easeOutCubix(' + elapsed + ', ' + fromLeft + ', ' + changeInValue + ', ' + duration + '): ' + left);
+
+//            if (elapsed >= duration || prevScrollLeft === scrollLeft || Math.abs(vx) < options.minVelocity) {
+//                timer.stop();
+//                if (options.onCompleted) {
+//                    options.onCompleted.apply(window);
+//                }
+//            } else {
+//            }
+//        }).start();
+//        return timer;
+//    }
 });
 
 /**
  * 指定したポジションまでアニメーションスクロールします。
  */
-function scrollLeft(target, toLeft, duration) {
-    console.log('scrollLeft: ' + toLeft + ', duration:' + duration);
+function scrollLeft(target, toLeft, duration, easing) {
+    console.log('scrollLeft');
+    console.log('scrollLeft: ' + toLeft + ', duration:' + duration + ', easing: ' + easing);
+
+    //if (duration) {
+    //    var FPS = 60;
+
+    //    var fromLeft = target.scrollLeft;
+    //    //var animationInterval = 1000 / FPS;
+    //    //var count = duration / animationInterval;
+    //    //var step = (toLeft - fromLeft) / count;
+    //    //var ti = 0;
+    //    //var timerId = setInterval(function () {
+    //    //    if (++ti < count) {
+    //    //        target.scrollLeft += step;
+    //    //    } else {
+    //    //        clearInterval(timerId);
+    //    //        target.scrollLeft = toLeft;
+    //    //    }
+    //    //}, animationInterval);
+    //    //return timerId;
+    //    var timer = new RAFTimer(function (timer, elapsed) {
+    //        console.log('elapsed: ' + elapsed);
+    //        if (elapsed < duration) {
+    //            target.scrollLeft = fromLeft + (toLeft - fromLeft) * (elapsed / duration);
+    //        } else {
+    //            timer.stop();
+    //            target.scrollLeft = toLeft;
+    //        }
+    //    }).start();
+    //    return timer;
+    //} else {
+    //    target.scrollLeft = toLeft;
+    //}
+
     if (duration) {
-        var FPS = 60;
+        if (!easing) {
+            easing = Easing.linear;
+        }
 
         var fromLeft = target.scrollLeft;
-        //var animationInterval = 1000 / FPS;
-        //var count = duration / animationInterval;
-        //var step = (toLeft - fromLeft) / count;
-        //var ti = 0;
-        //var timerId = setInterval(function () {
-        //    if (++ti < count) {
-        //        target.scrollLeft += step;
-        //    } else {
-        //        clearInterval(timerId);
-        //        target.scrollLeft = toLeft;
-        //    }
-        //}, animationInterval);
-        //return timerId;
+        var changeInValue = toLeft - fromLeft;
         var timer = new RAFTimer(function (timer, elapsed) {
             if (elapsed < duration) {
-                target.scrollLeft = fromLeft + (toLeft - fromLeft) * (elapsed / duration);
+                target.scrollLeft = easing(elapsed, fromLeft, changeInValue, duration);
             } else {
                 timer.stop();
                 target.scrollLeft = toLeft;
