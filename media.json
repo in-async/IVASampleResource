@@ -31,12 +31,12 @@
                                 "seller_name": "GungHo Online Entertainment, INC.",
                                 "average_rating": 4.5,
                                 "rating_count": 476188,
+                                "download_urls": [
+                                    "https://github.com/in-async/IVASampleResource/raw/master/creatives/113/video.mp4",
+                                    "http://is2.mzstatic.com/image/pf/us/r30/Purple5/v4/c7/b4/52/c7b45204-99c2-d141-27d0-85b7c7d4f7a2/mzl.qhazfnih.100x100-75.png",
+                                    "http://a4.mzstatic.com/jp/r30/Purple3/v4/67/23/19/672319a2-7b95-c9b3-fc1c-2847758876f0/screen322x572.jpeg", "http://a5.mzstatic.com/jp/r30/Purple1/v4/41/6d/11/416d11bb-1d0e-6171-861f-dd9558d7bbe1/screen322x572.jpeg", "http://a1.mzstatic.com/jp/r30/Purple1/v4/9f/dd/fe/9fddfe19-39bf-6959-f8e9-ac9ef61d7195/screen322x572.jpeg", "http://a2.mzstatic.com/jp/r30/Purple3/v4/2a/8b/8e/2a8b8ea6-65d9-f6d1-ce8d-36646422cba0/screen322x572.jpeg", "http://a1.mzstatic.com/jp/r30/Purple5/v4/a4/0e/c8/a40ec86d-721e-9dcf-f6cc-78c429f8674a/screen322x572.jpeg",
+                                ],
                             },
-                            "ad_template_creative_urls": [
-                                "https://github.com/in-async/IVASampleResource/raw/master/creatives/113/video.mp4",
-                                "http://is2.mzstatic.com/image/pf/us/r30/Purple5/v4/c7/b4/52/c7b45204-99c2-d141-27d0-85b7c7d4f7a2/mzl.qhazfnih.100x100-75.png",
-                                "http://a4.mzstatic.com/jp/r30/Purple3/v4/67/23/19/672319a2-7b95-c9b3-fc1c-2847758876f0/screen322x572.jpeg", "http://a5.mzstatic.com/jp/r30/Purple1/v4/41/6d/11/416d11bb-1d0e-6171-861f-dd9558d7bbe1/screen322x572.jpeg", "http://a1.mzstatic.com/jp/r30/Purple1/v4/9f/dd/fe/9fddfe19-39bf-6959-f8e9-ac9ef61d7195/screen322x572.jpeg", "http://a2.mzstatic.com/jp/r30/Purple3/v4/2a/8b/8e/2a8b8ea6-65d9-f6d1-ce8d-36646422cba0/screen322x572.jpeg", "http://a1.mzstatic.com/jp/r30/Purple5/v4/a4/0e/c8/a40ec86d-721e-9dcf-f6cc-78c429f8674a/screen322x572.jpeg",
-                            ],
                         }
                     ],
                     "daily_budget_remaining": 300,
@@ -69,12 +69,12 @@
                                 "seller_name": "mixi, Inc",
                                 "average_rating": 4.5,
                                 "rating_count": 2361529,
+                                "download_urls": [
+                                    "https://github.com/in-async/IVASampleResource/raw/master/creatives/113/video.mp4",
+                                    "http://is1.mzstatic.com/image/pf/us/r30/Purple5/v4/dc/f7/32/dcf73253-6f1c-cdb0-5c02-19e4a67395af/mzl.sijlkump.100x100-75.png",
+                                    "http://a2.mzstatic.com/jp/r30/Purple1/v4/1e/a4/54/1ea45485-e971-2ade-335f-84429e11e26e/screen1136x1136.jpeg", "http://a2.mzstatic.com/jp/r30/Purple5/v4/2d/b1/18/2db1189e-a068-eff2-7bb2-8050c5bae595/screen1136x1136.jpeg", "http://a1.mzstatic.com/jp/r30/Purple5/v4/a2/c3/24/a2c32443-8c94-df8b-bc23-c3aa8d9db0b4/screen1136x1136.jpeg", "http://a1.mzstatic.com/jp/r30/Purple1/v4/33/02/01/3302016d-4df3-4e04-4ff6-d42f980ff1dc/screen1136x1136.jpeg", "http://a2.mzstatic.com/jp/r30/Purple3/v4/1c/f5/bf/1cf5bfc8-ddb3-6354-3ced-c9578bd5877e/screen1136x1136.jpeg",
+                                ],
                             },
-                            "ad_template_creative_urls": [
-                                "https://github.com/in-async/IVASampleResource/raw/master/creatives/113/video.mp4",
-                                "http://is1.mzstatic.com/image/pf/us/r30/Purple5/v4/dc/f7/32/dcf73253-6f1c-cdb0-5c02-19e4a67395af/mzl.sijlkump.100x100-75.png",
-                                "http://a2.mzstatic.com/jp/r30/Purple1/v4/1e/a4/54/1ea45485-e971-2ade-335f-84429e11e26e/screen1136x1136.jpeg", "http://a2.mzstatic.com/jp/r30/Purple5/v4/2d/b1/18/2db1189e-a068-eff2-7bb2-8050c5bae595/screen1136x1136.jpeg", "http://a1.mzstatic.com/jp/r30/Purple5/v4/a2/c3/24/a2c32443-8c94-df8b-bc23-c3aa8d9db0b4/screen1136x1136.jpeg", "http://a1.mzstatic.com/jp/r30/Purple1/v4/33/02/01/3302016d-4df3-4e04-4ff6-d42f980ff1dc/screen1136x1136.jpeg", "http://a2.mzstatic.com/jp/r30/Purple3/v4/1c/f5/bf/1cf5bfc8-ddb3-6354-3ced-c9578bd5877e/screen1136x1136.jpeg",
-                            ],
                         }
                     ],
                     "daily_budget_remaining": 300,
@@ -107,12 +107,12 @@
                                 "seller_name": "COLOPL, Inc.",
                                 "average_rating": 4.0,
                                 "rating_count": 97609,
+                                "download_urls": [
+                                    "https://github.com/in-async/IVASampleResource/raw/master/creatives/113/video.mp4",
+                                    "http://is5.mzstatic.com/image/pf/us/r30/Purple1/v4/11/56/d2/1156d268-22eb-822e-0579-bfbb32cfaef6/mzl.vxcebezk.100x100-75.png",
+                                    "http://a5.mzstatic.com/jp/r30/Purple5/v4/4d/31/8f/4d318f25-40b3-c790-4f38-3110ed762456/screen1136x1136.jpeg", "http://a5.mzstatic.com/jp/r30/Purple3/v4/09/7b/a5/097ba521-e80a-ddb8-de90-f3d50a1cc635/screen1136x1136.jpeg", "http://a3.mzstatic.com/jp/r30/Purple1/v4/19/b7/d4/19b7d43a-0e71-6c7a-c889-f0bed37648c4/screen1136x1136.jpeg", "http://a3.mzstatic.com/jp/r30/Purple5/v4/27/26/8c/27268c61-fae0-e34c-5d36-c574aa53ea11/screen1136x1136.jpeg", "http://a3.mzstatic.com/jp/r30/Purple3/v4/10/4d/f5/104df581-17a7-ab7b-ff24-8bf6eee5c980/screen1136x1136.jpeg",
+                                ],
                             },
-                            "ad_template_creative_urls": [
-                                "https://github.com/in-async/IVASampleResource/raw/master/creatives/113/video.mp4",
-                                "http://is5.mzstatic.com/image/pf/us/r30/Purple1/v4/11/56/d2/1156d268-22eb-822e-0579-bfbb32cfaef6/mzl.vxcebezk.100x100-75.png",
-                                "http://a5.mzstatic.com/jp/r30/Purple5/v4/4d/31/8f/4d318f25-40b3-c790-4f38-3110ed762456/screen1136x1136.jpeg", "http://a5.mzstatic.com/jp/r30/Purple3/v4/09/7b/a5/097ba521-e80a-ddb8-de90-f3d50a1cc635/screen1136x1136.jpeg", "http://a3.mzstatic.com/jp/r30/Purple1/v4/19/b7/d4/19b7d43a-0e71-6c7a-c889-f0bed37648c4/screen1136x1136.jpeg", "http://a3.mzstatic.com/jp/r30/Purple5/v4/27/26/8c/27268c61-fae0-e34c-5d36-c574aa53ea11/screen1136x1136.jpeg", "http://a3.mzstatic.com/jp/r30/Purple3/v4/10/4d/f5/104df581-17a7-ab7b-ff24-8bf6eee5c980/screen1136x1136.jpeg",
-                            ],
                         }
                     ],
                     "daily_budget_remaining": 300,
@@ -135,12 +135,12 @@
                                 "seller_name": "SGN",
                                 "average_rating": 4.5,
                                 "rating_count": 3870,
+                                "download_urls": [
+                                    "https://doc-0k-6o-docs.googleusercontent.com/docs/securesc/ha0ro937gcuc7l7deffksulhg5h7mbp1/nl1b12q197r1bfpdmhuch4c6b5stvskb/1434427200000/06328133427177890713/*/0B4ovHFce0xk-c19yQWVYOTU5Rnc?e=download",
+                                    "http://is1.mzstatic.com/image/pf/us/r30/Purple1/v4/ce/30/5c/ce305cd1-6560-f59b-eb8f-8f2f8feb8cf1/pr_source.100x100-75.png",
+                                    "http://a2.mzstatic.com/jp/r30/Purple3/v4/af/ab/13/afab1353-121f-9208-3c38-e1397ccc2763/screen1136x1136.jpeg", "http://a1.mzstatic.com/jp/r30/Purple3/v4/4f/31/23/4f312368-0c47-f6b2-6e38-24e7915b9ad7/screen1136x1136.jpeg", "http://a5.mzstatic.com/jp/r30/Purple3/v4/9e/0e/35/9e0e35a8-7f05-9454-2e2c-c1b327f441c2/screen1136x1136.jpeg", "http://a3.mzstatic.com/jp/r30/Purple3/v4/e8/a9/0b/e8a90b38-a202-4eb0-49f9-b75bdce99583/screen1136x1136.jpeg", "http://a5.mzstatic.com/jp/r30/Purple5/v4/8d/3a/3d/8d3a3d3e-e06a-f8cc-9dec-fed5c9499fd9/screen1136x1136.jpeg",
+                                ],
                             },
-                            "ad_template_creative_urls": [
-                                "https://doc-0k-6o-docs.googleusercontent.com/docs/securesc/ha0ro937gcuc7l7deffksulhg5h7mbp1/nl1b12q197r1bfpdmhuch4c6b5stvskb/1434427200000/06328133427177890713/*/0B4ovHFce0xk-c19yQWVYOTU5Rnc?e=download",
-                                "http://is1.mzstatic.com/image/pf/us/r30/Purple1/v4/ce/30/5c/ce305cd1-6560-f59b-eb8f-8f2f8feb8cf1/pr_source.100x100-75.png",
-                                "http://a2.mzstatic.com/jp/r30/Purple3/v4/af/ab/13/afab1353-121f-9208-3c38-e1397ccc2763/screen1136x1136.jpeg", "http://a1.mzstatic.com/jp/r30/Purple3/v4/4f/31/23/4f312368-0c47-f6b2-6e38-24e7915b9ad7/screen1136x1136.jpeg", "http://a5.mzstatic.com/jp/r30/Purple3/v4/9e/0e/35/9e0e35a8-7f05-9454-2e2c-c1b327f441c2/screen1136x1136.jpeg", "http://a3.mzstatic.com/jp/r30/Purple3/v4/e8/a9/0b/e8a90b38-a202-4eb0-49f9-b75bdce99583/screen1136x1136.jpeg", "http://a5.mzstatic.com/jp/r30/Purple5/v4/8d/3a/3d/8d3a3d3e-e06a-f8cc-9dec-fed5c9499fd9/screen1136x1136.jpeg",
-                            ],
                         }
                     ],
                     "daily_budget_remaining": 300,
@@ -153,4 +153,4 @@
             "skippable_after_sec": 0,
         },
     ]
-    }
+}
