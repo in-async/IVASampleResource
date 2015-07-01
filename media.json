@@ -13,11 +13,19 @@
         {
             "zone_eid": "zone1",
             "zone_id": 1,
+            "ad_type": 2,
+            "reward_param": "",
             "allowed_portrait_play": false,
             "allowed_skip": false,
+            "default_mute": false,
+            "skippable_after_sec": 0,
             "campaigns": [
                 {
                     "campaign_id": 1,
+                    "daily_budget_remaining": 300,
+                    "deliver_end_time": "2016-06-30T15:00:00Z",
+                    "frequency": 5,
+                    "recency": 10,
                     "creatives": [
                         {
                             "creative_id": 111,
@@ -39,23 +47,25 @@
                             },
                         }
                     ],
-                    "daily_budget_remaining": 300,
-                    "deliver_end_time": "2015-06-30T15:00:00Z",
-                    "frequency": 5,
-                    "recency": 10,
                 }
             ],
-            "default_mute": false,
-            "skippable_after_sec": 0,
         },
         {
             "zone_eid": "zone2",
             "zone_id": 2,
+            "ad_type": 2,
+            "reward_param": "",
             "allowed_portrait_play": false,
             "allowed_skip": false,
+            "default_mute": false,
+            "skippable_after_sec": 0,
             "campaigns": [
                 {
                     "campaign_id": 2,
+                    "daily_budget_remaining": 300,
+                    "deliver_end_time": "2016-06-30T15:00:00Z",
+                    "frequency": 5,
+                    "recency": 10,
                     "creatives": [
                         {
                             "creative_id": 112,
@@ -77,23 +87,25 @@
                             },
                         }
                     ],
-                    "daily_budget_remaining": 300,
-                    "deliver_end_time": "2015-06-30T15:00:00Z",
-                    "frequency": 5,
-                    "recency": 10,
                 }
             ],
-            "default_mute": false,
-            "skippable_after_sec": 0,
         },
         {
             "zone_eid": "zone3",
             "zone_id": 3,
+            "ad_type": 2,
+            "reward_param": "",
             "allowed_portrait_play": false,
             "allowed_skip": false,
+            "default_mute": false,
+            "skippable_after_sec": 0,
             "campaigns": [
                 {
                     "campaign_id": 3,
+                    "daily_budget_remaining": 300,
+                    "deliver_end_time": "2016-06-30T15:00:00Z",
+                    "frequency": 5,
+                    "recency": 10,
                     "creatives": [
                         {
                             "creative_id": 113,
@@ -115,13 +127,13 @@
                             },
                         }
                     ],
-                    "daily_budget_remaining": 300,
-                    "deliver_end_time": "2015-06-30T15:00:00Z",
-                    "frequency": 5,
-                    "recency": 10,
                 },
                 {
                     "campaign_id": 4,
+                    "daily_budget_remaining": 300,
+                    "deliver_end_time": "2016-06-30T15:00:00Z",
+                    "frequency": 5,
+                    "recency": 10,
                     "creatives": [
                         {
                             "creative_id": 114,
@@ -143,14 +155,8 @@
                             },
                         }
                     ],
-                    "daily_budget_remaining": 300,
-                    "deliver_end_time": "2015-06-30T15:00:00Z",
-                    "frequency": 5,
-                    "recency": 10,
                 },
             ],
-            "default_mute": false,
-            "skippable_after_sec": 0,
         },
     ]
 }
