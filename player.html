@@ -583,7 +583,7 @@
                     for (var key in json) {
                         queryItems.push(encodeURIComponent(key) + '=' + encodeURIComponent(json[key]));
                     }
-                    var logClickUrl = queryItems.join('&');
+                    var logClickUrl = _settings.log_click_url + '?' + queryItems.join('&');
                     nativeApi('openClickUrl', { url: logClickUrl });
                 });
                 /**
