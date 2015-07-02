@@ -488,6 +488,7 @@
             var _videoThumbnailElem;
             var _replayVideoElem;
             var _media;
+            var _settings;
             var _device;
             var _slider;
 
@@ -575,7 +576,15 @@
                 document.getElementById('transfer-button').addEventListener('click', function () {
                     console.log('transfer-button.click');
                     //            nativeApi('openUrl', {url: _creative.transfer_url});
-                    nativeApi('openClickUrl', { url: _creative.ad_template_params.transfer_url });
+
+                    var json = createBaseLog();
+                    json.redirect_url = _creative.ad_template_params.transfer_url;
+                    var queryItems = [];
+                    for (var key in json) {
+                        queryItems.push(encodeURIComponent(key) + '=' + encodeURIComponent(json[key]));
+                    }
+                    var logClickUrl = queryItems.join('&');
+                    nativeApi('openClickUrl', { url: logClickUrl });
                 });
                 /**
                  *  広告クローズボタンのクリックイベント
@@ -603,6 +612,7 @@
                 nativeApi("getAdInfo", null, function (result) {
                     console.log("callback getAdInfo");
                     _media = result.media;
+                    _settings = _media.settings;
                     _device = result.device;
                     var zoneEid = result.zoneEid;
                     var campaignId = result.campaignId;
@@ -743,13 +753,9 @@
                 }
 
                 // 再生ログを送信
-                var postJson = {
-                    zone_id: _zone.zone_id,
-                    campaign_id: _campaign.campaign_id,
-                    creative_id: _creative.creative_id,
-                    view_time: playtime,
-                    view_completed: !skipped,
-                };
+                var postJson = createBaseLog();
+                postJson.view_time = playtime;
+                postJson.view_completed = !skipped;
                 nativeApi('sendViewLog', { postJson: postJson, async: true });
             }
             /**
@@ -771,6 +777,21 @@
              */
             function native_onFailed(reason, zoneEid) {
                 console.log('native_onFailed');
+            }
+
+            /**
+             *  再生ログ、クリックログにて共通のログデータを生成します。
+             */
+            function createBaseLog() {
+                var json = {
+                    zone_id: _zone.zone_id,
+                    campaign_id: _campaign.campaign_id,
+                    creative_id: _creative.creative_id,
+                };
+                for (var key in _device) {
+                    json[key] = _device[key];
+                }
+                return json;
             }
         } catch (ex) {
             console.log(ex);
