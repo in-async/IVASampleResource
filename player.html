@@ -19,13 +19,81 @@
         }
 
         /**
+         *  アニメーション設定
+         */
+        @-moz-keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+        @-webkit-keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+        @-moz-keyframes fadeOut {
+            0% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+            }
+        }
+        @-webkit-keyframes fadeOut {
+            0% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+            }
+        }
+        @keyframes fadeOut {
+            0% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+            }
+        }
+
+        .none {
+            display: none !important;
+        }
+
+
+        /**
          *  動画ページ
          */
         #video-page.fadeIn {
-            display: block;
+            /*display: block;*/
+            opacity: 1;
+
+            /* アニメーション設定 */
+            /*-moz-animation: fadeIn 3s;
+            -o-animation: fadeIn 3s;
+            -webkit-animation: fadeIn 3s;
+            animation: fadeIn 3s;*/
+        }
+        #video-page.fadeOut {
+            opacity: 0;
         }
         #video-page {
-            display: none;
+            /*display: none;*/
+            opacity: 0;
             position: absolute;
             z-index: 1;
             width: 100%;
@@ -33,6 +101,12 @@
             color: #ccc;
             left: 0;
             top: 0;
+
+            /* アニメーション設定 */
+            -moz-transition: opacity 1.5s;
+            -o-transition: opacity 1.5s;
+            -webkit-transition: opacity 1.5s;
+            transition: opacity 1.5s;
 
             /* ドラッグによる選択無効化 */
             -moz-user-select: none;
@@ -494,6 +568,7 @@
             var _device;
             var _slider;
             var _duration;
+            var _videoPageFadeOutTimerId;
 
             var _zone;
             var _campaign;
@@ -526,7 +601,6 @@
                 // window.scrollTo(0, 0);
             });
 
-
             /**
              *  初期化イベント
              */
@@ -545,6 +619,10 @@
                 _replayVideoElem = document.getElementById('replay-video');
                 _slider = new ImageSlider(document.getElementById('image-frame'));
 
+                /**
+                 *  動画ページのタップイベント
+                 */
+                _videoPageElem.addEventListener('click', VideoPageElem_click);
                 /**
                  *  広告スキップボタンのクリックイベント
                  */
@@ -603,7 +681,7 @@
                  */
                 if (_replayVideoElem) {
                     _replayVideoElem.addEventListener('click', function () {
-                        _videoPageElem.className = 'fadeIn';
+                        VideoPageElem_click();
                         _endcardPageElem.className = 'fadeOut';
 
                         // 動画をリプレイ
@@ -689,7 +767,10 @@
                 console.log("native_onPreparedAd");
 
                 // 動画再生
-                _videoPageElem.className = 'fadeIn';
+                _videoPageElem.className = '';
+                setTimeout(function () {
+                    VideoPageElem_click();
+                }, 0);
                 nativeApi('startVideo');
 
                 // エンドカード関連素材をロード
@@ -751,7 +832,7 @@
 
                 // 動画フレームに代わり、エンドカードフレームを表示
                 if (!skipped) {
-                    _videoPageElem.className = '';
+                    _videoPageElem.className = 'none';
                     _endcardPageElem.className = 'fadeIn';
                     _slider.setIndex(0);
                 }
@@ -786,6 +867,21 @@
             function native_onFailed(reason, zoneEid) {
                 console.log('native_onFailed');
             }
+
+
+            /**
+             *  動画ページ要素のクリックイベントハンドラ
+             */
+            function VideoPageElem_click() {
+                _videoPageElem.className = 'fadeIn';
+                if (_videoPageFadeOutTimerId) {
+                    clearTimeout(_videoPageFadeOutTimerId);
+                }
+                _videoPageFadeOutTimerId = setTimeout(function () {
+                    _videoPageElem.className = 'fadeOut';
+                }, 2000);
+            }
+
 
             /**
              *  再生ログ、クリックログにて共通のログデータを生成します。
