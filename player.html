@@ -312,6 +312,7 @@
             max-width: 100%;
             max-height: 100%;
         }
+
         #logo {
             position: absolute;
             left: 0;
@@ -851,6 +852,7 @@
                     var postJson = createBaseLog();
                     postJson.view_time = playtime;
                     postJson.view_completed = !skipped;
+                    postJson.ec = _campaign.ec;
                     nativeApi('sendViewLog', { postJson: postJson, async: true });
                 }, 250);
             }
