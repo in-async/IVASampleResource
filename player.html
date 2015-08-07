@@ -4,6 +4,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <style>
+		* {
+		    -webkit-user-select: none;
+		    -webkit-touch-callout: none;
+		}
+		
         html, body {
             height: 100%;
             width: 100%;
@@ -76,6 +81,22 @@
             margin: 2.5%;
             padding: 2.5%;
             display: none;
+        }
+
+        #muting-video {
+            position: absolute;
+            top: 0;
+            right: 0;
+            margin: 2.5%;
+            padding: 2.5%;
+        }
+
+        #mute-video.inactive {
+            color: #999;
+        }
+
+        #unmute-video.inactive {
+            color: #999;
         }
 
         #playtime {
@@ -370,6 +391,12 @@
         <a id="start-video">play</a>
         <a id="pause-video">pause</a>
         <a id="skip-video">skip</a>
+        <span id="muting-video">
+            sound
+            <a id="mute-video">off</a>
+            /
+            <a id="unmute-video">on</a>
+        </span>
         <div id="playtime">
             <span id="playtime-label"></span>
             <svg xmlns="http://www.w3.org/2000/svg" id="playtime-svg">
@@ -576,6 +603,11 @@
             var _campaign;
             var _creative;
 
+            // コンテキストメニュー無効化
+            document.addEventListener('contextmenu', function () {
+                event.preventDefault();
+            });
+
             // スクロール・バウンド無効化
             document.addEventListener('touchmove', function () {
                 //console.log('touchmove');
@@ -613,6 +645,9 @@
                 _startVideoElem = document.getElementById('start-video');
                 _pauseVideoElem = document.getElementById('pause-video');
                 _skipVideoElem = document.getElementById('skip-video');
+                _mutingVideoElem = document.getElementById('muting-video');
+                _muteVideoElem = document.getElementById('mute-video');
+                _unmuteVideoElem = document.getElementById('unmute-video');
                 _endcardPageElem = document.getElementById('endcard-page');
                 _playtimeLabelElem = document.getElementById('playtime-label');
                 _playtimeSvgElem = document.getElementById('playtime-svg');
@@ -693,6 +728,36 @@
                             VideoPageElem_click();
                             nativeApi('replayVideo', { orientationAnimated: false });
                         }, 250);
+                    });
+                }
+                /**
+                 *	動画広告の音声ON/OFF
+                 */
+                if (_mutingVideoElem) {
+                    var muted = false;
+                    _mutingVideoElem.addEventListener('click', function (e) {
+                        muted = !muted;
+                        nativeApi('volume', { value: (muted ? 0 : 1), async: true });
+
+                        if (muted) {
+                            _muteVideoElem.className = '';
+                            _unmuteVideoElem.className = 'inactive';
+                        } else {
+                            _muteVideoElem.className = 'inactive';
+                            _unmuteVideoElem.className = '';
+                        }
+
+                        e.preventDefault();
+                    });
+
+                    nativeApi('volume', null, function (result) {
+                        if (result <= 0) {
+                            _muteVideoElem.className = '';
+                            _unmuteVideoElem.className = 'inactive';
+                        } else {
+                            _muteVideoElem.className = 'inactive';
+                            _unmuteVideoElem.className = '';
+                        }
                     });
                 }
 
@@ -885,8 +950,8 @@
             /**
              *  動画ページ要素のクリックイベントハンドラ
              */
-            function VideoPageElem_click() {
-                if (_videoPageElem.className == 'fadeIn') {
+            function VideoPageElem_click(forceIn) {
+                if (!forceIn && _videoPageElem.className == 'fadeIn') {
                     _videoPageElem.className = 'fadeOut';
                 } else {
                     _videoPageElem.className = 'fadeIn';
